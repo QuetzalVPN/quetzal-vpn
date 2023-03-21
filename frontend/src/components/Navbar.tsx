@@ -1,12 +1,8 @@
-import logoUrl from '../assets/logo.svg';
-import activeUrl from '../assets/active.svg';
 import { CogIcon, UsersIcon, WindowIcon } from '@heroicons/react/24/outline';
 import { ReactElement, ReactSVGElement, useState } from 'react';
-import ActiveBar from '../assets/ActiveBar';
 import NavbarItem from './NavbarItem';
 import QuetzalTitle from './QuetzalTitle';
-
-//TODO: Add animation to active indicator
+import '../style/navbar.scss';
 
 interface NavItem {
   title: string;
@@ -35,11 +31,14 @@ const items: NavItem[] = [
 export default (/*{ activeIdx }: NavbarProps*/) => {
   const [activeIdx, setActiveIdx] = useState(0);
 
+  const [markerTop, setMarkerTop] = useState(0);
+
   return (
-    <div className="shadow-md h-screen py-8">
+    <div className="shadow-idk h-screen py-8">
       <QuetzalTitle className="w-full justify-center px-8" />
 
-      <div className="ml-8 mt-8">
+      <nav className="ml-8 mt-8">
+        <div id="navbar-marker" style={{ top: markerTop }} />
         {items.map((item, idx) => (
           <NavbarItem
             title={item.title}
@@ -47,10 +46,11 @@ export default (/*{ activeIdx }: NavbarProps*/) => {
             path={item.path}
             active={idx === activeIdx}
             setActive={() => setActiveIdx(idx)}
+            moveMarker={(top: number) => setMarkerTop(top)}
             key={idx}
           />
         ))}
-      </div>
+      </nav>
     </div>
   );
 };

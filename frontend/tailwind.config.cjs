@@ -11,6 +11,9 @@ module.exports = {
       colors: {
         'brand-green': `hsl(${brandHue}, ${brandSat}%, ${brandBright}%)`,
       },
+      boxShadow: {
+        idk: '-1px 1px 6px 0px rgba(0,0,0,0.38)',
+      },
     },
   },
   plugins: [],
