@@ -22,7 +22,7 @@ export default ({ title, icon, path, active, setActive }: NavbarItemProps) => (
         onClick={setActive}
       >
         {icon}
-        <p>{title}</p>
+        <h2>{title}</h2>
       </div>
     </Link>
     {active && <ActiveBar className="ml-auto h-10 fill-brand-green" />}

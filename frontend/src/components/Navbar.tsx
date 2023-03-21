@@ -4,6 +4,7 @@ import { CogIcon, UsersIcon, WindowIcon } from '@heroicons/react/24/outline';
 import { ReactElement, ReactSVGElement, useState } from 'react';
 import ActiveBar from '../assets/ActiveBar';
 import NavbarItem from './NavbarItem';
+import QuetzalTitle from './QuetzalTitle';
 
 //TODO: Add animation to active indicator
 
@@ -36,10 +37,7 @@ export default (/*{ activeIdx }: NavbarProps*/) => {
 
   return (
     <div className="shadow-md h-screen py-8">
-      <div className="flex w-full justify-center gap-2 items-center px-8">
-        <img src={logoUrl} className="h-10" />
-        <h2 className="font-heading text-2xl">QuetzalVPN</h2>
-      </div>
+      <QuetzalTitle className="w-full justify-center px-8" />
 
       <div className="ml-8 mt-8">
         {items.map((item, idx) => (

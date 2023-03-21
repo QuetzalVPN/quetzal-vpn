@@ -8,9 +8,6 @@ module.exports = {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
-      fontFamily: {
-        heading: ['Lexend', 'Arial', 'sans-serif'],
-      },
       colors: {
         'brand-green': `hsl(${brandHue}, ${brandSat}%, ${brandBright}%)`,
       },
