@@ -6,6 +6,7 @@ import {
   Routes,
 } from 'react-router-dom';
 import Navbar from './components/Navbar';
+import AdministartionPage from './pages/AdministartionPage';
 import ConfigurationPage from './pages/ConfigurationPage';
 import DashboardPage from './pages/DashboardPage';
 import NotFoundPage from './pages/NotFoundPage';
@@ -21,11 +22,11 @@ function App() {
           path="/"
           element={
             <>
-              <div className="flex gap-4">
-                <Navbar />
-                <div className="mt-8">
-                  <Outlet />
-                </div>
+              <div className="flex gap-4 bg-background">
+                <aside>
+                  <Navbar />
+                </aside>
+                <Outlet />
               </div>
             </>
           }
@@ -34,6 +35,7 @@ function App() {
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/users" element={<UserPage />} />
           <Route path="/configuration" element={<ConfigurationPage />} />
+          <Route path="/administration" element={<AdministartionPage />} />
         </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

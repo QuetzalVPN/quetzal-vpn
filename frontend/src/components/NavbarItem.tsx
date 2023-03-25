@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 interface NavbarItemProps {
   title: string;
   icon: ReactElement;
+  collapsed?: boolean;
   path: string;
   active: boolean;
   setActive: (e?: any) => any;
@@ -13,6 +14,7 @@ interface NavbarItemProps {
 export default ({
   title,
   icon,
+  collapsed,
   path,
   active,
   setActive,
@@ -29,8 +31,8 @@ export default ({
     >
       <Link to={path}>
         <div
-          className="flex gap-2 text-lg items-center py-2 cursor-pointer"
-          onClick={(e) => {
+          className="flex gap-2 text-lg items-center py-2 cursor-pointer w-fit "
+          onClick={() => {
             setActive();
             if (wrapperRef.current) {
               moveMarker(wrapperRef.current.offsetTop + 10);
@@ -38,7 +40,7 @@ export default ({
           }}
         >
           {icon}
-          <h2>{title}</h2>
+          {<h2 className={`overflow-hidden ${collapsed && 'w-0'}`}>{title}</h2>}
         </div>
       </Link>
     </div>

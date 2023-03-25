@@ -1,6 +1,10 @@
-export default () => (
-  <div>
-    <h1 className="text-sky-400 text-xl">Configuration</h1>
-    <p>Text in content</p>
-  </div>
-);
+import PageTitle from '../components/PageTitle';
+
+export default () => {
+  return (
+    <div className="mt-8 w-7/12">
+      <PageTitle title="Configuration" />
+      <p>Text in content</p>
+    </div>
+  );
+};

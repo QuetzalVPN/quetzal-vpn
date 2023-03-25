@@ -10,9 +10,19 @@ module.exports = {
     extend: {
       colors: {
         'brand-green': `hsl(${brandHue}, ${brandSat}%, ${brandBright}%)`,
+        background: `hsl(${brandHue}, ${brandSat / 4}%, ${97}%)`,
+        foreground: `#FFF`,
+        midground: '#EBEBEB',
+      },
+      borderRadius: {
+        12: '12px',
       },
       boxShadow: {
-        idk: '-1px 1px 6px 0px rgba(0,0,0,0.38)',
+        big: '-1px 1px 6px 0px rgba(0,0,0,0.38)',
+        glow: '0px 0px 4px 1px #00FF708F',
+      },
+      fontFamily: {
+        lexend: ['Lexend', 'sans-serif'],
       },
     },
   },
