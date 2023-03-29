@@ -1,0 +1,40 @@
+@use 'sass:color';
+
+$brand-hue: 146;
+$brand-sat: 100;
+$brand-bright: 50;
+
+$brand-color: hsl($brand-hue, $brand-sat * 1%, $brand-bright * 1%);
+
+nav {
+  display: flex;
+  flex-direction: column;
+
+  .navbar-items {
+    position: relative;
+
+    .navbar-item {
+      display: block;
+      position: relative;
+    }
+
+    #navbar-marker {
+      position: absolute;
+      background: $brand-color;
+      top: 0;
+      right: 0;
+      width: 6px;
+      border-radius: 3px 0 0 3px;
+      height: 2.4rem;
+      transition: 0.3s ease;
+    }
+  }
+
+  .footer {
+    justify-self: end;
+  }
+
+  .flipped {
+    transform: rotateY(180deg);
+  }
+}
