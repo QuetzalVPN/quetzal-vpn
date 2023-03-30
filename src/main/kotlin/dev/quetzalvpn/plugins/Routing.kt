@@ -10,6 +10,9 @@ import io.ktor.server.auth.jwt.*
 import io.ktor.server.http.content.*
 
 fun Application.configureRouting() {
+    configureVPNUserRouting()
+
+
     install(StatusPages) {
         exception<Throwable> { call, cause ->
             call.respondText(text = "500: $cause", status = HttpStatusCode.InternalServerError)
