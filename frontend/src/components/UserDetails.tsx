@@ -41,7 +41,7 @@ const UserSettings = ({ user }: StatisticsProps) => {
         <span className="font-lexend w-fit">Name</span>
         <input
           type="text"
-          className="inline w-2/3 border-slate-500 border px-2 py-1 rounded-lg"
+          className="inline w-2/3 border-slate-500 border px-2 py-1 rounded-lg bg-transparent"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
@@ -56,7 +56,7 @@ const UserSettings = ({ user }: StatisticsProps) => {
 
 export default ({ user, close }: UserDetailProps) => {
   return (
-    <div className="shadow-big bg-foreground flex flex-col h-screen pt-12 px-4 relative">
+    <div className="shadow-big bg-light-foreground dark:bg-dark-foreground flex flex-col h-screen pt-12 px-4 relative">
       <XCircleIcon
         className="absolute top-4 right-4 h-6 cursor-pointer"
         color="gray"

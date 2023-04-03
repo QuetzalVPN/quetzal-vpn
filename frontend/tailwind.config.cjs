@@ -6,13 +6,20 @@ const brandBright = 50;
 
 module.exports = {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
         'brand-green': `hsl(${brandHue}, ${brandSat}%, ${brandBright}%)`,
-        background: `hsl(${brandHue}, ${brandSat / 4}%, ${97}%)`,
-        foreground: `#FFF`,
-        midground: '#EBEBEB',
+        'light-background': `hsl(${brandHue}, ${brandSat / 4}%, ${97}%)`,
+        'light-foreground': `#FFF`,
+        'light-midground': '#EBEBEB',
+        'light-text': '#111',
+        'dark-background': `hsl(${brandHue}, 7%, 5%)`,
+        'dark-foreground': `hsl(${brandHue}, 3%, 7%)`,
+        'dark-midground': `#282B28`,
+        'dark-text': '#FFF',
+        'gray-neutral': '#6D6D6D',
       },
       borderRadius: {
         12: '12px',

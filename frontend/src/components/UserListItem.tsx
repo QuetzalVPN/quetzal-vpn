@@ -28,10 +28,10 @@ export default ({ user, setSelected }: UserListItemProps) => {
       <div className="cursor-pointer" onClick={setSelected}>
         <p className="text-lg font-lexend">{user.name}</p>
         {user.address && (
-          <p className="text-lg text-gray-500">{user.address}</p>
+          <p className="text-lg text-gray-neutral">{user.address}</p>
         )}
         {user.timestamp && (
-          <p className="text-lg text-gray-500">
+          <p className="text-lg text-gray-neutral">
             Last connected:&nbsp;
             {user.timestamp.toTimeString().split(' ')[0]}
           </p>
