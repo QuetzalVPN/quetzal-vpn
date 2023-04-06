@@ -53,6 +53,8 @@ export default ({ navbarIdx }: PageProps) => {
   const setNavposition = useCurrentPage((state) => state.move);
   useEffect(() => setNavposition(navbarIdx), []);
 
+  // TODO: handle user details via routes
+
   return (
     <div className="flex gap-4 grow">
       <div className="flex flex-col gap-4 mt-8 w-7/12 grow">

@@ -1,11 +1,15 @@
-import { useEffect, useState } from 'react';
+import {
+  CogIcon,
+  UsersIcon,
+  WindowIcon,
+  WrenchScrewdriverIcon,
+} from '@heroicons/react/24/outline';
 import {
   BrowserRouter,
   Navigate,
   Outlet,
   Route,
   Routes,
-  createBrowserRouter,
 } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import AdministartionPage from './pages/AdministrationPage';
@@ -13,13 +17,6 @@ import ConfigurationPage from './pages/ConfigurationPage';
 import DashboardPage from './pages/DashboardPage';
 import NotFoundPage from './pages/NotFoundPage';
 import UserPage from './pages/UserPage';
-import {
-  CogIcon,
-  UsersIcon,
-  WindowIcon,
-  WrenchScrewdriverIcon,
-} from '@heroicons/react/24/outline';
-import { useCurrentPage } from './hooks/zustand';
 
 //TODO: Implement Router loader
 //TODO: Fix types (they are really bad)
@@ -54,57 +51,6 @@ const pages = [
 ];
 
 function App() {
-  const [theme, setTheme] = useState<Theme>(
-    (localStorage.getItem('theme') as Theme) ?? 'system'
-  );
-
-  // const browserRouter = createBrowserRouter([
-  //   {
-  //     path: '/',
-  //     element: (
-  //       <>
-  //         <div className="flex gap-4 bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text">
-  //           <aside>
-  //             <Navbar
-  //               items={pages}
-  //               setTheme={setTheme}
-  //               activeIdx={currentPage}
-  //             />
-  //           </aside>
-  //           <Outlet />
-  //         </div>
-  //       </>
-  //     ),
-  //     children: [
-  //       ...pages,
-  //       {
-  //         path: '*',
-  //         element: <NotFoundPage />,
-  //       },
-  //     ],
-  //   },
-  // ]);
-
-  // On page load or when changing themes, best to add inline in `head` to avoid FOUC
-  useEffect(() => {
-    //TODO: Fix FOUC
-    if (theme === 'system') {
-      localStorage.removeItem('theme');
-    } else {
-      localStorage.theme = theme;
-    }
-
-    if (
-      localStorage.theme === 'dark' ||
-      (!('theme' in localStorage) &&
-        window.matchMedia('(prefers-color-scheme: dark)').matches)
-    ) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [theme]);
-
   return (
     <BrowserRouter>
       <Routes>
@@ -113,17 +59,26 @@ function App() {
           element={
             <>
               <div className="flex gap-4 bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text">
-                <aside>
-                  <Navbar items={pages} setTheme={setTheme} />
+                <aside className="min-w-fit">
+                  <Navbar items={pages} />
                 </aside>
+                {/* TODO: add gap to right end of page, care for detail popup */}
                 <Outlet />
               </div>
             </>
           }
         >
           <Route path="/" element={<Navigate to={pages[0].path} />} />
-          {pages.map((page, idx) => (
-            <Route path={page.path} element={page.element} key={page.path} />
+          {pages.map((page) => (
+            <Route
+              path={page.path}
+              element={page.element}
+              key={page.path}
+              loader={async () => {
+                console.log('switched page');
+                return null;
+              }}
+            />
           ))}
         </Route>
         <Route path="*" element={<NotFoundPage />} />

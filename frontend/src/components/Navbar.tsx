@@ -8,7 +8,6 @@ import { Theme } from '../App';
 import ThemeSwitcher from './ThemeSwitcher';
 import { useCurrentPage } from '../hooks/zustand';
 
-//TODO: make marker move with manual path change instead of onclick, probably call movement in page render
 interface NavItem {
   title: string;
   icon: ReactElement;
@@ -18,19 +17,28 @@ interface NavItem {
 interface NavbarProps {
   items: NavItem[];
   // activeIdx: number;
-  setTheme: (theme: Theme) => any;
 }
 
-export default ({ items, /*activeIdx,*/ setTheme }: NavbarProps) => {
-  const [collapsed, setCollapsed] = useState(false);
+export default ({ items /*activeIdx,*/ }: NavbarProps) => {
+  const [collapsed, setCollapsed] = useState<boolean>(
+    localStorage.navbarCollapsed
+  );
   const [markerTop, setMarkerTop] = useState(0);
 
   const currentPage = useCurrentPage((state) => state.currentPage);
 
+  useEffect(() => {
+    if (collapsed) {
+      localStorage.setItem('navbarCollapsed', 'true');
+    } else {
+      localStorage.removeItem('navbarCollapsed');
+    }
+  }, [collapsed]);
+
   //TODO: animate navbar collapse
   return (
     <div
-      className={`flex flex-col h-screen py-8  bg-light-foreground dark:bg-dark-foreground shadow-big`}
+      className={`flex flex-col h-screen py-8 bg-light-foreground dark:bg-dark-foreground shadow-md`}
     >
       <QuetzalTitle
         className="w-full justify-center px-8"
@@ -59,14 +67,17 @@ export default ({ items, /*activeIdx,*/ setTheme }: NavbarProps) => {
         </div>
 
         <div className="mt-auto flex flex-col gap-4 justify-center items-center">
-          {/* TODO: implement darkmode */}
-          <ThemeSwitcher setTheme={setTheme} />
-          <CollapseIcon
+          <ThemeSwitcher />
+          <button
             onClick={() => setCollapsed((prevCollapsed) => !prevCollapsed)}
-            className={`h-8 cursor-pointer stroke-gray-neutral hover:stroke-gray-700 dark:hover:stroke-gray-400  ${
-              !collapsed && 'flipped'
-            }`}
-          />
+            className="aspect-square p-2 rounded-md"
+          >
+            <CollapseIcon
+              className={`h-8 cursor-pointer stroke-gray-neutral hover:stroke-gray-700 dark:hover:stroke-gray-400  ${
+                !collapsed && 'flipped'
+              }`}
+            />
+          </button>
           <AboutLink collapsed={collapsed} />
         </div>
       </nav>

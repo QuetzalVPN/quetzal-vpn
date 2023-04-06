@@ -11,6 +11,7 @@ module.exports = {
     extend: {
       colors: {
         'brand-green': `hsl(${brandHue}, ${brandSat}%, ${brandBright}%)`,
+        'brand-red': `#ff3735`,
         'light-background': `hsl(${brandHue}, ${brandSat / 4}%, ${97}%)`,
         'light-foreground': `#FFF`,
         'light-midground': '#EBEBEB',

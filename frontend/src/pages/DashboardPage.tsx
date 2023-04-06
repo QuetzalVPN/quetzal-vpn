@@ -9,7 +9,7 @@ export default ({ navbarIdx }: PageProps) => {
   useEffect(() => setNavposition(navbarIdx), []);
 
   return (
-    <div className="mt-8 w-7/12">
+    <div className="mt-8 w-full">
       <PageTitle title="Dashboard" />
       <p>Text in content</p>
     </div>
