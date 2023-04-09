@@ -19,12 +19,6 @@ fun Application.configureRouting() {
         }
     }
     routing {
-        singlePageApplication {
-            useResources = true
-            filesPath = "frontend"
-            defaultPage = "index.html"
-            ignoreFiles { it.endsWith(".txt") }
-        }
         route("/api/v1") {
             route("/auth") {
                 authenticate {
