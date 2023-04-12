@@ -14,7 +14,21 @@ import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.transactions.transaction
 
 
+suspend fun ApplicationCall.getParamsVPNUser(): VPNUser? {
+    val id = parameters["id"]?.toIntOrNull()
+    if (id == null) {
+        respond(HttpStatusCode.BadRequest)
+        return null
+    }
 
+    val vpnUser = transaction {
+        VPNUser.findById(id)
+    }
+    if (vpnUser == null) {
+        respond(HttpStatusCode.NotFound)
+    }
+    return vpnUser
+}
 
 class VPNUserRoute {
     @Serializable
@@ -27,14 +41,20 @@ class VPNUserRoute {
     data class GetResponse(val id: Int, val username: String, val isEnabled: Boolean)
 
     @Serializable
-    data class GetAllResponse(val amount: Int, val amountDisabled: Int, val amountEnabled: Int,val vpnUsers: List<GetResponse>)
+    data class GetAllResponse(
+        val amount: Int,
+        val amountDisabled: Int,
+        val amountEnabled: Int,
+        val vpnUsers: List<GetResponse>
+    )
 
     @Serializable
     data class PatchRequest(val username: String? = null, val enable: Boolean? = null)
 }
-fun Application.configureVPNUserRouting(){
 
-    val controller = VPNUserController()
+fun Application.configureVPNUserRouting() {
+
+    val controller = VPNUserController(environment.config)
 
     routing {
         authenticate {
@@ -50,16 +70,16 @@ fun Application.configureVPNUserRouting(){
 
                     val amount = vpnUsers.size
                     val amountEnabled = vpnUsers.count { it.isEnabled }
-                    val amountDisabled = vpnUsers.count { !it.isEnabled }
+                    val amountDisabled = amount - amountEnabled
 
                     val response = VPNUserRoute.GetAllResponse(amount, amountDisabled, amountEnabled, vpnUsers)
                     call.respond(response)
                 }
                 post {
-                    val principal = call.principal<JWTPrincipal>()?.payload;
+                    val principal = call.principal<JWTPrincipal>()?.payload
                     val authUserId = principal?.getClaim("userid")?.asInt()
 
-                    if(authUserId == null){
+                    if (authUserId == null) {
                         call.respond(HttpStatusCode.Unauthorized)
                         return@post
                     }
@@ -76,42 +96,19 @@ fun Application.configureVPNUserRouting(){
 
                     val newVPNUser = controller.addVPNUser(reqBody.username, reqBody.enable ?: true, loginUser)
 
-                    val response = VPNUserRoute.CreateResponse(newVPNUser.id.value, newVPNUser.name, newVPNUser.isEnabled)
+                    val response =
+                        VPNUserRoute.CreateResponse(newVPNUser.id.value, newVPNUser.name, newVPNUser.isEnabled)
                     call.respond(HttpStatusCode.Created, response)
                 }
 
-                get("{id}"){
-                    val id = call.parameters["id"]?.toIntOrNull()
-                    if (id == null) {
-                        call.respond(HttpStatusCode.BadRequest)
-                        return@get
-                    }
-
-                    val vpnUser = transaction {
-                        VPNUser.findById(id)
-                    }
-                    if (vpnUser == null) {
-                        call.respond(HttpStatusCode.NotFound)
-                        return@get
-                    }
+                get("{id}") {
+                    val vpnUser = call.getParamsVPNUser() ?: return@get
 
                     val response = VPNUserRoute.GetResponse(vpnUser.id.value, vpnUser.name, vpnUser.isEnabled)
                     call.respond(response)
                 }
                 patch("{id}") {
-                    val id = call.parameters["id"]?.toIntOrNull()
-                    if (id == null) {
-                        call.respond(HttpStatusCode.BadRequest)
-                        return@patch
-                    }
-
-                    val vpnUser = transaction {
-                        VPNUser.findById(id)
-                    }
-                    if (vpnUser == null) {
-                        call.respond(HttpStatusCode.NotFound)
-                        return@patch
-                    }
+                    val vpnUser = call.getParamsVPNUser() ?: return@patch
 
                     val reqBody = call.receive<VPNUserRoute.PatchRequest>()
                     transaction {
@@ -124,20 +121,8 @@ fun Application.configureVPNUserRouting(){
                     val response = VPNUserRoute.GetResponse(vpnUser.id.value, vpnUser.name, vpnUser.isEnabled)
                     call.respond(response)
                 }
-                delete("{id}"){
-                    val id = call.parameters["id"]?.toIntOrNull()
-                    if (id == null) {
-                        call.respond(HttpStatusCode.BadRequest)
-                        return@delete
-                    }
-
-                    val vpnUser = transaction {
-                        VPNUser.findById(id)
-                    }
-                    if (vpnUser == null) {
-                        call.respond(HttpStatusCode.NotFound)
-                        return@delete
-                    }
+                delete("{id}") {
+                    val vpnUser = call.getParamsVPNUser() ?: return@delete
 
                     transaction {
                         vpnUser.delete()

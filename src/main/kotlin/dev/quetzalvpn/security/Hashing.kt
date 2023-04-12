@@ -22,6 +22,7 @@ private fun generateRandomSalt(): ByteArray {
 }
 
 private fun generatePasswordHash(password: String, salt: String): String {
+    //https://ubisoft-avatars.akamaized.net/0cfd0d4e-2d9e-42b7-9c80-ae88a2eb772c/default_256_256.png
     val combinedSalt = "$salt$SECRET".toByteArray()
     val factory: SecretKeyFactory = SecretKeyFactory.getInstance(ALGORITHM)
     val spec: KeySpec = PBEKeySpec(password.toCharArray(), combinedSalt, ITERATIONS, KEY_LENGTH)
@@ -41,6 +42,4 @@ fun validatePassword(password: String, hash: String): Boolean {
     val passwordHash = parts[1]
 
     return generatePasswordHash(password, salt) == passwordHash
-
-
 }

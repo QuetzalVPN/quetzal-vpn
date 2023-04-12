@@ -11,7 +11,7 @@ RUN npm run build
 #WORKDIR /home/gradle/src
 #RUN gradle buildFatJar
 
-FROM openjdk:11
+FROM amazoncorretto:11-al2023-headless
 EXPOSE 8080:8080
 RUN mkdir /app
 COPY ./build/libs/quetzal-vpn-all.jar /app/server.jar
