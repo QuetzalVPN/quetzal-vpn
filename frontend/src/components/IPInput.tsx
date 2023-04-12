@@ -9,8 +9,6 @@ interface IPInputProps {
 }
 
 export default ({ id, initialValue }: IPInputProps) => (
-  // FIXME: Red border at beginning of render, goes away after little time
-
   <Input
     type="text"
     initialValue={initialValue}

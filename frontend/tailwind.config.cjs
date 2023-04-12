@@ -20,7 +20,7 @@ module.exports = {
         'dark-foreground': `hsl(${brandHue}, 3%, 7%)`,
         'dark-midground': `#282B28`,
         'dark-text': '#FFF',
-        'gray-neutral': '#6D6D6D',
+        'gray-neutral': '#7F7F7F',
       },
       borderRadius: {
         12: '12px',

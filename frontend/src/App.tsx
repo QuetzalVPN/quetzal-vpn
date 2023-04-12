@@ -63,7 +63,9 @@ function App() {
                   <Navbar items={pages} />
                 </aside>
                 {/* TODO: add gap to right end of page, care for detail popup */}
+                {/* <div className="absolute left-40"> */}
                 <Outlet />
+                {/* </div> */}
               </div>
             </>
           }

@@ -5,7 +5,7 @@ $themeTransitionDuration: 0.2s;
   src: url('./fonts/Lexend_var.ttf');
 }
 
-* {
+div {
   transition: background-color ($themeTransitionDuration * 2) ease;
 }
 

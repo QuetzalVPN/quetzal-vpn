@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { User, UserStatus } from '../pages/UserPage';
 import ToggleSwitch from './ToggleSwitch';
 import Input from './Input';
+import Button from './Button';
 
 interface UserDetailProps {
   user: User;
@@ -65,10 +66,10 @@ const UserAuthentication = () => (
     <h2 className="text-xl text-center">Authentication</h2>
     <div className="flex gap-4 items-center">
       <span>File</span>
-      <button className="flex-grow flex gap-2 py-2 px-4 rounded-lg bg-brand-green text-light-text">
+      <Button>
         <ArrowDownTrayIcon className="h-6" />
         Download OVPN-File
-      </button>
+      </Button>
     </div>
   </section>
 );
