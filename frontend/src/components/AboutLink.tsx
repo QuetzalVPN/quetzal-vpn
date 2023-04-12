@@ -9,12 +9,12 @@ interface LinkProps {
 
 export default ({ collapsed }: LinkProps) => (
   <a
-    className="flex gap-1 items-center justify-center text-gray-500 hover:underline"
+    className="flex gap-1 items-center justify-center text-gray-neutral hover:underline"
     href="https://quetzal-vpn.dev"
     target="_blank"
   >
     {collapsed ? (
-      <InformationCircleIcon className="h-6" />
+      <InformationCircleIcon className="h-6 hover:stroke-gray-700 dark:hover:stroke-gray-400 " />
     ) : (
       <>
         <p>About Quetzal</p>

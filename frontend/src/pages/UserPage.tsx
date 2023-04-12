@@ -4,6 +4,8 @@ import UserListItem from '../components/UserListItem';
 import ShadowBox from '../components/ShadowBox';
 import UserDetails from '../components/UserDetails';
 import { useEffect, useState } from 'react';
+import { useCurrentPage } from '../hooks/zustand';
+import { PageProps } from './ConfigurationPage';
 
 export enum UserStatus {
   Online = 0,
@@ -44,9 +46,14 @@ const users: User[] = [
   },
 ];
 
-export default () => {
+export default ({ navbarIdx }: PageProps) => {
   //TODO: save index istead
   const [selectedUser, setSelectedUser] = useState<User>();
+
+  const setNavposition = useCurrentPage((state) => state.move);
+  useEffect(() => setNavposition(navbarIdx), []);
+
+  // TODO: handle user details via routes
 
   return (
     <div className="flex gap-4 grow">
@@ -57,10 +64,10 @@ export default () => {
             <h2 className="text-xl">Users</h2>
             <div className="ml-auto flex">
               <QueueListIcon className="cursor-pointer h-8" />
-              <Squares2X2Icon className="cursor-pointer h-8" color="#7F7F7F" />
+              <Squares2X2Icon className="cursor-pointer h-8 stroke-gray-neutral" />
             </div>
           </div>
-          <div className="user-list">
+          <div>
             {users.map((user, idx) => (
               <UserListItem
                 user={user}

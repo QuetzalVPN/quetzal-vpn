@@ -1,79 +1,65 @@
-import {
-  CogIcon,
-  MoonIcon,
-  UsersIcon,
-  WindowIcon,
-  WrenchScrewdriverIcon,
-} from '@heroicons/react/24/outline';
-import { ReactElement, ReactSVGElement, useState } from 'react';
+import { ReactElement, ReactSVGElement, useEffect, useState } from 'react';
 import NavbarItem from './NavbarItem';
 import QuetzalTitle from './QuetzalTitle';
 import AboutLink from './AboutLink';
 import '../style/navbar.scss';
-import collapseUrl from '../assets/collapse.svg';
 import CollapseIcon from '../assets/CollapseIcon';
+import { Theme } from '../App';
+import ThemeSwitcher from './ThemeSwitcher';
+import { useCurrentPage } from '../hooks/zustand';
 
-//TODO: make marker move with manual path change instead of onclick, probably call movement in page render
 interface NavItem {
   title: string;
   icon: ReactElement;
   path: string;
 }
 
-const items: NavItem[] = [
-  {
-    title: 'Dashboard',
-    icon: <WindowIcon className="h-8" />,
-    path: '/dashboard',
-  },
-  {
-    title: 'Usermanager',
-    icon: <UsersIcon className="h-8" />,
-    path: '/users',
-  },
-  {
-    title: 'Configuration',
-    icon: <CogIcon className="h-8" />,
-    path: '/configuration',
-  },
-  {
-    title: 'Administrastion',
-    icon: <WrenchScrewdriverIcon className="h-7" />,
-    path: '/administration',
-  },
-];
-
-interface MarkerState {
-  top: number;
-  move: (pos: number) => void;
+interface NavbarProps {
+  items: NavItem[];
+  // activeIdx: number;
 }
 
-export default (/*{ activeIdx }: NavbarProps*/) => {
-  const [collapsed, setCollapsed] = useState(false);
-
-  const [activeIdx, setActiveIdx] = useState(0);
-
+export default ({ items /*activeIdx,*/ }: NavbarProps) => {
+  const [collapsed, setCollapsed] = useState<boolean>(
+    localStorage.navbarCollapsed
+  );
   const [markerTop, setMarkerTop] = useState(0);
+
+  const currentPage = useCurrentPage((state) => state.currentPage);
+
+  useEffect(() => {
+    if (collapsed) {
+      localStorage.setItem('navbarCollapsed', 'true');
+    } else {
+      localStorage.removeItem('navbarCollapsed');
+    }
+  }, [collapsed]);
 
   //TODO: animate navbar collapse
   return (
-    <div className={`flex flex-col h-screen py-8  bg-foreground shadow-big`}>
+    <div
+      className={`flex flex-col h-screen py-8 bg-light-foreground dark:bg-dark-foreground shadow-md`}
+    >
       <QuetzalTitle
         className="w-full justify-center px-8"
         collapsed={collapsed}
       />
 
       <nav className="h-full flex flex-col justify-center">
-        <div className="navbar-items ml-8 mt-8">
-          <div id="navbar-marker" style={{ top: markerTop }} />
+        <div className="navbar-items ml-8 mt-8 ">
+          <div
+            id="navbar-marker"
+            style={{ top: markerTop }}
+            className="bg-brand-green"
+          />
           {items.map((item, idx) => (
             <NavbarItem
               title={item.title}
               icon={item.icon}
               collapsed={collapsed}
               path={item.path}
-              active={idx === activeIdx}
-              setActive={() => setActiveIdx(idx)}
+              active={idx === currentPage}
+              // setActive={() => setActiveIdx(idx)}
               moveMarker={(top: number) => setMarkerTop(top)}
               key={item.title + idx}
             />
@@ -81,12 +67,17 @@ export default (/*{ activeIdx }: NavbarProps*/) => {
         </div>
 
         <div className="mt-auto flex flex-col gap-4 justify-center items-center">
-          {/* TODO: implement darkmode */}
-          <MoonIcon className="h-6 cursor-pointer" color="grey" />
-          <CollapseIcon
+          <ThemeSwitcher />
+          <button
             onClick={() => setCollapsed((prevCollapsed) => !prevCollapsed)}
-            className={`h-8 cursor-pointer ${!collapsed && 'flipped'}`}
-          />
+            className="aspect-square p-2 rounded-md"
+          >
+            <CollapseIcon
+              className={`h-8 cursor-pointer stroke-gray-neutral hover:stroke-gray-700 dark:hover:stroke-gray-400  ${
+                !collapsed && 'flipped'
+              }`}
+            />
+          </button>
           <AboutLink collapsed={collapsed} />
         </div>
       </nav>

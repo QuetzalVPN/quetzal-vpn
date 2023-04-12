@@ -1,0 +1,17 @@
+$themeTransitionDuration: 0.2s;
+
+@font-face {
+  font-family: 'Lexend';
+  src: url('./fonts/Lexend_var.ttf');
+}
+
+div {
+  transition: background-color ($themeTransitionDuration * 2) ease;
+}
+
+h1,
+h2,
+h3 {
+  font-family: 'Lexend';
+  transition: color $themeTransitionDuration ease;
+}

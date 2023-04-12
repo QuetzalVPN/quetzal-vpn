@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import QuetzalTitle from '../components/QuetzalTitle';
 
 export default () => (
-  <div className="grid h-screen">
+  <div className="grid h-screen w-full">
     <div className="flex justify-center mt-8">
       <Link to="/">
         <QuetzalTitle />
