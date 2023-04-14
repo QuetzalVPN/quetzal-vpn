@@ -29,6 +29,7 @@ export default ({ data, options }: LineChartProps) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const [, setRerender] = useState(0);
 
+  // FIXME: Size is too big initially
   useEffect(() => {
     setRerender((prev) => prev + 1);
     window.addEventListener('resize', () => {
@@ -36,6 +37,8 @@ export default ({ data, options }: LineChartProps) => {
     });
     return () => window.removeEventListener('resize', () => {});
   }, []);
+
+  useEffect(() => setRerender((prev) => prev + 1), [svgRef]);
 
   const margin = {
     top: 10,

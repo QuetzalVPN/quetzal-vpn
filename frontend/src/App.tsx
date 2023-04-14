@@ -17,6 +17,7 @@ import ConfigurationPage from './pages/ConfigurationPage';
 import DashboardPage from './pages/DashboardPage';
 import NotFoundPage from './pages/NotFoundPage';
 import UserPage from './pages/UserPage';
+import LoginPage from './pages/LoginPage';
 
 //TODO: Implement Router loader
 //TODO: Fix types (they are really bad)
@@ -54,11 +55,12 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/login" element={<LoginPage />} />
         <Route
           path="/"
           element={
             <>
-              <div className="flex gap-4 bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text">
+              <div className="flex gap-4">
                 <aside className="min-w-fit">
                   <Navbar items={pages} />
                 </aside>
@@ -72,15 +74,7 @@ function App() {
         >
           <Route path="/" element={<Navigate to={pages[0].path} />} />
           {pages.map((page) => (
-            <Route
-              path={page.path}
-              element={page.element}
-              key={page.path}
-              loader={async () => {
-                console.log('switched page');
-                return null;
-              }}
-            />
+            <Route path={page.path} element={page.element} key={page.path} />
           ))}
         </Route>
         <Route path="*" element={<NotFoundPage />} />

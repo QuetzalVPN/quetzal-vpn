@@ -1,12 +1,17 @@
 import { useEffect } from 'react';
 import PageTitle from '../components/PageTitle';
 import ShadowBox from '../components/ShadowBox';
-import { useCurrentPage } from '../hooks/zustand';
+import { useCurrentPage, useTitleState } from '../hooks/zustand';
 import { PageProps } from './ConfigurationPage';
 
 export default ({ navbarIdx }: PageProps) => {
   const setNavposition = useCurrentPage((state) => state.move);
-  useEffect(() => setNavposition(navbarIdx), []);
+  const setBrowserTitle = useTitleState((state) => state.change);
+
+  useEffect(() => {
+    setBrowserTitle('Administration');
+    setNavposition(navbarIdx);
+  }, []);
 
   return (
     <div className="mt-8 w-7/12">

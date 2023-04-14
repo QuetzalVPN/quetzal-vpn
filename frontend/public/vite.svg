@@ -1,1 +1,47 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--logos" width="31.88" height="32" preserveAspectRatio="xMidYMid meet" viewBox="0 0 256 257"><defs><linearGradient id="IconifyId1813088fe1fbc01fb466" x1="-.828%" x2="57.636%" y1="7.652%" y2="78.411%"><stop offset="0%" stop-color="#41D1FF"></stop><stop offset="100%" stop-color="#BD34FE"></stop></linearGradient><linearGradient id="IconifyId1813088fe1fbc01fb467" x1="43.376%" x2="50.316%" y1="2.242%" y2="89.03%"><stop offset="0%" stop-color="#FFEA83"></stop><stop offset="8.333%" stop-color="#FFDD35"></stop><stop offset="100%" stop-color="#FFA800"></stop></linearGradient></defs><path fill="url(#IconifyId1813088fe1fbc01fb466)" d="M255.153 37.938L134.897 252.976c-2.483 4.44-8.862 4.466-11.382.048L.875 37.958c-2.746-4.814 1.371-10.646 6.827-9.67l120.385 21.517a6.537 6.537 0 0 0 2.322-.004l117.867-21.483c5.438-.991 9.574 4.796 6.877 9.62Z"></path><path fill="url(#IconifyId1813088fe1fbc01fb467)" d="M185.432.063L96.44 17.501a3.268 3.268 0 0 0-2.634 3.014l-5.474 92.456a3.268 3.268 0 0 0 3.997 3.378l24.777-5.718c2.318-.535 4.413 1.507 3.936 3.838l-7.361 36.047c-.495 2.426 1.782 4.5 4.151 3.78l15.304-4.649c2.372-.72 4.652 1.36 4.15 3.788l-11.698 56.621c-.732 3.542 3.979 5.473 5.943 2.437l1.313-2.028l72.516-144.72c1.215-2.423-.88-5.186-3.54-4.672l-25.505 4.922c-2.396.462-4.435-1.77-3.759-4.114l16.646-57.705c.677-2.35-1.37-4.583-3.769-4.113Z"></path></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" fill="none" viewBox="0 0 44 44">
+  <g clip-path="url(#a)">
+    <path fill="url(#b)" d="M38.477 0H5.523A5.523 5.523 0 0 0 0 5.523v32.954A5.523 5.523 0 0 0 5.523 44h32.954A5.523 5.523 0 0 0 44 38.477V5.523A5.523 5.523 0 0 0 38.477 0Z"/>
+    <g filter="url(#c)">
+      <path fill="#111" d="M40.424 13.75c-10.695-.411-20.6 5.439-25.494 14.742.004-1.06.114-2.133.33-3.21 1.848-9.253 10.85-15.257 20.102-13.41a16.951 16.951 0 0 1 5.062 1.876v.003Z"/>
+    </g>
+    <g filter="url(#d)">
+      <path fill="#111" d="M3.68 30.38c10.695.411 20.6-5.439 25.494-14.742a16.78 16.78 0 0 1-.329 3.21c-1.849 9.254-10.85 15.257-20.103 13.41a16.951 16.951 0 0 1-5.062-1.876v-.003Z"/>
+    </g>
+  </g>
+  <defs>
+    <filter id="c" width="41.494" height="32.954" x="6.93" y="4.538" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feColorMatrix in="SourceAlpha" result="hardAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/>
+      <feOffset dy="1"/>
+      <feGaussianBlur stdDeviation="4"/>
+      <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.5 0"/>
+      <feBlend in2="BackgroundImageFix" result="effect1_dropShadow_3_2"/>
+      <feBlend in="SourceGraphic" in2="effect1_dropShadow_3_2" result="shape"/>
+    </filter>
+    <filter id="d" width="41.494" height="32.954" x="-4.32" y="8.638" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feColorMatrix in="SourceAlpha" result="hardAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/>
+      <feOffset dy="1"/>
+      <feGaussianBlur stdDeviation="4"/>
+      <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.5 0"/>
+      <feBlend in2="BackgroundImageFix" result="effect1_dropShadow_3_2"/>
+      <feBlend in="SourceGraphic" in2="effect1_dropShadow_3_2" result="shape"/>
+    </filter>
+    <radialGradient id="b" cx="0" cy="0" r="1" gradientTransform="translate(-3.745 -7.619) scale(66.401)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F5FDEA"/>
+      <stop offset=".05" stop-color="#C7FDD3"/>
+      <stop offset=".09" stop-color="#9CFDBE"/>
+      <stop offset=".14" stop-color="#77FEAB"/>
+      <stop offset=".2" stop-color="#56FE9B"/>
+      <stop offset=".25" stop-color="#3BFE8D"/>
+      <stop offset=".32" stop-color="#25FE82"/>
+      <stop offset=".4" stop-color="#14FE7A"/>
+      <stop offset=".49" stop-color="#08FE74"/>
+      <stop offset=".63" stop-color="#01FE70"/>
+      <stop offset="1" stop-color="#00FF70"/>
+    </radialGradient>
+    <clipPath id="a">
+      <path fill="#fff" d="M0 0h44v44H0z"/>
+    </clipPath>
+  </defs>
+</svg>

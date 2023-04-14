@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import PageTitle from '../components/PageTitle';
-import { useCurrentPage } from '../hooks/zustand';
+import { useCurrentPage, useTitleState } from '../hooks/zustand';
 import { PageProps } from './ConfigurationPage';
 import ShadowBox from '../components/ShadowBox';
 import LineChart from '../components/charts/LineChart';
@@ -18,6 +18,7 @@ const colors = [
 
 export default ({ navbarIdx }: PageProps) => {
   const setNavposition = useCurrentPage((state) => state.move);
+  const setBrowserTitle = useTitleState((state) => state.change);
 
   const [activeUsers, setActiveUsers] = useState([
     { time: Date.now() - 1000, value: 6 },
@@ -35,7 +36,10 @@ export default ({ navbarIdx }: PageProps) => {
     ]);
   };
 
-  useEffect(() => setNavposition(navbarIdx), []);
+  useEffect(() => {
+    setBrowserTitle('Dashboard');
+    setNavposition(navbarIdx);
+  }, []);
 
   return (
     <div className="mt-8 w-full flex flex-col gap-4">

@@ -49,6 +49,7 @@ export default ({ data, options }: PieChartProps) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const [radius, setRadius] = useState(0);
   const [displayData, setDisplayData] = useState(data);
+  const [textTransform, setTextTransform] = useState('translate(0, 0)');
 
   const updateRadius = () => {
     const diameter = Math.min(
@@ -103,6 +104,7 @@ export default ({ data, options }: PieChartProps) => {
           return (t) => {
             copy.startAngle = interpolateStartAngle(t);
             copy.endAngle = interpolateEndAngle(t);
+
             return arcGenerator(copy) ?? '';
           };
         })
@@ -110,20 +112,20 @@ export default ({ data, options }: PieChartProps) => {
           setDisplayData(data);
         });
 
-      d3.select(svgRef.current)
-        .selectAll('text')
-        .transition()
-        .duration(TRANSITION_DURATION)
-        .attrTween('transform', (d, i) => {
-          const interpolateCenterTransform = d3.interpolateTransformSvg(
-            `translate(${arcGenerator.centroid(oldData[i])})`,
-            `translate(${arcGenerator.centroid(newData[i])})`
-          );
-
-          return (t) => {
-            return interpolateCenterTransform(t);
-          };
-        });
+      // d3.select(svgRef.current)
+      // .selectAll('text')
+      // .transition()
+      // .duration(TRANSITION_DURATION)
+      // .attrTween('transform', (d, i) => {
+      // const interpolateCenterTransform = d3.interpolateTransformSvg(
+      // `translate(${arcGenerator.centroid(oldData[i])})`,
+      // `translate(${arcGenerator.centroid(newData[i])})`
+      // );
+      //
+      // return (t) => {
+      // return interpolateCenterTransform(t);
+      // };
+      // });
     }
   }, [data, svgRef.current]);
 
@@ -137,16 +139,40 @@ export default ({ data, options }: PieChartProps) => {
           key={data[i].label}
         >
           <path />
-          <text
+          {/* <text
             fill={hexToBrightness(quetzalTheme[i]) > 0.5 ? '#000' : '#fff'}
-            transform={`translate(${arcGenerator.centroid(d)})`}
+            transform={textTransform}
             textAnchor="middle"
             alignmentBaseline="middle"
           >
             {data[i].label}
-          </text>
+          </text> */}
         </g>
       ))}
+      <g
+        transform={`translate(${radius + (options.padding?.x ?? 0)}, ${
+          radius + (options.padding?.y ?? 0)
+        })`}
+      >
+        {
+          // Display the legend
+          data.map((d, i) => (
+            <g
+              key={d.label}
+              transform={`translate(0, ${i * 20})`}
+              className="flex items-center"
+            >
+              <circle r="10" cx={5} cy={10} fill={quetzalTheme[i]} />
+              <text
+                transform="translate(25, 15)"
+                className="fill-light-text dark:fill-dark-text"
+              >
+                {d.label}
+              </text>
+            </g>
+          ))
+        }
+      </g>
     </svg>
   );
 };

@@ -1,5 +1,17 @@
 import { useEffect } from 'react';
-import { Theme, useThemeState } from './zustand';
+import { create } from 'zustand';
+
+type Theme = 'system' | 'light' | 'dark';
+
+interface ThemeState {
+  theme: Theme;
+  switchTo: (to: Theme) => void;
+}
+
+const useThemeState = create<ThemeState>((set, get) => ({
+  theme: localStorage.theme ?? 'system',
+  switchTo: (newTheme) => set((state) => ({ theme: newTheme })),
+}));
 
 const useTheme = () => {
   const updateStoredTheme = (newTheme: Theme) => {

@@ -4,7 +4,7 @@ import UserListItem from '../components/UserListItem';
 import ShadowBox from '../components/ShadowBox';
 import UserDetails from '../components/UserDetails';
 import { useEffect, useState } from 'react';
-import { useCurrentPage } from '../hooks/zustand';
+import { useCurrentPage, useTitleState } from '../hooks/zustand';
 import { PageProps } from './ConfigurationPage';
 
 export enum UserStatus {
@@ -51,8 +51,12 @@ export default ({ navbarIdx }: PageProps) => {
   const [selectedUser, setSelectedUser] = useState<User>();
 
   const setNavposition = useCurrentPage((state) => state.move);
-  useEffect(() => setNavposition(navbarIdx), []);
+  const setBrowserTitle = useTitleState((state) => state.change);
 
+  useEffect(() => {
+    setBrowserTitle('User Management');
+    setNavposition(navbarIdx);
+  }, []);
   // TODO: handle user details via routes
 
   return (
