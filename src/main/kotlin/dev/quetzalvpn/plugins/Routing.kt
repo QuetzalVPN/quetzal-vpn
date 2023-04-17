@@ -10,18 +10,15 @@ import io.ktor.server.auth.jwt.*
 import io.ktor.server.http.content.*
 
 fun Application.configureRouting() {
+    configureVPNUserRouting()
+
+
     install(StatusPages) {
         exception<Throwable> { call, cause ->
             call.respondText(text = "500: $cause", status = HttpStatusCode.InternalServerError)
         }
     }
     routing {
-        singlePageApplication {
-            useResources = true
-            filesPath = "frontend"
-            defaultPage = "index.html"
-            ignoreFiles { it.endsWith(".txt") }
-        }
         route("/api/v1") {
             route("/auth") {
                 authenticate {

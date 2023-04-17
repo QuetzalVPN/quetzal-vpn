@@ -29,6 +29,15 @@ data class LoginUserResponse(val username: String, val accessToken: String)
 @Serializable
 data class PatchLoginUserRequest(val password: String)
 
+@Serializable
+data class DeleteLoginUserRequest(val username: String)
+
+@Serializable
+data class SafeLoginUser(val username: String, val id: Int)
+
+
+
+
 fun Application.configureSecurity() {
     val secret = environment.config.property("jwt.secret").getString()
     val issuer = environment.config.property("jwt.issuer").getString()
@@ -118,6 +127,7 @@ fun Application.configureSecurity() {
                     .withAudience(audience)
                     .withIssuer(issuer)
                     .withClaim("username", user.loginName)
+                    .withClaim("userid", user.id.value)
                     .withExpiresAt(Date(System.currentTimeMillis() + expirationTime))
                     .sign(Algorithm.HMAC256(secret))
                 val response = LoginUserResponse(user.loginName, token)
@@ -126,6 +136,14 @@ fun Application.configureSecurity() {
 
             authenticate {
                 route("/signup") {
+                    get {
+                        val users = transaction {
+                            LoginUser.all().toList()
+                        }
+                        val safeUsers = users.map { SafeLoginUser(it.loginName, it.id.value) }
+
+                        call.respond(safeUsers)
+                    }
                     post {
                         val loginUser = call.receive<LoginUserRequest>()
 
@@ -168,6 +186,31 @@ fun Application.configureSecurity() {
                         }
 
                         transaction { dbUser.passwordHash = generateHash(patchValues.password) }
+                        call.respond(HttpStatusCode.NoContent)
+                    }
+                    delete {
+                        val deleteUser = call.receive<DeleteLoginUserRequest>()
+
+                        val userAmount = transaction {
+                            LoginUser.count()
+                        }
+
+                        if(userAmount <= 1L) {
+                            call.respond(HttpStatusCode.Forbidden)
+                            return@delete
+                        }
+
+                        val dbUser = transaction {
+                            LoginUser.find {
+                                LoginUsers.loginName eq deleteUser.username.lowercase()
+                            }.firstOrNull()
+                        }
+                        if (dbUser == null) {
+                            call.respond(HttpStatusCode.NotFound)
+                            return@delete
+                        }
+
+                        transaction { dbUser.delete() }
                         call.respond(HttpStatusCode.NoContent)
                     }
                 }
