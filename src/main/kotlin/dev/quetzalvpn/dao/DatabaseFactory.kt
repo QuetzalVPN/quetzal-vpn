@@ -3,6 +3,7 @@ package dev.quetzalvpn.dao
 import com.zaxxer.hikari.HikariDataSource
 import dev.quetzalvpn.models.LoginLogs
 import dev.quetzalvpn.models.LoginUsers
+import dev.quetzalvpn.models.VPNUsers
 import io.ktor.server.config.*
 import kotlinx.coroutines.Dispatchers
 import org.jetbrains.exposed.sql.Database
@@ -17,8 +18,11 @@ object DatabaseFactory {
         val password = config.property("storage.password").getString()
         val database = Database.connect(createHikariDataSource(jdbcURL, driverClassName, password))
         transaction(database) {
-            SchemaUtils.create(LoginUsers)
-            SchemaUtils.create(LoginLogs)
+
+            SchemaUtils.createMissingTablesAndColumns(LoginUsers)
+            SchemaUtils.createMissingTablesAndColumns(LoginLogs)
+            SchemaUtils.createMissingTablesAndColumns(VPNUsers)
+
         }
     }
 

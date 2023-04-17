@@ -13,4 +13,5 @@ fun Application.module() {
     configureSerialization()
     configureSecurity()
     configureRouting()
+    configureReactSPA()
 }
