@@ -1,6 +1,13 @@
-import { UserCircleIcon, XCircleIcon } from '@heroicons/react/24/outline';
+import {
+  ArrowDownTrayIcon,
+  UserCircleIcon,
+  XCircleIcon,
+} from '@heroicons/react/24/outline';
 import { useEffect, useState } from 'react';
 import { User, UserStatus } from '../pages/UserPage';
+import ToggleSwitch from './ToggleSwitch';
+import Input from './Input';
+import Button from './Button';
 
 interface UserDetailProps {
   user: User;
@@ -16,7 +23,7 @@ const colors = ['#00FF70', '#F9C81B', '#F91B1B'];
 
 const UserStatistics = ({ user }: StatisticsProps) => {
   return (
-    <>
+    <section className="flex flex-col gap-2">
       <h2 className="text-xl text-center">Statistics</h2>
       <div className="grid grid-cols-2">
         <span className="font-lexend ">IP</span>
@@ -24,39 +31,45 @@ const UserStatistics = ({ user }: StatisticsProps) => {
         <span className="font-lexend ">Traffic</span>
         <span className="font-lexend font-light">{user.traffic} Mbit/s</span>
       </div>
-    </>
+    </section>
   );
 };
 
 //FIXME: Fix width
 const UserSettings = ({ user }: StatisticsProps) => {
-  const [name, setName] = useState(user.name);
-
-  useEffect(() => setName(user.name), [user]);
-
   return (
-    <>
+    <section className="flex flex-col gap-2">
       <h2 className="text-xl text-center">Settings</h2>
-      <div className="grid grid-cols-2">
-        <span className="font-lexend w-fit">Name</span>
-        <input
-          type="text"
-          className="inline w-2/3 border-slate-500 border px-2 py-1 rounded-lg"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <span className="font-lexend w-fit">Traffic</span>
-        <span className="font-lexend font-light w-fit">
-          {user.traffic} Mbit/s
-        </span>
+      <div className="flex flex-col gap-4">
+        <div className="flex gap-4">
+          <span className="font-lexend">Name</span>
+          <span>{user.name}</span>
+        </div>
+        <div className="flex gap-4">
+          <span className="font-lexend w-fit">Enabled</span>
+          <ToggleSwitch />
+        </div>
       </div>
-    </>
+    </section>
   );
 };
 
+const UserAuthentication = () => (
+  <section className="flex flex-col gap-2">
+    <h2 className="text-xl text-center">Authentication</h2>
+    <div className="flex gap-4 items-center">
+      <span>File</span>
+      <Button>
+        <ArrowDownTrayIcon className="h-6" />
+        Download OVPN-File
+      </Button>
+    </div>
+  </section>
+);
+
 export default ({ user, close }: UserDetailProps) => {
   return (
-    <div className="shadow-big bg-foreground flex flex-col h-screen pt-12 px-4 relative">
+    <div className="shadow-md bg-light-foreground dark:bg-dark-foreground flex flex-col h-screen pt-12 px-8 relative">
       <XCircleIcon
         className="absolute top-4 right-4 h-6 cursor-pointer"
         color="gray"
@@ -69,9 +82,10 @@ export default ({ user, close }: UserDetailProps) => {
           strokeWidth={1.25}
           color={colors[user.status]}
         />
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center gap-4">
           {user.status == UserStatus.Online && <UserStatistics user={user} />}
           <UserSettings user={user} />
+          <UserAuthentication />
         </div>
       </div>
     </div>

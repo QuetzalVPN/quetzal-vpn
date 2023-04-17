@@ -1,26 +1,40 @@
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import ShadowBox from './ShadowBox';
+import {
+  InstantSearch,
+  SearchBox,
+  Hits,
+  Highlight,
+} from 'react-instantsearch-hooks-web';
+import { instantMeiliSearch } from '@meilisearch/instant-meilisearch';
+import GlobalSearch from './GlobalSearch';
 
 interface PageTitleProps {
   title: string;
 }
 
+const searchClient = instantMeiliSearch(
+  'http://localhost:7700',
+  'XD6DtZnHnb32qPEZX1gCKQIl4fkluHgW1XqMIvc0vlo'
+);
+
 export default ({ title }: PageTitleProps) => (
   <ShadowBox>
     <div className="flex items-center">
-      <h2 className="text-2xl">{title}</h2>
-      <div className="ml-auto w-80">
-        <div className="relative bg-midground rounded-xl">
-          <input
-            type="search"
-            placeholder="Search"
-            className="bg-transparent p-3 shadow-inner w-full rounded-xl text-slate-600 outline-none focus:ring-2 ring-brand-green ring-opacity-50 ring-offset-1"
+      <h2 className="text-2xl w-fit">{title}</h2>
+      <GlobalSearch className="ml-auto w-[320px]" />
+      {/* <InstantSearch
+          searchClient={searchClient}
+          indexName="quetzal-pages"
+          routing={true}
+        >
+          <SearchBox />
+          <Hits
+            hitComponent={({ hit }) => (
+              <Highlight attribute="title" hit={hit} />
+            )}
           />
-          <button className="absolute aspect-square h-full rounded-xl bg-brand-green shadow-glow right-0 top-0 flex items-center justify-center">
-            <MagnifyingGlassIcon className="h-5" />
-          </button>
-        </div>
-      </div>
+        </InstantSearch> */}
     </div>
   </ShadowBox>
 );
