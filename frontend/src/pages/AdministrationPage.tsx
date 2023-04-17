@@ -14,7 +14,7 @@ export default ({ navbarIdx }: PageProps) => {
   }, []);
 
   return (
-    <div className="mt-8 w-7/12">
+    <div className="mt-8 w-full">
       <div className="flex flex-col gap-4">
         <PageTitle title="Administration" />
         <ShadowBox className="w-full"></ShadowBox>

@@ -11,11 +11,10 @@ nav {
   flex-direction: column;
 
   .navbar-items {
-    position: relative;
-
     .navbar-item {
       display: block;
       position: relative;
+      stroke: red;
     }
 
     #navbar-marker {

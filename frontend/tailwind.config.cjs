@@ -11,13 +11,14 @@ module.exports = {
     extend: {
       colors: {
         'brand-green': `hsl(${brandHue}, ${brandSat}%, ${brandBright}%)`,
+        'brand-green-light': `hsl(${brandHue}, ${brandSat}%, ${58}%)`,
         'brand-red': `#ff3735`,
         'light-background': `hsl(${brandHue}, ${brandSat / 4}%, ${97}%)`,
         'light-foreground': `#FFF`,
         'light-midground': '#EBEBEB',
         'light-text': '#111',
         'dark-background': `hsl(${brandHue}, 7%, 5%)`,
-        'dark-foreground': `hsl(${brandHue}, 3%, 7%)`,
+        'dark-foreground': `hsl(${brandHue}, 3%, 8%)`,
         'dark-midground': `#282B28`,
         'dark-text': '#FFF',
         'gray-neutral': '#7F7F7F',

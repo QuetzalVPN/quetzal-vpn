@@ -1,12 +1,13 @@
-import { ReactElement, ReactSVGElement, useEffect, useState } from 'react';
+import { ChevronDoubleLeftIcon, UserIcon } from '@heroicons/react/24/outline';
+import { ReactElement, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useCurrentPage } from '../hooks/zustand';
+import '../style/navbar.scss';
+import AboutLink from './AboutLink';
+import NavButton from './NavButton';
 import NavbarItem from './NavbarItem';
 import QuetzalTitle from './QuetzalTitle';
-import AboutLink from './AboutLink';
-import '../style/navbar.scss';
-import CollapseIcon from '../assets/CollapseIcon';
-import { Theme } from '../App';
 import ThemeSwitcher from './ThemeSwitcher';
-import { useCurrentPage } from '../hooks/zustand';
 
 interface NavItem {
   title: string;
@@ -16,12 +17,13 @@ interface NavItem {
 
 interface NavbarProps {
   items: NavItem[];
-  // activeIdx: number;
 }
 
-export default ({ items /*activeIdx,*/ }: NavbarProps) => {
+export default ({ items }: NavbarProps) => {
+  const navigate = useNavigate();
+
   const [collapsed, setCollapsed] = useState<boolean>(
-    localStorage.navbarCollapsed
+    (localStorage.getItem('navbarCollapsed') ?? 'false') === 'true'
   );
   const [markerTop, setMarkerTop] = useState(0);
 
@@ -46,7 +48,7 @@ export default ({ items /*activeIdx,*/ }: NavbarProps) => {
       />
 
       <nav className="h-full flex flex-col justify-center">
-        <div className="navbar-items ml-8 mt-8 ">
+        <div className="navbar-items ml-8 mt-8 relative flex flex-col gap-2">
           <div
             id="navbar-marker"
             style={{ top: markerTop }}
@@ -66,18 +68,20 @@ export default ({ items /*activeIdx,*/ }: NavbarProps) => {
           ))}
         </div>
 
-        <div className="mt-auto flex flex-col gap-4 justify-center items-center">
+        <div className="mt-auto flex flex-col gap-2 justify-center items-center h-fit">
+          <NavButton onClick={() => navigate('/login')}>
+            <UserIcon className="h-6 stroke-inherit" />
+          </NavButton>
           <ThemeSwitcher />
-          <button
+          <NavButton
             onClick={() => setCollapsed((prevCollapsed) => !prevCollapsed)}
-            className="aspect-square p-2 rounded-md"
           >
-            <CollapseIcon
-              className={`h-8 cursor-pointer stroke-gray-neutral hover:stroke-gray-700 dark:hover:stroke-gray-400  ${
-                !collapsed && 'flipped'
+            <ChevronDoubleLeftIcon
+              className={`h-6 transition-transform stroke-inherit ${
+                collapsed ? 'flipped' : ''
               }`}
             />
-          </button>
+          </NavButton>
           <AboutLink collapsed={collapsed} />
         </div>
       </nav>

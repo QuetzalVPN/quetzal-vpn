@@ -19,8 +19,8 @@ export default () => {
           <p className="text-gray-neutral">
             Please enter your login information
           </p>
-          <Input type="password" className="w-full" />
           <Input />
+          <Input type="password" className="w-full" />
           <Button>Login</Button>
           <Link className="text-gray-neutral hover:underline" to="/">
             Forgot Password?

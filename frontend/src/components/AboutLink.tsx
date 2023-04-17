@@ -2,6 +2,7 @@ import {
   ArrowTopRightOnSquareIcon,
   InformationCircleIcon,
 } from '@heroicons/react/24/outline';
+import NavButton from './NavButton';
 
 interface LinkProps {
   collapsed?: boolean;
@@ -14,7 +15,9 @@ export default ({ collapsed }: LinkProps) => (
     target="_blank"
   >
     {collapsed ? (
-      <InformationCircleIcon className="h-6 hover:stroke-gray-700 dark:hover:stroke-gray-400 " />
+      <NavButton>
+        <InformationCircleIcon className="h-6 stroke-inherit " />
+      </NavButton>
     ) : (
       <>
         <p>About Quetzal</p>

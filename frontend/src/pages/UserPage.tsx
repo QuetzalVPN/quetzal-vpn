@@ -6,6 +6,7 @@ import UserDetails from '../components/UserDetails';
 import { useEffect, useState } from 'react';
 import { useCurrentPage, useTitleState } from '../hooks/zustand';
 import { PageProps } from './ConfigurationPage';
+import Search from '../components/GlobalSearch';
 
 export enum UserStatus {
   Online = 0,
@@ -60,7 +61,7 @@ export default ({ navbarIdx }: PageProps) => {
   // TODO: handle user details via routes
 
   return (
-    <div className="flex gap-4 grow">
+    <div className="flex gap-4 w-full">
       <div className="flex flex-col gap-4 mt-8 w-7/12 grow">
         <PageTitle title="User Management" />
         <ShadowBox>

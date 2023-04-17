@@ -18,6 +18,7 @@ import DashboardPage from './pages/DashboardPage';
 import NotFoundPage from './pages/NotFoundPage';
 import UserPage from './pages/UserPage';
 import LoginPage from './pages/LoginPage';
+import { useTheme } from './hooks/useTheme';
 
 //TODO: Implement Router loader
 //TODO: Fix types (they are really bad)
@@ -52,6 +53,8 @@ const pages = [
 ];
 
 function App() {
+  const { theme, setTheme } = useTheme();
+
   return (
     <BrowserRouter>
       <Routes>
@@ -61,13 +64,13 @@ function App() {
           element={
             <>
               <div className="flex gap-4">
-                <aside className="min-w-fit">
+                <aside className="min-w-fit left-0 top-0">
                   <Navbar items={pages} />
                 </aside>
                 {/* TODO: add gap to right end of page, care for detail popup */}
-                {/* <div className="absolute left-40"> */}
-                <Outlet />
-                {/* </div> */}
+                <div className="overflow-y-scroll pr-4 flex-grow">
+                  <Outlet />
+                </div>
               </div>
             </>
           }
