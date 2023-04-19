@@ -44,34 +44,34 @@ export default ({ className, ...props }: React.HTMLProps<HTMLInputElement>) => {
       </div>
       <Modal open={open} close={closeModal}>
         <h2 className="text-2xl">Search anything</h2>
-        <InstantSearch searchClient={meiliClient} indexName="quetzal-pages">
-          <SearchBox className="bg-transparent border-2 border-gray-neutral" />
-          <div className="h-64 px-2 overflow-y-scroll">
-            <Index indexName="quetzal-pages">
-              <Hits
-                // hitComponent={({ hit }) => (
-                //   <div className="p-2 my-2 rounded-lg bg-light-midground dark:bg-dark-midground">
-                //     <h3>{(hit as any).title}</h3>
-                //     <p className="text-gray-neutral">
-                //       {(hit as any).description}
-                //     </p>
-                //   </div>
-                // )}
-                hitComponent={({ hit }) => (
-                  <Highlight hit={hit} attribute="title" />
-                )}
-              />
-            </Index>
+        {/*<InstantSearch searchClient={meiliClient} indexName="quetzal-pages">*/}
+        {/*  <SearchBox className="bg-transparent border-2 border-gray-neutral" />*/}
+        {/*  <div className="h-64 px-2 overflow-y-scroll">*/}
+        {/*    <Index indexName="quetzal-pages">*/}
+        {/*      <Hits*/}
+        {/*        // hitComponent={({ hit }) => (*/}
+        {/*          <div className="p-2 my-2 rounded-lg bg-light-midground dark:bg-dark-midground">*/}
+        {/*        //     <h3>{(hit as any).title}</h3>*/}
+        {/*        //     <p className="text-gray-neutral">*/}
+        {/*        //       {(hit as any).description}*/}
+        {/*        //     </p>*/}
+        {/*        //   </div>*/}
+        {/*        // )}*/}
+        {/*        hitComponent={({ hit }) => (*/}
+        {/*          // <Highlight hit={hit} attribute="title" />*/}
+        {/*        )}*/}
+        {/*      />*/}
+        {/*    </Index>*/}
 
-            <Index indexName="quetzal-users">
-              <Hits
-                hitComponent={({ hit }) => (
-                  <Highlight hit={hit} attribute="name" />
-                )}
-              />
-            </Index>
-          </div>
-        </InstantSearch>
+        {/*    <Index indexName="quetzal-users">*/}
+        {/*      <Hits*/}
+        {/*        hitComponent={({ hit }) => (*/}
+        {/*          <Highlight hit={hit} attribute="name" />*/}
+        {/*        )}*/}
+        {/*      />*/}
+        {/*    </Index>*/}
+        {/*  </div>*/}
+        {/*</InstantSearch>*/}
 
         <Button onClick={closeModal}>Close</Button>
       </Modal>

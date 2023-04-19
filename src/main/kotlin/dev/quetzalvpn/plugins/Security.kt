@@ -36,8 +36,6 @@ data class DeleteLoginUserRequest(val username: String)
 data class SafeLoginUser(val username: String, val id: Int)
 
 
-
-
 fun Application.configureSecurity() {
     val secret = environment.config.property("jwt.secret").getString()
     val issuer = environment.config.property("jwt.issuer").getString()
@@ -63,13 +61,7 @@ fun Application.configureSecurity() {
         jwt {
 
             realm = myRealm
-            verifier(
-                JWT
-                    .require(Algorithm.HMAC256(secret))
-                    .withAudience(audience)
-                    .withIssuer(issuer)
-                    .build()
-            )
+            verifier(JWT.require(Algorithm.HMAC256(secret)).withAudience(audience).withIssuer(issuer).build())
             validate { credential ->
                 if (credential.payload.getClaim("username").asString() != "") {
                     JWTPrincipal(credential.payload)
@@ -123,14 +115,10 @@ fun Application.configureSecurity() {
                     }
                 }
 
-                val token = JWT.create()
-                    .withAudience(audience)
-                    .withIssuer(issuer)
-                    .withClaim("username", user.loginName)
-                    .withClaim("userid", user.id.value)
-                    .withExpiresAt(Date(System.currentTimeMillis() + expirationTime))
-                    .sign(Algorithm.HMAC256(secret))
+                val token = JWT.create().withAudience(audience).withIssuer(issuer).withClaim("username", user.loginName).withClaim("userid", user.id.value).withExpiresAt(Date(System.currentTimeMillis() + expirationTime)).sign(Algorithm.HMAC256(secret))
                 val response = LoginUserResponse(user.loginName, token)
+                // For non development set secure to true
+                call.response.cookies.append("token", token, maxAge = expirationTime, httpOnly = true, secure = false, extensions = mapOf("SameSite" to "strict"));
                 call.respond(response)
             }
 
@@ -144,6 +132,7 @@ fun Application.configureSecurity() {
 
                         call.respond(safeUsers)
                     }
+
                     post {
                         val loginUser = call.receive<LoginUserRequest>()
 
@@ -195,7 +184,7 @@ fun Application.configureSecurity() {
                             LoginUser.count()
                         }
 
-                        if(userAmount <= 1L) {
+                        if (userAmount <= 1L) {
                             call.respond(HttpStatusCode.Forbidden)
                             return@delete
                         }
