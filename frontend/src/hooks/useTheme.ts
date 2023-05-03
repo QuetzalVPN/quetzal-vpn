@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { create } from 'zustand';
+import {useEffect, useState} from 'react';
+import {create} from 'zustand';
 
 type Theme = 'system' | 'light' | 'dark';
 
@@ -10,14 +10,18 @@ interface ThemeState {
 
 const useThemeState = create<ThemeState>((set, get) => ({
   theme: (localStorage.getItem('theme') as Theme) ?? 'system',
-  switchTo: (newTheme) => set((state) => ({ theme: newTheme })),
+  switchTo: (newTheme) => set((state) => ({theme: newTheme})),
 }));
 
 const useTheme = () => {
+  const [isSystemTheme, setIsSysTheme] = useState(false);
+
   const updateStoredTheme = (newTheme: Theme) => {
     if (newTheme === 'system') {
+      setIsSysTheme(true);
       localStorage.removeItem('theme');
     } else {
+      setIsSysTheme(false);
       localStorage.setItem('theme', newTheme);
     }
 
@@ -39,21 +43,16 @@ const useTheme = () => {
     state.switchTo,
   ]);
 
-  const [themeName, setThemeName] = useThemeState((state) => [
-    state.theme,
-    state.switchTo,
-  ]);
-
   useEffect(() => {
     updateStoredTheme(theme);
-    setThemeName(theme);
+    console.log('theme', theme);
   }, [theme]);
 
   return {
     setTheme,
     theme,
-    themeName,
+    isSystemTheme,
   };
 };
 
-export { useTheme };
+export {useTheme};

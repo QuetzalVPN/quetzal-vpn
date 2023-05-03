@@ -10,6 +10,7 @@ import dev.quetzalvpn.models.LoginUsers
 import dev.quetzalvpn.security.generateHash
 import dev.quetzalvpn.security.validatePassword
 import io.ktor.http.*
+import io.ktor.http.auth.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.*
 import io.ktor.server.request.*
@@ -59,8 +60,18 @@ fun Application.configureSecurity() {
 
     authentication {
         jwt {
-
             realm = myRealm
+
+            authHeader { call ->
+                val oldHeader = call.request.parseAuthorizationHeader();
+
+                val tokenCookie = call.request.cookies.get(name = "token");
+
+                tokenCookie?.let {
+                    HttpAuthHeader.Single(oldHeader?.authScheme ?: "Bearer", tokenCookie)
+                } ?: oldHeader;
+            }
+
             verifier(JWT.require(Algorithm.HMAC256(secret)).withAudience(audience).withIssuer(issuer).build())
             validate { credential ->
                 if (credential.payload.getClaim("username").asString() != "") {
@@ -115,10 +126,19 @@ fun Application.configureSecurity() {
                     }
                 }
 
-                val token = JWT.create().withAudience(audience).withIssuer(issuer).withClaim("username", user.loginName).withClaim("userid", user.id.value).withExpiresAt(Date(System.currentTimeMillis() + expirationTime)).sign(Algorithm.HMAC256(secret))
+                val token = JWT.create().withAudience(audience).withIssuer(issuer).withClaim("username", user.loginName)
+                    .withClaim("userid", user.id.value).withExpiresAt(Date(System.currentTimeMillis() + expirationTime))
+                    .sign(Algorithm.HMAC256(secret))
                 val response = LoginUserResponse(user.loginName, token)
                 // For non development set secure to true
-                call.response.cookies.append("token", token, maxAge = expirationTime, httpOnly = true, secure = false, extensions = mapOf("SameSite" to "strict"));
+                call.response.cookies.append(
+                    "token",
+                    token,
+                    maxAge = expirationTime,
+                    httpOnly = true,
+                    secure = false,
+                    extensions = mapOf("SameSite" to "strict")
+                );
                 call.respond(response)
             }
 

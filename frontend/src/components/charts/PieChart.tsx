@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import { useEffect, useRef, useState } from 'react';
+import {useEffect, useRef, useState} from 'react';
 
 const TRANSITION_DURATION = 200;
 
@@ -45,7 +45,7 @@ const quetzalTheme = [
   '#f1cabf',
 ];
 
-export default ({ data, options }: PieChartProps) => {
+export default ({data, options}: PieChartProps) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const [radius, setRadius] = useState(0);
   const [displayData, setDisplayData] = useState(data);
@@ -90,7 +90,7 @@ export default ({ data, options }: PieChartProps) => {
         .duration(TRANSITION_DURATION)
         .attr('fill', (d, i) => quetzalTheme[i])
         .attrTween('d', (d, i) => {
-          const copy = { ...oldData[i] };
+          const copy = {...oldData[i]};
 
           const interpolateStartAngle = d3.interpolate(
             oldData[i].startAngle,
@@ -115,7 +115,7 @@ export default ({ data, options }: PieChartProps) => {
   }, [data, svgRef.current, radius]);
 
   return (
-    <svg ref={svgRef} className="w-full h-full bg-none overflow-visible">
+    <svg ref={svgRef} className="w-fit grow bg-none overflow-visible">
       {pie(displayData.map((d) => d.value)).map((d, i) => (
         <g
           transform={`translate(${radius + (options.padding?.x ?? 0)}, ${
@@ -123,7 +123,7 @@ export default ({ data, options }: PieChartProps) => {
           })`}
           key={data[i].label}
         >
-          <path />
+          <path/>
         </g>
       ))}
       <g

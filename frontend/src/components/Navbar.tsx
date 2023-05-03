@@ -1,13 +1,14 @@
-import { ChevronDoubleLeftIcon, UserIcon } from '@heroicons/react/24/outline';
-import { ReactElement, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useCurrentPage } from '../hooks/zustand';
+import {ArrowLeftOnRectangleIcon, ChevronDoubleLeftIcon} from '@heroicons/react/24/outline';
+import {ReactElement, useEffect, useState} from 'react';
+import {useNavigate} from 'react-router-dom';
+import {useCurrentPage} from '../hooks/zustand';
 import '../style/navbar.scss';
 import AboutLink from './AboutLink';
 import NavButton from './NavButton';
 import NavbarItem from './NavbarItem';
 import QuetzalTitle from './QuetzalTitle';
 import ThemeSwitcher from './ThemeSwitcher';
+import useLogout from "../hooks/useLogout";
 
 interface NavItem {
   title: string;
@@ -19,8 +20,10 @@ interface NavbarProps {
   items: NavItem[];
 }
 
-export default ({ items }: NavbarProps) => {
+export default ({items}: NavbarProps) => {
   const navigate = useNavigate();
+
+  const logout = useLogout();
 
   const [collapsed, setCollapsed] = useState<boolean>(
     (localStorage.getItem('navbarCollapsed') ?? 'false') === 'true'
@@ -37,6 +40,7 @@ export default ({ items }: NavbarProps) => {
     }
   }, [collapsed]);
 
+
   //TODO: animate navbar collapse
   return (
     <div
@@ -51,7 +55,7 @@ export default ({ items }: NavbarProps) => {
         <div className="navbar-items ml-8 mt-8 relative flex flex-col gap-2">
           <div
             id="navbar-marker"
-            style={{ top: markerTop }}
+            style={{top: markerTop}}
             className="bg-brand-green"
           />
           {items.map((item, idx) => (
@@ -69,10 +73,13 @@ export default ({ items }: NavbarProps) => {
         </div>
 
         <div className="mt-auto flex flex-col gap-2 justify-center items-center h-fit">
-          <NavButton onClick={() => navigate('/login')}>
-            <UserIcon className="h-6 stroke-inherit" />
+          <NavButton onClick={() => {
+            logout();
+            navigate('/login');
+          }}>
+            <ArrowLeftOnRectangleIcon className="h-6 stroke-inherit"/>
           </NavButton>
-          <ThemeSwitcher />
+          <ThemeSwitcher/>
           <NavButton
             onClick={() => setCollapsed((prevCollapsed) => !prevCollapsed)}
           >
@@ -82,7 +89,7 @@ export default ({ items }: NavbarProps) => {
               }`}
             />
           </NavButton>
-          <AboutLink collapsed={collapsed} />
+          <AboutLink collapsed={collapsed}/>
         </div>
       </nav>
     </div>

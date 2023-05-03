@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import {useState} from 'react';
 
 export default () => {
   const [checked, setChecked] = useState(true);
@@ -15,7 +15,7 @@ export default () => {
       onClick={toggle}
     >
       <div
-        className={`aspect-square rounded-full h-full bg-brand-green absolute top-0 transition-all `}
+        className={`aspect-square rounded-full h-full bg-brand-green absolute top-0 transition-all`}
         style={{
           left: checked ? 0 : 'calc(100% - 19px)',
         }}
