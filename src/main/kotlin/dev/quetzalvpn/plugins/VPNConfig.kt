@@ -1,6 +1,7 @@
 package dev.quetzalvpn.plugins
 
 import dev.quetzalvpn.openvpn.OpenVPNConfig
+import dev.quetzalvpn.openvpn.OpenVPNManagementClient
 import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -11,6 +12,7 @@ fun Application.configureVPNConfigRouting() {
     val vpnConfigFile = vpnConfigDir.resolve("openvpn.conf")
 
     val vpnConfig = OpenVPNConfig(vpnConfigFile)
+
 
 
     routing {

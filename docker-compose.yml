@@ -22,7 +22,6 @@ services:
     restart: always
     volumes:
       - openvpn_config:/etc/openvpn
-      - easyrsa:/usr/share/easy-rsa
 
   quetzal:
     build:
@@ -34,7 +33,6 @@ services:
       - "8080:8080/tcp"
     volumes:
       - openvpn_config:/etc/openvpn
-      - easyrsa:/mnt/easyrsa
     environment:
       - JDBC_URL=jdbc:postgresql://db:5432/db?user=user
       - POSTGRES_PASSWORD=password
@@ -45,7 +43,7 @@ services:
       - OPENVPN_HOST=openvpn
       - OPENVPN_PORT=1194
       - OPENVPN_CONFIG_PATH=/etc/openvpn
-      - OPENVPN_EASYRSA_PATH=/mnt/easyrsa
+      - OPENVPN_PKI_PATH=/etc/openvpn/pki
     depends_on:
       - db
       - openvpn
@@ -57,6 +55,3 @@ volumes:
     openvpn_config:
         driver: local
         name: openvpn_config
-    easyrsa:
-        driver: local
-        name: easyrsa

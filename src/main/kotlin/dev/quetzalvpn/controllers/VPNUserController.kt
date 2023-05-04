@@ -9,7 +9,11 @@ import java.nio.file.Path
 
 class VPNUserController (private val config: ApplicationConfig){
 
-    private val easyRSA = EasyRSA(Path.of(config.property("openvpn.easyrsa.path").getString()))
+    private val easyRSA = EasyRSA(
+            binDir = Path.of(config.property("openvpn.easyrsa.binPath").getString()),
+            pkiDir = Path.of(config.property("openvpn.easyrsa.pkiPath").getString()),
+            configDir = Path.of(config.property("openvpn.config.path").getString())
+        )
 
     private fun activateUser(vpnUser: VPNUser) {
         TODO("Write user to OpenVPN")
@@ -53,5 +57,9 @@ class VPNUserController (private val config: ApplicationConfig){
         transaction {
             vpnUser.isEnabled = false
         }
+    }
+
+    fun getVPNUserConfig(vpnUser: VPNUser): String {
+        return easyRSA.getClientConfig(vpnUser.name)
     }
 }

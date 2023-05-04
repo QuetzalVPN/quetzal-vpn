@@ -15,14 +15,18 @@ services:
   openvpn:
     cap_add:
       - NET_ADMIN
-    image: kylemanna/openvpn
+    build:
+        context: .
+        dockerfile: openvpn.Dockerfile
     container_name: openvpn
+    command: /etc/openvpn-setup/configure.sh
     ports:
-      - "1194:1194/udp"
+      - "1194:1194/tcp"
       - "9999:9999"
-    restart: always
+
     volumes:
       - ./openvpn_data:/etc/openvpn
+
 
   quetzal:
     build:
@@ -45,7 +49,9 @@ services:
       - OPENVPN_HOST=openvpn
       - OPENVPN_PORT=1194
       - OPENVPN_CONFIG_PATH=/etc/openvpn
-      - OPENVPN_EASYRSA_PATH=/mnt/easyrsa
+      - OPENVPN_EASYRSA_PATH=/usr/share/easy-rsa
+      - EASYRSA_PKI=/etc/openvpn/easyrsa/pki
+      - OPENVPN_MANAGEMENT_PORT=9999
     depends_on:
       - db
       - openvpn
