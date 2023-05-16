@@ -16,7 +16,7 @@ data class OpenVPNStatus(
     @Serializable(with = LocalDateTimeSerializer::class) val updated: LocalDateTime,
     val clients: List<OpenVPNClient>,
     val routes: List<OpenVPNRoutingTableRow>,
-    val rawStatus: String
+    val rawStatus: String //TODO: remove on release
 );
 
 @Serializable
@@ -38,12 +38,14 @@ data class OpenVPNRoutingTableRow(
 
 
 class OpenVPNManagementClient(private val host: String, private val port: Int) {
+    companion object {
+        private val ovpnDateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+    }
 
     val socket: Socket = Socket(host, port)
     val writer: Writer = OutputStreamWriter(socket.getOutputStream())
     val reader: Scanner = Scanner(InputStreamReader(socket.getInputStream()))
 
-    private val ovpnDateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
 
     enum class Signals {
         SIGHUP, SIGTERM, SIGUSR1, SIGUSR2
@@ -65,7 +67,6 @@ class OpenVPNManagementClient(private val host: String, private val port: Int) {
 
     private fun parseStatus(output: String): OpenVPNStatus {
         val lines = output.split("\n")
-
 
 
         val clientListLabelIndex = lines.indexOf("OpenVPN CLIENT LIST")
@@ -167,7 +168,6 @@ class OpenVPNManagementClient(private val host: String, private val port: Int) {
         }
         return sb.toString()
     }
-
 
 
 }
