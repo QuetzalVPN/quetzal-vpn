@@ -37,20 +37,13 @@ const UserStatistics = ({ user }: StatisticsProps) => {
 
 //FIXME: Fix width
 const UserSettings = ({ user }: StatisticsProps) => {
-  const [name, setName] = useState(user.name);
-
-  useEffect(() => setName(user.name), [user]);
-
   return (
     <section className="flex flex-col gap-2">
       <h2 className="text-xl text-center">Settings</h2>
       <div className="flex flex-col gap-4">
         <div className="flex gap-4">
-          <label htmlFor="user-name">Name</label>
-          <Input
-            initialValue={name}
-            validator={(value: string) => value.trim().length > 0}
-          />
+          <span className="font-lexend">Name</span>
+          <span>{user.name}</span>
         </div>
         <div className="flex gap-4">
           <span className="font-lexend w-fit">Enabled</span>

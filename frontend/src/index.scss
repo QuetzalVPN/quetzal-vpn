@@ -15,3 +15,14 @@ h3 {
   font-family: 'Lexend';
   transition: color $themeTransitionDuration ease;
 }
+
+div.centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+body {
+  overflow-y: hidden;
+}

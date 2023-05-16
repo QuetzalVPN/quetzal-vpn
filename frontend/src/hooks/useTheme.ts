@@ -1,17 +1,29 @@
 import { useEffect } from 'react';
-import { Theme, useThemeState } from './zustand';
+import { create } from 'zustand';
+
+type Theme = 'system' | 'light' | 'dark';
+
+interface ThemeState {
+  theme: Theme;
+  switchTo: (to: Theme) => void;
+}
+
+const useThemeState = create<ThemeState>((set, get) => ({
+  theme: (localStorage.getItem('theme') as Theme) ?? 'system',
+  switchTo: (newTheme) => set((state) => ({ theme: newTheme })),
+}));
 
 const useTheme = () => {
   const updateStoredTheme = (newTheme: Theme) => {
     if (newTheme === 'system') {
       localStorage.removeItem('theme');
     } else {
-      localStorage.theme = newTheme;
+      localStorage.setItem('theme', newTheme);
     }
 
     if (
-      localStorage.theme === 'dark' ||
-      (!('theme' in localStorage) &&
+      localStorage.getItem('theme') === 'dark' ||
+      (!localStorage.getItem('theme') &&
         window.matchMedia('(prefers-color-scheme: dark)').matches)
     ) {
       document.documentElement.classList.add('dark');

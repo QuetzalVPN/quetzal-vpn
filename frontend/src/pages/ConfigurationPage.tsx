@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import Input from '../components/Input';
 import PageTitle from '../components/PageTitle';
 import ShadowBox from '../components/ShadowBox';
-import { useCurrentPage } from '../hooks/zustand';
+import { useCurrentPage, useTitleState } from '../hooks/zustand';
 import IPInput from '../components/IPInput';
 import SettingsControls from '../components/SettingsControls';
 export interface PageProps {
@@ -53,10 +53,15 @@ const TrafficSettings = () => {
 
 export default ({ navbarIdx }: PageProps) => {
   const setNavposition = useCurrentPage((state) => state.move);
-  useEffect(() => setNavposition(navbarIdx), []);
+  const setBrowserTitle = useTitleState((state) => state.change);
+
+  useEffect(() => {
+    setBrowserTitle('Configuration');
+    setNavposition(navbarIdx);
+  }, []);
 
   return (
-    <div className="flex flex-col gap-4 mt-8 w-7/12 grow">
+    <div className="flex flex-col gap-4 mt-8 w-full">
       <PageTitle title="VPN Configuration" />
       <ShadowBox>
         <div className="flex flex-col gap-4">

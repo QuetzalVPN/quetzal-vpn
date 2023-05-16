@@ -1,15 +1,13 @@
 import { create } from 'zustand';
 
-type Theme = 'system' | 'light' | 'dark';
-
 interface CurrentPageState {
   currentPage: number;
   move: (to: number) => void;
 }
 
-interface ThemeState {
-  theme: Theme;
-  switchTo: (to: Theme) => void;
+interface TitleState {
+  title: string;
+  change: (to: string) => void;
 }
 
 const useCurrentPage = create<CurrentPageState>((set) => ({
@@ -17,10 +15,12 @@ const useCurrentPage = create<CurrentPageState>((set) => ({
   move: (to) => set((state) => ({ currentPage: to })),
 }));
 
-const useThemeState = create<ThemeState>((set, get) => ({
-  theme: localStorage.theme ?? 'system',
-  switchTo: (newTheme) => set((state) => ({ theme: newTheme })),
+const useTitleState = create<TitleState>((set) => ({
+  title: 'Home',
+  change: (to) => {
+    document.title = to;
+    return set((state) => ({ title: to }));
+  },
 }));
 
-export { useCurrentPage, useThemeState };
-export type { Theme };
+export { useCurrentPage, useTitleState };

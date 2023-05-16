@@ -52,12 +52,14 @@ export default ({ data, options }: PieChartProps) => {
       svgRef.current?.clientWidth ?? 0,
       svgRef.current?.clientHeight ?? 0
     );
+    console.log('diameter');
+
     setRadius(diameter / 2);
   };
 
   useEffect(() => {
     updateRadius();
-    window.addEventListener('resize', updateRadius);
+    window.addEventListener('resize', () => updateRadius());
     return () => window.removeEventListener('resize', updateRadius);
   }, []);
 

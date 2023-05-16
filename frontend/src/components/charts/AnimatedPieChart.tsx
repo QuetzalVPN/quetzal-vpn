@@ -49,6 +49,7 @@ export default ({ data, options }: PieChartProps) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const [radius, setRadius] = useState(0);
   const [displayData, setDisplayData] = useState(data);
+  const [textTransform, setTextTransform] = useState('translate(0, 0)');
 
   const updateRadius = () => {
     const diameter = Math.min(
@@ -103,29 +104,15 @@ export default ({ data, options }: PieChartProps) => {
           return (t) => {
             copy.startAngle = interpolateStartAngle(t);
             copy.endAngle = interpolateEndAngle(t);
+
             return arcGenerator(copy) ?? '';
           };
         })
         .on('end', () => {
           setDisplayData(data);
         });
-
-      d3.select(svgRef.current)
-        .selectAll('text')
-        .transition()
-        .duration(TRANSITION_DURATION)
-        .attrTween('transform', (d, i) => {
-          const interpolateCenterTransform = d3.interpolateTransformSvg(
-            `translate(${arcGenerator.centroid(oldData[i])})`,
-            `translate(${arcGenerator.centroid(newData[i])})`
-          );
-
-          return (t) => {
-            return interpolateCenterTransform(t);
-          };
-        });
     }
-  }, [data, svgRef.current]);
+  }, [data, svgRef.current, radius]);
 
   return (
     <svg ref={svgRef} className="w-full h-full bg-none overflow-visible">
@@ -137,16 +124,13 @@ export default ({ data, options }: PieChartProps) => {
           key={data[i].label}
         >
           <path />
-          <text
-            fill={hexToBrightness(quetzalTheme[i]) > 0.5 ? '#000' : '#fff'}
-            transform={`translate(${arcGenerator.centroid(d)})`}
-            textAnchor="middle"
-            alignmentBaseline="middle"
-          >
-            {data[i].label}
-          </text>
         </g>
       ))}
+      <g
+        transform={`translate(${radius + (options.padding?.x ?? 0)}, ${
+          radius + (options.padding?.y ?? 0)
+        })`}
+      ></g>
     </svg>
   );
 };

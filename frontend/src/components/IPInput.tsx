@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Input from './Input';
 
 const IP_REGEX =
@@ -8,12 +9,18 @@ interface IPInputProps {
   initialValue: string;
 }
 
-export default ({ id, initialValue }: IPInputProps) => (
-  <Input
-    type="text"
-    initialValue={initialValue}
-    required
-    validator={(value: string) => !!value.match(IP_REGEX)}
-    id={id}
-  />
-);
+export default ({ id, initialValue }: IPInputProps) => {
+  const [value, setValue] = useState(initialValue);
+
+  return (
+    <Input
+      type="text"
+      initialValue={initialValue}
+      value={value}
+      setValue={setValue}
+      required
+      validator={(value: string) => !!value.match(IP_REGEX)}
+      id={id}
+    />
+  );
+};

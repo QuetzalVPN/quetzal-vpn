@@ -6,6 +6,7 @@ import {
 import { useEffect, useState } from 'react';
 import { Theme } from '../App';
 import { useTheme } from '../hooks/useTheme';
+import NavButton from './NavButton';
 
 export default () => {
   const [open, setOpen] = useState(false);
@@ -34,31 +35,21 @@ export default () => {
     },
   ];
 
-  // useEffect(() => {
-  //   console.log('themeName', themeName);
-  // }, [themeName]);
-  // useEffect(() => {
-  //   console.log('theme', theme);
-  // }, [theme]);
-
   const toggleOpen = () => setOpen((prevOpen) => !prevOpen);
 
   return (
-    <div className="inline-flex items-center relative">
-      <button
-        onClick={toggleOpen}
-        className="stroke-gray-neutral hover:stroke-gray-700 dark:hover:stroke-gray-400 rounded-lg p-2"
-      >
-        <div className="h-6">
+    <div className="relative">
+      <NavButton>
+        <div className="h-6" onClick={toggleOpen}>
           {theme === 'light' ? (
             <MoonIcon className="stroke-inherit h-full" />
           ) : (
             <SunIcon className="stroke-inherit h-full" />
           )}
         </div>
-      </button>
+      </NavButton>
       {open && (
-        <ul className="bg-light-foreground dark:bg-dark-midground shadow-md rounded-lg absolute left-12 py-1">
+        <ul className="bg-light-foreground dark:bg-dark-midground shadow-md rounded-lg absolute top-0 left-12 py-1">
           {options.map((opt) => (
             <li key={opt.label}>
               <button

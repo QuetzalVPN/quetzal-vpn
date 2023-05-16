@@ -1,10 +1,15 @@
 import Button from './Button';
 
-export default () => (
+interface SettingsControlsProps {
+  apply?: () => void;
+  discard?: () => void;
+}
+
+export default ({ apply, discard }: SettingsControlsProps) => (
   <div className="flex ">
     <div className="ml-auto flex gap-4">
-      <Button>Apply</Button>
-      <Button>Discard</Button>
+      <Button onClick={apply}>Apply</Button>
+      <Button onClick={discard}>Discard</Button>
     </div>
   </div>
 );

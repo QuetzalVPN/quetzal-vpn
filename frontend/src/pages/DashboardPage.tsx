@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import PageTitle from '../components/PageTitle';
-import { useCurrentPage } from '../hooks/zustand';
+import { useCurrentPage, useTitleState } from '../hooks/zustand';
 import { PageProps } from './ConfigurationPage';
 import ShadowBox from '../components/ShadowBox';
 import LineChart from '../components/charts/LineChart';
@@ -18,6 +18,7 @@ const colors = [
 
 export default ({ navbarIdx }: PageProps) => {
   const setNavposition = useCurrentPage((state) => state.move);
+  const setBrowserTitle = useTitleState((state) => state.change);
 
   const [activeUsers, setActiveUsers] = useState([
     { time: Date.now() - 1000, value: 6 },
@@ -35,16 +36,21 @@ export default ({ navbarIdx }: PageProps) => {
     ]);
   };
 
-  useEffect(() => setNavposition(navbarIdx), []);
+  useEffect(() => {
+    setBrowserTitle('Dashboard');
+    setNavposition(navbarIdx);
+  }, []);
 
   return (
     <div className="mt-8 w-full flex flex-col gap-4">
       <PageTitle title="Dashboard" />
-      <div className="flex flex-wrap justify-center gap-4 flex-">
-        <ShadowBox className="flex flex-col h-fit">
-          <div className="flex items-center gap-2">
-            <h2 className="text-xl">Current Traffic</h2>
-            <Button onClick={randomizeTraffic}>Randomize</Button>
+      <div className="flex flex-wrap gap-4 flex-">
+        <ShadowBox className="flex flex-col h-fit w-1/4">
+          <div className="flex items-center gap-2 w-full">
+            <h2 className="text-xl w-fit">Current Traffic</h2>
+            <Button className="ml-auto" onClick={randomizeTraffic}>
+              Randomize
+            </Button>
           </div>
 
           <div className="flex gap-2 items-center w-fit">
@@ -70,8 +76,10 @@ export default ({ navbarIdx }: PageProps) => {
             />
           </div>
         </ShadowBox>
+        <ShadowBox className="w-64 grow" />
+        <ShadowBox className="w-48" />
         {/* Active User Panel */}
-        <ShadowBox className="h-96 grow">
+        <ShadowBox className="h-96 w-1/2 grow">
           <div className="flex gap-4 items-center">
             <h2 className="text-xl">Active Users </h2>
             <Button
@@ -91,7 +99,7 @@ export default ({ navbarIdx }: PageProps) => {
           />
         </ShadowBox>
         {/* Down vs. Up Panel */}
-        <ShadowBox className="h-96">
+        <ShadowBox className="aspect-square w-1/4 ">
           <div className="flex items-center gap-4">
             <h2 className="text-xl">Download / Upload</h2>
             <Button onClick={randomizeTraffic}>Update</Button>

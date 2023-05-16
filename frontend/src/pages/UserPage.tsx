@@ -4,8 +4,9 @@ import UserListItem from '../components/UserListItem';
 import ShadowBox from '../components/ShadowBox';
 import UserDetails from '../components/UserDetails';
 import { useEffect, useState } from 'react';
-import { useCurrentPage } from '../hooks/zustand';
+import { useCurrentPage, useTitleState } from '../hooks/zustand';
 import { PageProps } from './ConfigurationPage';
+import Search from '../components/GlobalSearch';
 
 export enum UserStatus {
   Online = 0,
@@ -51,12 +52,16 @@ export default ({ navbarIdx }: PageProps) => {
   const [selectedUser, setSelectedUser] = useState<User>();
 
   const setNavposition = useCurrentPage((state) => state.move);
-  useEffect(() => setNavposition(navbarIdx), []);
+  const setBrowserTitle = useTitleState((state) => state.change);
 
+  useEffect(() => {
+    setBrowserTitle('User Management');
+    setNavposition(navbarIdx);
+  }, []);
   // TODO: handle user details via routes
 
   return (
-    <div className="flex gap-4 grow">
+    <div className="flex gap-4 w-full">
       <div className="flex flex-col gap-4 mt-8 w-7/12 grow">
         <PageTitle title="User Management" />
         <ShadowBox>
