@@ -5,6 +5,7 @@ import dev.quetzalvpn.models.VPNUser
 import dev.quetzalvpn.openvpn.EasyRSA
 import io.ktor.server.config.*
 import org.jetbrains.exposed.sql.transactions.transaction
+import java.io.File
 import java.nio.file.Path
 
 class VPNUserController (private val config: ApplicationConfig){
@@ -27,20 +28,16 @@ class VPNUserController (private val config: ApplicationConfig){
         easyRSA.buildClientFull(vpnUser.name)
     }
 
-    fun addVPNUser(name: String, isEnabled: Boolean = true, createdBy: LoginUser): VPNUser {
+    fun addVPNUser(name: String, createdBy: LoginUser): VPNUser {
 
         val newVPNUser = transaction {
             VPNUser.new {
                 this.name = name
-                this.isEnabled = isEnabled
+                this.isEnabled = true
                 this.createdBy = createdBy
             }
         }
         generateUserCertificate(newVPNUser)
-
-        if(isEnabled) {
-            activateUser(newVPNUser)
-        }
 
         return newVPNUser;
     }
@@ -59,7 +56,7 @@ class VPNUserController (private val config: ApplicationConfig){
         }
     }
 
-    fun getVPNUserConfig(vpnUser: VPNUser): String {
+    fun getVPNUserConfig(vpnUser: VPNUser): File {
         return easyRSA.getClientConfig(vpnUser.name)
     }
 }

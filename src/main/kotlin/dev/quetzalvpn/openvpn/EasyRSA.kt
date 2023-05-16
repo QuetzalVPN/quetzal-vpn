@@ -1,7 +1,10 @@
 package dev.quetzalvpn.openvpn
 
 import java.io.BufferedReader
+import java.io.File
 import java.nio.file.Path
+import java.time.Duration
+import java.util.concurrent.TimeUnit
 
 class EasyRSA(private val binDir: Path, private val pkiDir: Path, private val configDir: Path) {
 
@@ -13,12 +16,14 @@ class EasyRSA(private val binDir: Path, private val pkiDir: Path, private val co
     }
 
     fun buildClientFull(name: String) {
-        val command = listOf(easyRSAScript.toString(), "build-client-full", name)
+        val command = listOf("/bin/sh","-c","yes yes | ${easyRSAScript.toString()} build-client-full $name nopass")
         val process = defaultProcessBuilder(command)
             .start()
-        process.waitFor()
-        val text = process.inputStream.bufferedReader().use(BufferedReader::readText)
-        println("Built client $name: $text")
+
+        process.waitFor(1000, TimeUnit.MILLISECONDS)
+
+        val cmdOut = process.inputStream.bufferedReader().use(BufferedReader::readText)
+        println("\nBuilt client $name: $cmdOut\n")
     }
 
     fun revokeClient(name: String) {
@@ -28,13 +33,13 @@ class EasyRSA(private val binDir: Path, private val pkiDir: Path, private val co
         process.waitFor()
     }
 
-    fun getClientConfig(name: String): String {
+    fun getClientConfig(name: String): File {
         val command = listOf(configDir.resolve("createClientConfig.sh").toString(), name)
         val process = ProcessBuilder(command)
             .directory(configDir.toFile())
             .start()
         process.waitFor()
-        return configDir.resolve("ccd").resolve(name).resolve("$name.ovpn").toFile().readText()
+        return configDir.resolve("ccd").resolve(name).resolve("$name.ovpn").toFile()
     }
 
 
