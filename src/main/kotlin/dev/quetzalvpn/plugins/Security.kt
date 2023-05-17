@@ -7,8 +7,7 @@ import com.auth0.jwt.algorithms.Algorithm
 import dev.quetzalvpn.models.LoginLog
 import dev.quetzalvpn.models.LoginUser
 import dev.quetzalvpn.models.LoginUsers
-import dev.quetzalvpn.security.generateHash
-import dev.quetzalvpn.security.validatePassword
+import dev.quetzalvpn.security.Hashing
 import io.ktor.http.*
 import io.ktor.http.auth.*
 import io.ktor.server.application.*
@@ -43,7 +42,9 @@ fun Application.configureSecurity() {
     val audience = environment.config.property("jwt.audience").getString()
     val myRealm = environment.config.property("jwt.realm").getString()
     val expirationTime = environment.config.property("jwt.expirationTimeSecs").getString().toLong() * 1000
+    val hashSecret = environment.config.property("login.hashSecret").getString()
 
+    val hashing = Hashing(hashSecret)
 
 
     transaction {
@@ -53,7 +54,7 @@ fun Application.configureSecurity() {
             log.info("Creating default user $adminUser")
             LoginUser.new {
                 loginName = adminUser
-                passwordHash = generateHash(adminPassword)
+                passwordHash = hashing.generateHash(adminPassword)
             }
         }
     }
@@ -104,7 +105,7 @@ fun Application.configureSecurity() {
                 }
                 val user = userList.elementAt(0)
 
-                if (!validatePassword(requestUser.password, user.passwordHash)) {
+                if (!hashing.validatePassword(requestUser.password, user.passwordHash)) {
                     transaction {
                         LoginLog.new {
                             loginDateTime = LocalDateTime.now()
@@ -170,7 +171,7 @@ fun Application.configureSecurity() {
                         transaction {
                             LoginUser.new {
                                 loginName = loginUser.username.lowercase()
-                                passwordHash = generateHash(loginUser.password)
+                                passwordHash = hashing.generateHash(loginUser.password)
                             }
                         }
 
@@ -194,7 +195,7 @@ fun Application.configureSecurity() {
                             return@patch
                         }
 
-                        transaction { dbUser.passwordHash = generateHash(patchValues.password) }
+                        transaction { dbUser.passwordHash = hashing.generateHash(patchValues.password) }
                         call.respond(HttpStatusCode.NoContent)
                     }
                     delete {

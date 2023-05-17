@@ -11,6 +11,8 @@ import io.ktor.server.http.content.*
 
 fun Application.configureRouting() {
     configureVPNUserRouting()
+    configureVPNConfigRouting()
+    configureVPNManagementRouting()
 
 
     install(StatusPages) {
