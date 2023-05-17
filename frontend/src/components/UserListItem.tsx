@@ -1,5 +1,7 @@
 import {PowerIcon, UserCircleIcon, WrenchIcon,} from '@heroicons/react/24/outline';
 import {colors, User} from '../pages/UserPage';
+import Dialog from './Dialog';
+import NavButton from "./NavButton";
 
 interface UserListItemProps {
   user: User;
@@ -32,8 +34,10 @@ export default ({user, setSelected}: UserListItemProps) => {
         )}
       </div>
       <div className="edit-section ml-auto flex gap-2">
-        <WrenchIcon className="h-7 cursor-pointer"/>
-        <PowerIcon className="h-7 cursor-pointer"/>
+        <NavButton onClick={setSelected}><WrenchIcon className="h-7"/></NavButton>
+        <Dialog triggerElement={<NavButton><PowerIcon className="h-7"/></NavButton>} title="Hello World!">
+          <h2>Hello</h2>
+        </Dialog>
       </div>
     </div>
   );

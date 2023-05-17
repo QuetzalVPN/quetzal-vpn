@@ -9,7 +9,6 @@ import {ArrowDownIcon, ArrowUpIcon} from '@heroicons/react/24/outline';
 import Button from '../components/Button';
 import usePageLoad from "../hooks/usePageLoad";
 
-// TODO: Assign fitting color to traffic arrows
 const colors = [
   {max: 10, color: '#00FF70'},
   {max: 20, color: '#F9C81B'},

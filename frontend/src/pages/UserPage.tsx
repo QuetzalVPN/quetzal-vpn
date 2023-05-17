@@ -3,9 +3,12 @@ import PageTitle from '../components/PageTitle';
 import UserListItem from '../components/UserListItem';
 import ShadowBox from '../components/ShadowBox';
 import UserDetails from '../components/UserDetails';
-import {useState} from 'react';
 import {PageProps} from './ConfigurationPage';
 import usePageLoad from "../hooks/usePageLoad";
+import Sidebar from "../components/Sidebar";
+import {useSidebarState} from "../hooks/zustand";
+import {useNavigate, useParams} from "react-router-dom";
+import {useEffect} from "react";
 
 export enum UserStatus {
   Online,
@@ -55,15 +58,23 @@ const users: User[] = [
 
 export default ({navbarIdx}: PageProps) => {
   usePageLoad("Administration", navbarIdx);
+  const {sidebar, setSidebar} = useSidebarState();
 
-  //TODO: save index istead
-  const [selectedUser, setSelectedUser] = useState<User>();
+  const navigate = useNavigate();
 
-  // TODO: handle user details via routes
+  const {id: selectedUser} = useParams();
+
+  useEffect(() => {
+    if (selectedUser) {
+      setSidebar(true);
+    } else {
+      setSidebar(false);
+    }
+  }, [selectedUser]);
 
   return (
     <div className="flex gap-4 w-full">
-      <div className="flex flex-col gap-4 mt-8 w-7/12 grow">
+      <div className="flex flex-col gap-4 mt-8 w-7/12 grow overflow-y-scroll">
         <PageTitle title="User Management"/>
         <ShadowBox>
           <div className="flex items-center">
@@ -78,17 +89,20 @@ export default ({navbarIdx}: PageProps) => {
               <UserListItem
                 user={user}
                 key={user.name + idx}
-                setSelected={() => setSelectedUser(user)}
+                setSelected={() => {
+                  navigate(`/users/${idx}`)
+                }}
               />
             ))}
           </div>
         </ShadowBox>
       </div>
       {selectedUser && (
-        <UserDetails
-          user={selectedUser}
-          close={() => setSelectedUser(undefined)}
-        />
+        <Sidebar>
+          <UserDetails
+            user={users[parseInt(selectedUser)]}
+          />
+        </Sidebar>
       )}
     </div>
   );

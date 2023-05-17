@@ -10,10 +10,15 @@ interface TitleState {
   change: (to: string) => void;
 }
 
-interface LoginState {
-  loggedIn: boolean;
-  setLoggedIn: (to: boolean) => void;
+interface SidebarState {
+  sidebar: boolean;
+  setSidebar: (to: boolean) => void;
 }
+
+// interface LoginState {
+//   loggedIn: boolean;
+//   setLoggedIn: (to: boolean) => void;
+// }
 
 const useCurrentPage = create<CurrentPageState>((set) => ({
   currentPage: 0,
@@ -37,4 +42,9 @@ const useTitleState = create<TitleState>((set) => ({
 //   },
 // }));
 
-export {useCurrentPage, useTitleState, /*useLoginState*/};
+const useSidebarState = create<SidebarState>((set) => ({
+  sidebar: false,
+  setSidebar: (to) => set((state) => ({sidebar: to})),
+}));
+
+export {useCurrentPage, useTitleState, useSidebarState /*useLoginState*/};

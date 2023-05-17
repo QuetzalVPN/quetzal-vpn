@@ -5,9 +5,10 @@ import NotFoundPage from "./pages/NotFoundPage";
 import {CogIcon, UsersIcon, WindowIcon, WrenchScrewdriverIcon} from "@heroicons/react/24/outline";
 import DashboardPage from "./pages/DashboardPage";
 import UserPage from "./pages/UserPage";
-import ConfigurationPage from "./pages/ConfigurationPage";
 import AdministrationPage from "./pages/AdministrationPage";
 import {ToastContainer} from "react-toastify";
+import {useSidebarState} from "./hooks/zustand";
+import ConfigurationPage from "./pages/ConfigurationPage";
 
 const pages = [
   {
@@ -20,7 +21,7 @@ const pages = [
     title: 'Usermanager',
     icon: <UsersIcon className="h-8"/>,
     element: <UserPage navbarIdx={1}/>,
-    path: '/users',
+    path: '/users/:id?',
   },
   {
     title: 'Configuration',
@@ -37,6 +38,8 @@ const pages = [
 ];
 
 export default () => {
+  const {sidebar: sidebarOpen} = useSidebarState();
+
   return <BrowserRouter>
     <Routes>
       <Route path="/login" element={<LoginPage/>}/>
@@ -44,11 +47,10 @@ export default () => {
         path="/"
         element={<>
           <div className="flex gap-4">
-            <aside className="min-w-fit left-0 top-0">
+            <div className="min-w-fit left-0 top-0">
               <Navbar items={pages}/>
-            </aside>
-            {/* TODO: add gap to right end of page, care for detail popup */}
-            <div className="overflow-y-scroll pr-4 flex-grow">
+            </div>
+            <div className={`flex-grow ${sidebarOpen ? '' : 'pr-4'}`}>
               <Outlet/>
               <ToastContainer/>
             </div>
