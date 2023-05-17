@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import dayjs from 'dayjs';
-import { useEffect, useRef, useState } from 'react';
+import {useEffect, useRef, useState} from 'react';
 
 interface LineChartData {
   time: Date | number;
@@ -9,7 +9,6 @@ interface LineChartData {
 
 interface LineChartOptions {
   points?: boolean;
-  area?: string;
   alwaysZero?: boolean;
   curve?: d3.CurveFactory;
   margin?: {
@@ -18,6 +17,7 @@ interface LineChartOptions {
     bottom: number;
     left: number;
   };
+  fill?: boolean;
 }
 
 interface LineChartProps {
@@ -25,32 +25,35 @@ interface LineChartProps {
   options: LineChartOptions;
 }
 
-export default ({ data, options }: LineChartProps) => {
+export default ({data, options}: LineChartProps) => {
   const svgRef = useRef<SVGSVGElement>(null);
-  const [, setRerender] = useState(0);
+  const [width, setWidth] = useState<number>();
+  const [height, setHeight] = useState<number>();
 
-  // FIXME: Size is too big initially
+  const handleResize = () => {
+    if (svgRef.current) {
+      setWidth(svgRef.current.clientWidth);
+      setHeight(svgRef.current.clientHeight);
+    }
+  }
+
   useEffect(() => {
-    setRerender((prev) => prev + 1);
+    handleResize()
     window.addEventListener('resize', () => {
-      setRerender((prev) => prev + 1);
+      handleResize()
     });
-    return () => window.removeEventListener('resize', () => {});
+    return () => window.removeEventListener('resize', () => {
+    });
   }, []);
 
-  useEffect(() => setRerender((prev) => prev + 1), [svgRef]);
+  useEffect(handleResize, [svgRef]);
 
   const margin = {
     top: 10,
     right: 10,
-    bottom: 70,
+    bottom: 20,
     left: 20,
   };
-
-  //TODO: Add options for margin
-  //TODO: Add options for padding
-  //TODO: Add options for background
-  //TODO: Add options for fill
 
   // Generate Ranges
   // Range of timestamps
@@ -77,16 +80,16 @@ export default ({ data, options }: LineChartProps) => {
     .scaleTime()
     .domain(xRange)
     .range(
-      svgRef.current
-        ? [margin.left, svgRef.current.clientWidth - margin.right]
+      width
+        ? [margin.left, width - margin.right]
         : [0, 0]
     );
   const yScale = d3
     .scaleLinear()
     .domain(yRange)
     .range(
-      svgRef.current
-        ? [svgRef.current.clientHeight - margin.bottom, margin.top]
+      height
+        ? [height - margin.bottom, margin.top]
         : [0, 0]
     );
 
@@ -99,10 +102,22 @@ export default ({ data, options }: LineChartProps) => {
 
   const dLine = line(data);
 
+  let area, dArea;
+
+  if (options.fill) {
+    area = d3.area<LineChartData>()
+      .x(d => xScale(d.time))
+      .y0(_ => yScale(0))
+      .y1(d => yScale(d.value))
+      .curve(options.curve || d3.curveLinear);
+
+    dArea = area(data);
+  }
+
   return (
     <svg
       ref={svgRef}
-      className="w-full h-full bg-none overflow-visible cursor-crosshair"
+      className="w-full grow bg-none overflow-visible cursor-crosshair"
     >
       {/* Draw y-Scaling */}
       {yScale.ticks(4).map((max) => (
@@ -110,7 +125,7 @@ export default ({ data, options }: LineChartProps) => {
           {/* Draw dashed line */}
           <line
             x1={margin.left}
-            x2={svgRef.current ? svgRef.current.clientWidth - margin.right : 0}
+            x2={width ? width - margin.right : 0}
             className={max === 0 ? 'stroke-current' : 'stroke-gray-neutral'}
             strokeDasharray={max === 0 ? 'none' : '5 5'}
           />
@@ -132,7 +147,7 @@ export default ({ data, options }: LineChartProps) => {
           {/* Draw dashed line */}
           <line
             y1={
-              svgRef.current ? svgRef.current.clientHeight - margin.bottom : 0
+              height ? height - margin.bottom : 0
             }
             y2={margin.top}
             className="stroke-gray-neutral"
@@ -141,8 +156,8 @@ export default ({ data, options }: LineChartProps) => {
           {/* Draw text */}
           <text
             y={
-              svgRef.current
-                ? svgRef.current.clientHeight - margin.bottom + 15
+              height
+                ? height - margin.bottom + 15
                 : 0
             }
             fontSize={11}
@@ -164,6 +179,14 @@ export default ({ data, options }: LineChartProps) => {
           strokeWidth={2}
           strokeLinecap="round"
           strokeLinejoin="round"
+        />
+      )}
+
+      {/* Draw area */}
+      {dArea && (
+        <path
+          d={dArea || ''}
+          className="fill-brand-green opacity-10"
         />
       )}
 

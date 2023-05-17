@@ -1,18 +1,27 @@
-import { QueueListIcon, Squares2X2Icon } from '@heroicons/react/24/outline';
+import {QueueListIcon, Squares2X2Icon} from '@heroicons/react/24/outline';
 import PageTitle from '../components/PageTitle';
 import UserListItem from '../components/UserListItem';
 import ShadowBox from '../components/ShadowBox';
 import UserDetails from '../components/UserDetails';
-import { useEffect, useState } from 'react';
-import { useCurrentPage, useTitleState } from '../hooks/zustand';
-import { PageProps } from './ConfigurationPage';
-import Search from '../components/GlobalSearch';
+import {PageProps} from './ConfigurationPage';
+import usePageLoad from "../hooks/usePageLoad";
+import Sidebar from "../components/Sidebar";
+import {useSidebarState} from "../hooks/zustand";
+import {useNavigate, useParams} from "react-router-dom";
+import {useEffect} from "react";
 
 export enum UserStatus {
-  Online = 0,
+  Online,
   Offline,
   Deactivated,
 }
+
+export const colors = {
+  [UserStatus.Online]: '#00FF70',
+  [UserStatus.Offline]: '#F9C81B',
+  [UserStatus.Deactivated]: '#F91B1B',
+};
+
 
 //TODO: safe users differently dependent on status
 export interface User {
@@ -47,29 +56,32 @@ const users: User[] = [
   },
 ];
 
-export default ({ navbarIdx }: PageProps) => {
-  //TODO: save index istead
-  const [selectedUser, setSelectedUser] = useState<User>();
+export default ({navbarIdx}: PageProps) => {
+  usePageLoad("Administration", navbarIdx);
+  const {sidebar, setSidebar} = useSidebarState();
 
-  const setNavposition = useCurrentPage((state) => state.move);
-  const setBrowserTitle = useTitleState((state) => state.change);
+  const navigate = useNavigate();
+
+  const {id: selectedUser} = useParams();
 
   useEffect(() => {
-    setBrowserTitle('User Management');
-    setNavposition(navbarIdx);
-  }, []);
-  // TODO: handle user details via routes
+    if (selectedUser) {
+      setSidebar(true);
+    } else {
+      setSidebar(false);
+    }
+  }, [selectedUser]);
 
   return (
     <div className="flex gap-4 w-full">
-      <div className="flex flex-col gap-4 mt-8 w-7/12 grow">
-        <PageTitle title="User Management" />
+      <div className="flex flex-col gap-4 mt-8 w-7/12 grow overflow-y-scroll">
+        <PageTitle title="User Management"/>
         <ShadowBox>
           <div className="flex items-center">
             <h2 className="text-xl">Users</h2>
             <div className="ml-auto flex">
-              <QueueListIcon className="cursor-pointer h-8" />
-              <Squares2X2Icon className="cursor-pointer h-8 stroke-gray-neutral" />
+              <QueueListIcon className="cursor-pointer h-8"/>
+              <Squares2X2Icon className="cursor-pointer h-8 stroke-gray-neutral"/>
             </div>
           </div>
           <div>
@@ -77,17 +89,20 @@ export default ({ navbarIdx }: PageProps) => {
               <UserListItem
                 user={user}
                 key={user.name + idx}
-                setSelected={() => setSelectedUser(user)}
+                setSelected={() => {
+                  navigate(`/users/${idx}`)
+                }}
               />
             ))}
           </div>
         </ShadowBox>
       </div>
       {selectedUser && (
-        <UserDetails
-          user={selectedUser}
-          close={() => setSelectedUser(undefined)}
-        />
+        <Sidebar>
+          <UserDetails
+            user={users[parseInt(selectedUser)]}
+          />
+        </Sidebar>
       )}
     </div>
   );

@@ -1,4 +1,4 @@
-import { InputHTMLAttributes, useEffect, useState } from 'react';
+import {InputHTMLAttributes, useEffect, useState} from 'react';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   initialValue?: any;
@@ -8,13 +8,13 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 export default ({
-  validator,
-  value,
-  initialValue,
-  setValue,
-  className: propsClassName,
-  ...props
-}: InputProps) => {
+                  validator,
+                  value,
+                  initialValue,
+                  setValue,
+                  className: propsClassName,
+                  ...props
+                }: InputProps) => {
   const [valid, setValid] = useState<boolean>(!props.required);
 
   useEffect(() => {
@@ -23,22 +23,20 @@ export default ({
     }
   }, [value]);
 
-  // TODO: Allow state to be controlled from parent component
-
   return (
     <input
       {...props}
-      className={`border-2 rounded-lg p-1 outline-none transition-[border] bg-transparent ${
+      className={`rounded-lg py-1.5 px-2 outline-none border-2 transition-[border] bg-transparent ${
         value == initialValue
           ? 'border-gray-neutral'
           : valid
-          ? 'border-sky-400'
-          : 'border-brand-red'
+            ? initialValue ? 'border-sky-400' : ''
+            : 'border-brand-red'
       } ${
         valid ? 'focus:border-brand-green' : 'border-brand-red'
       } ${propsClassName}} `}
       value={value}
-      onChange={setValue ? ({ target }) => setValue(target.value) : undefined}
+      onChange={setValue ? ({target}) => setValue(target.value) : undefined}
     />
   );
 };

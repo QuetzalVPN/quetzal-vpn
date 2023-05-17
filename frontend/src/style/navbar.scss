@@ -10,6 +10,8 @@ nav {
   display: flex;
   flex-direction: column;
 
+  transition: all .5s ease;
+
   .navbar-items {
     .navbar-item {
       display: block;
@@ -23,9 +25,34 @@ nav {
       right: 0;
       width: 6px;
       border-radius: 3px 0 0 3px;
-      height: 2.4rem;
+      height: 40px;
       transition: 0.3s ease;
     }
+  }
+
+  .nav-extra {
+    display: grid;
+    grid-template-columns: 1fr;
+    transition: grid-template-columns .4s ease;
+
+    h2 {
+      opacity: 1;
+      overflow: hidden;
+      transition: all .5s ease;
+    }
+  }
+
+  .collapsed {
+    grid-template-columns: 0fr;
+
+    h2 {
+      //opacity: 0;
+      //transform: scale(.2);
+    }
+  }
+
+  .collapse-btn {
+    transition: transform .5s ease;
   }
 
   .footer {

@@ -5,7 +5,7 @@ interface SettingsControlsProps {
   discard?: () => void;
 }
 
-export default ({ apply, discard }: SettingsControlsProps) => (
+export default ({apply, discard}: SettingsControlsProps) => (
   <div className="flex ">
     <div className="ml-auto flex gap-4">
       <Button onClick={apply}>Apply</Button>

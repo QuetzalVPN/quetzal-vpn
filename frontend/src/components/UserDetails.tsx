@@ -1,27 +1,20 @@
-import {
-  ArrowDownTrayIcon,
-  UserCircleIcon,
-  XCircleIcon,
-} from '@heroicons/react/24/outline';
-import { useEffect, useState } from 'react';
-import { User, UserStatus } from '../pages/UserPage';
+import {ArrowDownTrayIcon, UserCircleIcon, XCircleIcon,} from '@heroicons/react/24/outline';
+import {colors, User, UserStatus} from '../pages/UserPage';
 import ToggleSwitch from './ToggleSwitch';
-import Input from './Input';
 import Button from './Button';
+import NavButton from "./NavButton";
+import {useSidebarState} from "../hooks/zustand";
+import {useNavigate} from "react-router-dom";
 
 interface UserDetailProps {
   user: User;
-  close: () => any;
 }
 
 interface StatisticsProps {
   user: User;
 }
 
-//TODO: dont have color array in multiple components
-const colors = ['#00FF70', '#F9C81B', '#F91B1B'];
-
-const UserStatistics = ({ user }: StatisticsProps) => {
+const UserStatistics = ({user}: StatisticsProps) => {
   return (
     <section className="flex flex-col gap-2">
       <h2 className="text-xl text-center">Statistics</h2>
@@ -35,8 +28,7 @@ const UserStatistics = ({ user }: StatisticsProps) => {
   );
 };
 
-//FIXME: Fix width
-const UserSettings = ({ user }: StatisticsProps) => {
+const UserSettings = ({user}: StatisticsProps) => {
   return (
     <section className="flex flex-col gap-2">
       <h2 className="text-xl text-center">Settings</h2>
@@ -47,7 +39,7 @@ const UserSettings = ({ user }: StatisticsProps) => {
         </div>
         <div className="flex gap-4">
           <span className="font-lexend w-fit">Enabled</span>
-          <ToggleSwitch />
+          <ToggleSwitch/>
         </div>
       </div>
     </section>
@@ -60,21 +52,28 @@ const UserAuthentication = () => (
     <div className="flex gap-4 items-center">
       <span>File</span>
       <Button>
-        <ArrowDownTrayIcon className="h-6" />
+        <ArrowDownTrayIcon className="h-6"/>
         Download OVPN-File
       </Button>
     </div>
   </section>
 );
 
-export default ({ user, close }: UserDetailProps) => {
+export default ({user}: UserDetailProps) => {
+  const {sidebar: open, setSidebar} = useSidebarState();
+  const navigate = useNavigate();
+
   return (
-    <div className="shadow-md bg-light-foreground dark:bg-dark-foreground flex flex-col h-screen pt-12 px-8 relative">
-      <XCircleIcon
-        className="absolute top-4 right-4 h-6 cursor-pointer"
-        color="gray"
-        onClick={close}
-      />
+    <div>
+      <NavButton
+        className="absolute top-4 right-4 cursor-pointer"
+        onClick={() => navigate('/users')}
+      >
+        <XCircleIcon
+          className="h-6"
+          color="gray"
+        />
+      </NavButton>
       <div className="flex flex-col items-center gap-4">
         <h2 className="text-2xl">Settings for {user.name}</h2>
         <UserCircleIcon
@@ -83,9 +82,9 @@ export default ({ user, close }: UserDetailProps) => {
           color={colors[user.status]}
         />
         <div className="flex flex-col items-center gap-4">
-          {user.status == UserStatus.Online && <UserStatistics user={user} />}
-          <UserSettings user={user} />
-          <UserAuthentication />
+          {user.status == UserStatus.Online && <UserStatistics user={user}/>}
+          <UserSettings user={user}/>
+          <UserAuthentication/>
         </div>
       </div>
     </div>

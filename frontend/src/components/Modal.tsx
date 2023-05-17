@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import ShadowBox from './ShadowBox';
 
 interface ModalProps extends React.HTMLProps<HTMLDivElement> {
@@ -6,7 +5,7 @@ interface ModalProps extends React.HTMLProps<HTMLDivElement> {
   close: () => void;
 }
 
-export default ({ open, close, children }: ModalProps) => {
+export default ({open, close, children}: ModalProps) => {
   return open ? (
     <div
       className="absolute top-0 left-0 w-screen h-screen bg-light-background/50 dark:bg-dark-background/50 backdrop-blur-[1px] z-[999]"

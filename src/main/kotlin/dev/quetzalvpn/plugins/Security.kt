@@ -9,6 +9,7 @@ import dev.quetzalvpn.models.LoginUser
 import dev.quetzalvpn.models.LoginUsers
 import dev.quetzalvpn.security.Hashing
 import io.ktor.http.*
+import io.ktor.http.auth.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.*
 import io.ktor.server.request.*
@@ -33,8 +34,6 @@ data class DeleteLoginUserRequest(val username: String)
 
 @Serializable
 data class SafeLoginUser(val username: String, val id: Int)
-
-
 
 
 fun Application.configureSecurity() {
@@ -62,15 +61,19 @@ fun Application.configureSecurity() {
 
     authentication {
         jwt {
-
             realm = myRealm
-            verifier(
-                JWT
-                    .require(Algorithm.HMAC256(secret))
-                    .withAudience(audience)
-                    .withIssuer(issuer)
-                    .build()
-            )
+
+            authHeader { call ->
+                val oldHeader = call.request.parseAuthorizationHeader();
+
+                val tokenCookie = call.request.cookies.get(name = "token");
+
+                tokenCookie?.let {
+                    HttpAuthHeader.Single(oldHeader?.authScheme ?: "Bearer", tokenCookie)
+                } ?: oldHeader;
+            }
+
+            verifier(JWT.require(Algorithm.HMAC256(secret)).withAudience(audience).withIssuer(issuer).build())
             validate { credential ->
                 if (credential.payload.getClaim("username").asString() != "") {
                     JWTPrincipal(credential.payload)
@@ -124,14 +127,19 @@ fun Application.configureSecurity() {
                     }
                 }
 
-                val token = JWT.create()
-                    .withAudience(audience)
-                    .withIssuer(issuer)
-                    .withClaim("username", user.loginName)
-                    .withClaim("userid", user.id.value)
-                    .withExpiresAt(Date(System.currentTimeMillis() + expirationTime))
+                val token = JWT.create().withAudience(audience).withIssuer(issuer).withClaim("username", user.loginName)
+                    .withClaim("userid", user.id.value).withExpiresAt(Date(System.currentTimeMillis() + expirationTime))
                     .sign(Algorithm.HMAC256(secret))
                 val response = LoginUserResponse(user.loginName, token)
+                // For non development set secure to true
+                call.response.cookies.append(
+                    "token",
+                    token,
+                    maxAge = expirationTime,
+                    httpOnly = true,
+                    secure = false,
+                    extensions = mapOf("SameSite" to "strict")
+                );
                 call.respond(response)
             }
 
@@ -145,6 +153,7 @@ fun Application.configureSecurity() {
 
                         call.respond(safeUsers)
                     }
+
                     post {
                         val loginUser = call.receive<LoginUserRequest>()
 
@@ -196,7 +205,7 @@ fun Application.configureSecurity() {
                             LoginUser.count()
                         }
 
-                        if(userAmount <= 1L) {
+                        if (userAmount <= 1L) {
                             call.respond(HttpStatusCode.Forbidden)
                             return@delete
                         }

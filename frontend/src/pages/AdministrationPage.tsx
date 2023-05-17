@@ -1,22 +1,17 @@
-import { useEffect } from 'react';
+import {useEffect} from 'react';
 import PageTitle from '../components/PageTitle';
 import ShadowBox from '../components/ShadowBox';
-import { useCurrentPage, useTitleState } from '../hooks/zustand';
-import { PageProps } from './ConfigurationPage';
+import {useCurrentPage, useTitleState} from '../hooks/zustand';
+import {PageProps} from './ConfigurationPage';
+import usePageLoad from "../hooks/usePageLoad";
 
-export default ({ navbarIdx }: PageProps) => {
-  const setNavposition = useCurrentPage((state) => state.move);
-  const setBrowserTitle = useTitleState((state) => state.change);
-
-  useEffect(() => {
-    setBrowserTitle('Administration');
-    setNavposition(navbarIdx);
-  }, []);
+export default ({navbarIdx}: PageProps) => {
+  usePageLoad("Administration", navbarIdx);
 
   return (
     <div className="mt-8 w-full">
       <div className="flex flex-col gap-4">
-        <PageTitle title="Administration" />
+        <PageTitle title="Administration"/>
         <ShadowBox className="w-full"></ShadowBox>
       </div>
     </div>

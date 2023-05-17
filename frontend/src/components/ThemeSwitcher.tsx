@@ -1,37 +1,31 @@
-import {
-  ComputerDesktopIcon,
-  MoonIcon,
-  SunIcon,
-} from '@heroicons/react/24/outline';
-import { useEffect, useState } from 'react';
-import { Theme } from '../App';
-import { useTheme } from '../hooks/useTheme';
+import {ComputerDesktopIcon, MoonIcon, SunIcon,} from '@heroicons/react/24/outline';
+import {useState} from 'react';
+import {useTheme} from '../hooks/useTheme';
 import NavButton from './NavButton';
 
 export default () => {
   const [open, setOpen] = useState(false);
 
-  //FIXME: Icon always shows sun for system theme
-  const { theme, themeName, setTheme } = useTheme();
+  const {theme, isSystemTheme, setTheme} = useTheme();
 
   const options = [
     {
-      icon: <SunIcon className="h-full" />,
+      icon: <SunIcon className="h-full"/>,
       label: 'Light',
       action: () => setTheme('light'),
-      active: themeName === 'light',
+      active: !isSystemTheme && theme === 'light',
     },
     {
-      icon: <MoonIcon className="h-full" />,
+      icon: <MoonIcon className="h-full"/>,
       label: 'Dark',
       action: () => setTheme('dark'),
-      active: themeName === 'dark',
+      active: !isSystemTheme && theme === 'dark',
     },
     {
-      icon: <ComputerDesktopIcon className="h-full" />,
+      icon: <ComputerDesktopIcon className="h-full"/>,
       label: 'System',
       action: () => setTheme('system'),
-      active: themeName === 'system',
+      active: isSystemTheme,
     },
   ];
 
@@ -39,12 +33,12 @@ export default () => {
 
   return (
     <div className="relative">
-      <NavButton>
-        <div className="h-6" onClick={toggleOpen}>
+      <NavButton onClick={toggleOpen}>
+        <div className="h-6">
           {theme === 'light' ? (
-            <MoonIcon className="stroke-inherit h-full" />
+            <SunIcon className="stroke-inherit h-full"/>
           ) : (
-            <SunIcon className="stroke-inherit h-full" />
+            <MoonIcon className="stroke-inherit h-full"/>
           )}
         </div>
       </NavButton>
