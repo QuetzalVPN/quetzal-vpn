@@ -1,5 +1,6 @@
 package dev.quetzalvpn
 
+import dev.quetzalvpn.dao.DatabaseFactory
 import io.ktor.server.application.*
 import dev.quetzalvpn.plugins.*
 
@@ -8,9 +9,9 @@ fun main(args: Array<String>): Unit =
 
 @Suppress("unused") // application.conf references the main function. This annotation prevents the IDE from marking it as unused.
 fun Application.module() {
-    configureSockets()
+    DatabaseFactory.init(environment.config)
     configureSerialization()
-    configureDatabases()
     configureSecurity()
     configureRouting()
+    configureReactSPA()
 }

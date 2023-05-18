@@ -1,0 +1,48 @@
+$themeTransitionDuration: 0.2s;
+
+@font-face {
+  font-family: 'Lexend';
+  src: url('./fonts/Lexend_var.ttf');
+}
+
+div {
+  transition: background-color ($themeTransitionDuration * 2) ease;
+}
+
+h1,
+h2,
+h3 {
+  font-family: 'Lexend', sans-serif;
+  transition: color $themeTransitionDuration ease;
+}
+
+div.centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+body {
+  overflow-y: hidden;
+}
+
+@keyframes showDialogContent {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -48%) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes showDialogOverlay {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
