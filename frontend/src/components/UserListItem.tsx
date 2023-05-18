@@ -1,28 +1,46 @@
-import {PowerIcon, UserCircleIcon, WrenchIcon,} from '@heroicons/react/24/outline';
-import {colors, User} from '../pages/UserPage';
-import Dialog from './Dialog';
+import {TrashIcon, UserCircleIcon, WrenchIcon,} from '@heroicons/react/24/outline';
 import NavButton from "./NavButton";
+import {VPNUser} from "../types/VPNUsers";
+import {useNavigate} from "react-router-dom";
+import React from "react";
+import Dialog from "./Dialog";
+import Button from "./Button";
+import {useDeleteVPNUser} from "../hooks/useVPNUser";
 
 interface UserListItemProps {
-  user: User;
-  setSelected: () => any;
+  user: VPNUser;
 }
 
-export default ({user, setSelected}: UserListItemProps) => {
+export default ({user}: UserListItemProps) => {
+  const navigate = useNavigate();
+
+  const [dialogOpen, setDialogOpen] = React.useState(false);
+
+  const openDetails = () => navigate(`/users/${user.id}`);
+
+  const closeDialog = () => setDialogOpen(false);
+
+  const deleteVPNUser = useDeleteVPNUser();
+
+  const handleDelete = () => {
+    deleteVPNUser.mutate(user);
+    closeDialog();
+  }
+
   return (
     <div
       className="flex p-4 my-4 items-center gap-4 rounded-xl"
       style={{
-        boxShadow: `0px 1px 4px 1px ${colors[user.status]}4F`,
+        boxShadow: `0px 1px 4px 1px ${'#00ff70'}5F`,
       }}
     >
       <UserCircleIcon
         className="h-14 cursor-pointer"
-        color={colors[user.status]}
-        onClick={setSelected}
+        color={'#00ff70'}
+        onClick={openDetails}
       />
-      <div className="cursor-pointer" onClick={setSelected}>
-        <p className="text-lg font-lexend">{user.name}</p>
+      <div className="cursor-pointer" onClick={openDetails}>
+        <p className="text-lg font-lexend">{user.username}</p>
         {user.address && (
           <p className="text-lg text-gray-neutral">{user.address}</p>
         )}
@@ -33,12 +51,21 @@ export default ({user, setSelected}: UserListItemProps) => {
           </p>
         )}
       </div>
-      <div className="edit-section ml-auto flex gap-2">
-        <NavButton onClick={setSelected}><WrenchIcon className="h-7"/></NavButton>
-        <Dialog triggerElement={<NavButton><PowerIcon className="h-7"/></NavButton>} title="Hello World!">
-          <h2>Hello</h2>
-        </Dialog>
+      <div className="ml-auto flex gap-2">
+        <NavButton onClick={openDetails}><WrenchIcon className="h-7"/></NavButton>
+        <NavButton className="group" onClick={() => setDialogOpen(true)}><TrashIcon
+          className="h-7 group-hover:text-brand-red group-focus:text-brand-red"/></NavButton>
       </div>
+      <Dialog open={dialogOpen} onClose={closeDialog} title={`Confirm deletion of ${user.username}`}
+              description={`Do you really want to delete the user ${user.username} ?`}>
+        <form className="flex gap-2 justify-end" onSubmit={(e) => {
+          e.preventDefault();
+          handleDelete();
+        }}>
+          <Button variant="outline" color="neutral" onClick={closeDialog} type="button">Cancel</Button>
+          <Button color="red" type="submit">Delete</Button>
+        </form>
+      </Dialog>
     </div>
   );
 };

@@ -55,7 +55,7 @@ const TrafficSettings = () => {
 };
 
 export default ({navbarIdx}: PageProps) => {
-  usePageLoad("Administration", navbarIdx);
+  usePageLoad("Configuration", navbarIdx);
   const {theme} = useTheme();
 
   const notify = () => toast('Applied changes!', {

@@ -9,6 +9,7 @@ import AdministrationPage from "./pages/AdministrationPage";
 import {ToastContainer} from "react-toastify";
 import {useSidebarState} from "./hooks/zustand";
 import ConfigurationPage from "./pages/ConfigurationPage";
+import {useTheme} from "./hooks/useTheme";
 
 const pages = [
   {
@@ -39,6 +40,7 @@ const pages = [
 
 export default () => {
   const {sidebar: sidebarOpen} = useSidebarState();
+  const {theme} = useTheme();
 
   return <BrowserRouter>
     <Routes>
@@ -52,16 +54,21 @@ export default () => {
             </div>
             <div className={`flex-grow ${sidebarOpen ? '' : 'pr-4'}`}>
               <Outlet/>
-              <ToastContainer/>
+              <ToastContainer
+                position="bottom-right"
+                autoClose={5000}
+                theme={theme === 'dark' ? 'dark' : 'light'}
+              />
             </div>
           </div>
         </>}
       >
         <Route path="/" element={<Navigate to={pages[0].path}/>}/>
         {pages.map((page) => (
-          <Route path={page.path} element={page.element} key={page.path}/>
+          <Route path={page.path} element={page.element} key={page.path}
+                 loader={async () => console.log(`Loaded: ${page.title}`)}/>
         ))}
       </Route><Route path="*" element={<NotFoundPage/>}/>
     </Routes>
-  </BrowserRouter>
+  </BrowserRouter>;
 }

@@ -16,7 +16,7 @@ const colors = [
 ];
 
 export default ({navbarIdx}: PageProps) => {
-  usePageLoad("Administration", navbarIdx);
+  usePageLoad("Dashboard", navbarIdx);
 
   const [activeUsers, setActiveUsers] = useState([
     {time: Date.now() - 1000, value: 6},
