@@ -1,29 +1,29 @@
-import * as Dialog from '@radix-ui/react-dialog';
 import React, {ReactNode} from "react";
+import {Dialog} from "@headlessui/react";
+import ShadowBox from "./ShadowBox";
 
 interface DialogProps {
-  triggerElement: ReactNode;
-  title: string;
+  open?: boolean;
+  title?: string;
   description?: string;
-  closeElement?: ReactNode;
-  children: ReactNode;
+  children?: ReactNode;
+  backdrop?: boolean;
+  onClose: () => void;
 }
 
-// TODO: Fix dialog, currently showing some ref error (most likely because of weird interaction form radix and react-router-dom)
-export default ({triggerElement, title, description, closeElement, children}: DialogProps) => <Dialog.Root>
-  {/*<Dialog.Trigger asChild>{triggerElement}</Dialog.Trigger>*/}
-  {/*<Dialog.Portal>*/}
-  {/*  <Dialog.Overlay className="bg-black/50q data-[state=open]:animate-showDialogOverlay fixed inset-0"/>*/}
-  {/*  <Dialog.Content*/}
-  {/*    className="bg-light-foreground dark:bg-dark-foreground rounded-xl shadow-lg fixed top-[50%] left-[50%] transform -translate-x-center-50 -translate-y-center-50 p-4 w-1/3 h-1/4">*/}
-  {/*    <Dialog.Title className="text-lg font-lexend">{title}</Dialog.Title>*/}
-  {/*    {description && <Dialog.Description className="text-gray-neutral">{description}</Dialog.Description>}*/}
-  {/*    {children}*/}
-  {/*    <Dialog.Close>*/}
-  {/*      {closeElement ??*/}
-  {/*          <Button*/}
-  {/*              className="border border-brand-red bg-light-foreground dark:bg-dark-foreground hover:bg-gray-neutral/10 text-brand-red active:bg-gray-neutral/25">Close</Button>}*/}
-  {/*    </Dialog.Close>*/}
-  {/*  </Dialog.Content>*/}
-  {/*</Dialog.Portal>*/}
-</Dialog.Root>
+export default ({open, onClose, title, backdrop, description, children}: DialogProps) =>
+  <Dialog open={open} onClose={onClose}>
+    {(backdrop ?? true) &&
+        <div className="fixed inset-0 bg-black/20 dark:bg-black/50" aria-hidden={true}/>
+    }
+    <Dialog.Panel as={ShadowBox}
+                  className="fixed top-[50%] left-[50%] -translate-x-center-50 -translate-y-center-50">
+      <Dialog.Title as="h2" className="text-xl">
+        {title}
+      </Dialog.Title>
+      <Dialog.Description className="text-gray-neutral mb-4">
+        {description}
+      </Dialog.Description>
+      {children}
+    </Dialog.Panel>
+  </Dialog>
