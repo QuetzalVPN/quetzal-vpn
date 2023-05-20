@@ -112,10 +112,9 @@ fun Application.configureVPNUserRouting() {
                         val vpnUser = call.getParamsVPNUser() ?: return@patch
 
                         val reqBody = call.receive<VPNUserRoute.PatchRequest>()
-                        transaction {
-                            vpnUser.apply {
-                                if (reqBody.enable != null) isEnabled = reqBody.enable
-                            }
+
+                        reqBody.takeIf { it.enable != null && it.enable != vpnUser.isEnabled }?.let {
+                            controller.disableVPNUser(vpnUser)
                         }
 
                         val response = VPNUserRoute.GetResponse(vpnUser.id.value, vpnUser.name, vpnUser.isEnabled)
