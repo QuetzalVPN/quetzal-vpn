@@ -1,67 +1,80 @@
 import {ArrowDownTrayIcon, UserCircleIcon, XCircleIcon,} from '@heroicons/react/24/outline';
-import {colors, User, UserStatus} from '../pages/UserPage';
-import ToggleSwitch from './ToggleSwitch';
-import Button from './Button';
+import ToggleSwitch from './Switch';
 import NavButton from "./NavButton";
 import {useSidebarState} from "../hooks/zustand";
 import {useNavigate} from "react-router-dom";
+import {VPNUser} from "../types/VPNUsers";
+import {useVPNUser, useVPNUserProfile} from "../hooks/useVPNUser";
+import LoadingSpinner from "./LoadingSpinner";
+import Button from "./Button";
+import DownloadLink from "./DownloadLink";
+import {useState} from "react";
 
 interface UserDetailProps {
-  user: User;
+  userId: number;
 }
 
 interface StatisticsProps {
-  user: User;
+  user: VPNUser;
 }
 
-const UserStatistics = ({user}: StatisticsProps) => {
-  return (
-    <section className="flex flex-col gap-2">
-      <h2 className="text-xl text-center">Statistics</h2>
-      <div className="grid grid-cols-2">
-        <span className="font-lexend ">IP</span>
-        <span className="font-lexend font-light">{user.address}</span>
-        <span className="font-lexend ">Traffic</span>
-        <span className="font-lexend font-light">{user.traffic} Mbit/s</span>
-      </div>
-    </section>
-  );
-};
+// const UserStatistics = ({user}: StatisticsProps) => {
+//   return (
+//     <section className="flex flex-col gap-2">
+//       <h2 className="text-xl text-center">Statistics</h2>
+//       <div className="grid grid-cols-2">
+//         <span className="font-lexend ">IP</span>
+//         <span className="font-lexend font-light">{user.address}</span>
+//         <span className="font-lexend ">Traffic</span>
+//         <span className="font-lexend font-light">{user.traffic} Mbit/s</span>
+//       </div>
+//     </section>
+//   );
+// };
 
 const UserSettings = ({user}: StatisticsProps) => {
+  const [enabled, setEnabled] = useState(user.isEnabled);
+
   return (
     <section className="flex flex-col gap-2">
       <h2 className="text-xl text-center">Settings</h2>
       <div className="flex flex-col gap-4">
         <div className="flex gap-4">
           <span className="font-lexend">Name</span>
-          <span>{user.name}</span>
+          <span>{user.username}</span>
         </div>
         <div className="flex gap-4">
           <span className="font-lexend w-fit">Enabled</span>
-          <ToggleSwitch/>
+          <ToggleSwitch enabled={enabled} setEnabled={() => setEnabled((prev) => !prev)}/>
         </div>
       </div>
     </section>
   );
 };
 
-const UserAuthentication = () => (
-  <section className="flex flex-col gap-2">
-    <h2 className="text-xl text-center">Authentication</h2>
-    <div className="flex gap-4 items-center">
-      <span>File</span>
-      <Button>
-        <ArrowDownTrayIcon className="h-6"/>
-        Download OVPN-File
-      </Button>
-    </div>
-  </section>
-);
+const UserAuthentication = ({user}: { user: VPNUser }) => {
+  const vpnUserProfile = useVPNUserProfile(user.id);
 
-export default ({user}: UserDetailProps) => {
+  return <section className="flex flex-col gap-2">
+    <h2 className="text-xl text-center">Authentication</h2>
+    {vpnUserProfile.isLoading && <p>Loading ...</p>}
+    {vpnUserProfile.isError && <p>A unexpected error occurred</p>}
+    {vpnUserProfile.isSuccess &&
+      vpnUserProfile.data &&
+        <DownloadLink filename={`${user.username}.ovpn`} blob={new Blob([vpnUserProfile.data.data])}>
+            <Button tabIndex={-1}>
+                <ArrowDownTrayIcon className="h-6"/>
+                Download OVPN-File
+            </Button>
+        </DownloadLink>}
+  </section>
+};
+
+export default ({userId}: UserDetailProps) => {
   const {sidebar: open, setSidebar} = useSidebarState();
   const navigate = useNavigate();
+
+  const vpnUser = useVPNUser(userId);
 
   return (
     <div>
@@ -74,19 +87,23 @@ export default ({user}: UserDetailProps) => {
           color="gray"
         />
       </NavButton>
-      <div className="flex flex-col items-center gap-4">
-        <h2 className="text-2xl">Settings for {user.name}</h2>
-        <UserCircleIcon
-          className="h-[170px]"
-          strokeWidth={1.25}
-          color={colors[user.status]}
-        />
+      {vpnUser.isLoading && <><LoadingSpinner className="h-12"/> Loading ...</>}
+      {vpnUser.isError && <p>A unexpected error occurred</p>}
+      {vpnUser.isSuccess && vpnUser.data && (
         <div className="flex flex-col items-center gap-4">
-          {user.status == UserStatus.Online && <UserStatistics user={user}/>}
-          <UserSettings user={user}/>
-          <UserAuthentication/>
-        </div>
-      </div>
+          <h2 className="text-2xl">Settings for {vpnUser.data.data.username}</h2>
+          <UserCircleIcon
+            className="h-[170px]"
+            strokeWidth={1.25}
+            color={'#00ff70'}
+          />
+          <UserAuthentication user={vpnUser.data.data}/>
+          {/*{vpnUser.data.data == UserStatus.Online && <UserStatistics user={user}/>}*/}
+          {/*<div className="flex flex-col items-center gap-4">*/}
+          {/*  <UserSettings user={user}/>*/}
+
+          {/*</div>*/}
+        </div>)}
     </div>
   );
 };

@@ -15,10 +15,10 @@ interface SidebarState {
   setSidebar: (to: boolean) => void;
 }
 
-// interface LoginState {
-//   loggedIn: boolean;
-//   setLoggedIn: (to: boolean) => void;
-// }
+interface LoginState {
+  loggedIn: boolean;
+  setLoggedIn: (to: boolean) => void;
+}
 
 const useCurrentPage = create<CurrentPageState>((set) => ({
   currentPage: 0,
@@ -33,18 +33,16 @@ const useTitleState = create<TitleState>((set) => ({
   },
 }));
 
-// const useLoginState = create<LoginState>((set) => ({
-//   loggedIn: localStorage.getItem('loggedIn') === 'true',
-//   setLoggedIn: (to: boolean) => {
-//     if (to) localStorage.setItem('loggedIn', 'true');
-//     else localStorage.removeItem('loggedIn');
-//     return set((state) => ({loggedIn: to}));
-//   },
-// }));
+const useLoginState = create<LoginState>((set) => ({
+  loggedIn: localStorage.getItem('token') !== null,
+  setLoggedIn: (to: boolean) => {
+    return set((state) => ({loggedIn: to}));
+  },
+}));
 
 const useSidebarState = create<SidebarState>((set) => ({
   sidebar: false,
   setSidebar: (to) => set((state) => ({sidebar: to})),
 }));
 
-export {useCurrentPage, useTitleState, useSidebarState /*useLoginState*/};
+export {useCurrentPage, useTitleState, useSidebarState, useLoginState};
