@@ -45,7 +45,7 @@ const UserSettings = ({user}: StatisticsProps) => {
         </div>
         <div className="flex gap-4">
           <span className="font-lexend w-fit">Enabled</span>
-          <ToggleSwitch checked={enabled} toggle={() => setEnabled((prev) => !prev)}/>
+          <ToggleSwitch enabled={enabled} setEnabled={() => setEnabled((prev) => !prev)}/>
         </div>
       </div>
     </section>
