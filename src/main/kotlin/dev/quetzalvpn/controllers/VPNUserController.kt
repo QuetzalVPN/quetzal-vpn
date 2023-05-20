@@ -18,10 +18,11 @@ class VPNUserController (private val config: ApplicationConfig){
 
     private fun activateUser(vpnUser: VPNUser) {
         TODO("Write user to OpenVPN")
+        // move revoked files to active directories and reload crl
     }
 
     private fun deactivateUser(vpnUser: VPNUser) {
-        TODO("Remove user from OpenVPN")
+        easyRSA.revokeClient(vpnUser.name)
     }
 
     private fun generateUserCertificate(vpnUser: VPNUser) {
