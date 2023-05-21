@@ -32,7 +32,7 @@ suspend fun ApplicationCall.getParamsVPNUser(): VPNUser? {
 
 class VPNUserRoute {
     @Serializable
-    data class CreateRequest(val username: String)
+    data class CreateRequest(val username: String, val enable: Boolean? = null)
 
     @Serializable
     data class CreateResponse(val id: Int, val username: String, val isEnabled: Boolean)
@@ -94,8 +94,11 @@ fun Application.configureVPNUserRouting() {
 
                     val reqBody = call.receive<VPNUserRoute.CreateRequest>()
 
-                    val newVPNUser = controller.addVPNUser(reqBody.username, loginUser)
-
+                    val newVPNUser = controller.addVPNUser(reqBody.username, loginUser).also {
+                        if (reqBody.enable == false) {
+                            controller.disableVPNUser(it)
+                        }
+                    }
                     val response =
                         VPNUserRoute.CreateResponse(newVPNUser.id.value, newVPNUser.name, newVPNUser.isEnabled)
                     call.respond(HttpStatusCode.Created, response)

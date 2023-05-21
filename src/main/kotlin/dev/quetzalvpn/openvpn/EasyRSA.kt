@@ -33,6 +33,16 @@ class EasyRSA(private val binDir: Path, private val pkiDir: Path, private val co
         genCRL()
     }
 
+    fun unrevokeClient(name: String) {
+        TODO("Implement unrevoking a client")
+        // move revoked files to active directories and reload crl
+//        val command = listOf("/bin/sh", "-c", "")
+//        val process = defaultProcessBuilder(command)
+//            .start()
+//        process.waitFor(1, TimeUnit.SECONDS)
+//        genCRL()
+    }
+
     fun genCRL() {
         val command = listOf("/bin/sh", "-c", "$easyRSAScript gen-crl")
         val process = defaultProcessBuilder(command)
