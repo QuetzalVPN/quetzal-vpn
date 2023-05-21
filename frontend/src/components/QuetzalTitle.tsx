@@ -1,4 +1,4 @@
-import logo from '../assets/logo.svg';
+import logo from '../assets/quetzal.png';
 
 interface TitleProps {
   collapsed?: boolean;
