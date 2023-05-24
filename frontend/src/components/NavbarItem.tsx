@@ -1,6 +1,6 @@
-import {ReactElement, useEffect, useRef} from 'react';
-import {useNavigate} from 'react-router-dom';
-import NavButton from './NavButton';
+import { ReactElement, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import NavButton from "./NavButton";
 
 interface NavbarItemProps {
   title: string;
@@ -18,7 +18,7 @@ export default ({
                   collapsed,
                   path,
                   active,
-                  moveMarker,
+                  moveMarker
                 }: // setActive,
                   NavbarItemProps) => {
   const navigate = useNavigate();
@@ -31,20 +31,22 @@ export default ({
   }, [active]);
 
   return (
-    <div
-      className={`navbar-item flex gap-2 py-2 items-center ${
-        active ? 'text-current' : ''
-      }`}
-      ref={wrapperRef}
-    >
-      <NavButton active={active} onClick={() => navigate(path)}>
-        <div className="flex gap-2 text-lg items-center py-2 cursor-pointer w-fit ">
-          {icon}
-          <div className={`nav-extra ${collapsed ? 'collapsed' : ''}`}>
-            <h2 className={`overflow-hidden`}>{title}</h2>
-          </div>
+    // <div
+    //   className={`navbar-item flex gap-2 items-center w-fit ${
+    //     active ? 'text-current' : ''
+    //   }`}
+    //   ref={wrapperRef}
+    // >
+    <NavButton active={active} onClick={() => navigate(path)}>
+      <div
+        className={`flex ${collapsed ? "" : "gap-2"} text-lg items-center cursor-pointer w-fit ${active ? "text-current" : ""}`}
+        ref={wrapperRef}>
+        {icon}
+        <div className={`nav-extra ${collapsed ? "collapsed" : ""}`}>
+          <h2 className={`overflow-hidden`}>{title}</h2>
         </div>
-      </NavButton>
-    </div>
+      </div>
+    </NavButton>
+    // </div>
   );
 };

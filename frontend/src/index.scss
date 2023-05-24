@@ -27,6 +27,30 @@ body {
   overflow-y: hidden;
 }
 
+.flipped {
+  transform: rotateY(180deg);
+}
+
+.nav-extra {
+  display: grid;
+  grid-template-columns: 1fr;
+  transition: grid-template-columns .4s ease;
+
+  h2 {
+    opacity: 1;
+    overflow: hidden;
+    transition: all .5s ease;
+  }
+}
+
+.collapsed {
+  grid-template-columns: 0fr;
+
+  h2 {
+    opacity: 0;
+  }
+}
+
 @keyframes showDialogContent {
   from {
     opacity: 0;

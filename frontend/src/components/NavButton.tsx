@@ -14,7 +14,7 @@ export default React.forwardRef<HTMLButtonElement, NavButtonProps>(({
     style={props.style ? props.style : {padding: '.5rem'}}
     ref={forwardedRef}
     className={`
-    ${className}
+    ${className ?? ''}
     ${
       active
         ? ''
