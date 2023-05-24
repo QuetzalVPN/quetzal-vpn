@@ -25,7 +25,6 @@ const useVPNUserProfile = (id: number) => {
 const useCreateVPNUser = () => {
   const queryClient = useQueryClient();
   const toastId = useRef<ToastId | null>(null);
-  const unblockRef = useRef<(() => void) | null>(null);
 
   const updateLoadingToast = (options: ToastUpdateOptions) => {
     if (toastId.current) {

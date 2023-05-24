@@ -1,14 +1,16 @@
-import {ArrowDownTrayIcon, UserCircleIcon, XCircleIcon,} from '@heroicons/react/24/outline';
+import {ArrowDownTrayIcon, TrashIcon, UserCircleIcon, XCircleIcon,} from '@heroicons/react/24/outline';
 import ToggleSwitch from './Switch';
 import NavButton from "./NavButton";
 import {useSidebarState} from "../hooks/zustand";
 import {useNavigate} from "react-router-dom";
 import {VPNUser} from "../types/VPNUsers";
-import {useVPNUser, useVPNUserProfile} from "../hooks/useVPNUser";
+import {useDeleteVPNUser, useVPNUser, useVPNUserProfile} from "../hooks/useVPNUser";
 import LoadingSpinner from "./LoadingSpinner";
 import Button from "./Button";
-import DownloadLink from "./DownloadLink";
 import {useState} from "react";
+import useDownload from "../hooks/useDownload";
+import {getUserProfile} from "../services/vpnUserService";
+import {toast} from "react-toastify";
 
 interface UserDetailProps {
   userId: number;
@@ -53,20 +55,23 @@ const UserSettings = ({user}: StatisticsProps) => {
 };
 
 const UserAuthentication = ({user}: { user: VPNUser }) => {
-  const vpnUserProfile = useVPNUserProfile(user.id);
+  const download = useDownload();
+
+  const handleDownload = async () => {
+    const profile = await getUserProfile(user.id);
+    if (profile.status >= 200 && profile.status < 300) {
+      download(new Blob([profile.data]), `${user.username}.ovpn`);
+    } else {
+      toast.error('Could not download profile');
+    }
+  }
 
   return <section className="flex flex-col gap-2">
     <h2 className="text-xl text-center">Authentication</h2>
-    {vpnUserProfile.isLoading && <p>Loading ...</p>}
-    {vpnUserProfile.isError && <p>A unexpected error occurred</p>}
-    {vpnUserProfile.isSuccess &&
-      vpnUserProfile.data &&
-        <DownloadLink filename={`${user.username}.ovpn`} blob={new Blob([vpnUserProfile.data.data])}>
-            <Button tabIndex={-1}>
-                <ArrowDownTrayIcon className="h-6"/>
-                Download OVPN-File
-            </Button>
-        </DownloadLink>}
+    <Button onClick={handleDownload}>
+      <ArrowDownTrayIcon className="h-6"/>
+      Download OVPN-File
+    </Button>
   </section>
 };
 
@@ -75,6 +80,8 @@ export default ({userId}: UserDetailProps) => {
   const navigate = useNavigate();
 
   const vpnUser = useVPNUser(userId);
+
+  const deleteVPNUser = useDeleteVPNUser();
 
   return (
     <div>
@@ -98,11 +105,15 @@ export default ({userId}: UserDetailProps) => {
             color={'#00ff70'}
           />
           <UserAuthentication user={vpnUser.data.data}/>
-          {/*{vpnUser.data.data == UserStatus.Online && <UserStatistics user={user}/>}*/}
-          {/*<div className="flex flex-col items-center gap-4">*/}
-          {/*  <UserSettings user={user}/>*/}
-
-          {/*</div>*/}
+          <h2 className="text-xl">Actions</h2>
+          <div className="flex gap-2 w-full">
+            {/*<Button color="yellow" variant="outline" className="grow">Deactivate</Button>*/}
+            {/*TODO: show a confirmation dialog before deleting*/}
+            <Button color="red" variant="outline" className="grow" onClick={() => deleteVPNUser.mutate(vpnUser.data.data)}>
+              <TrashIcon className="h-6"/>
+              Delete
+            </Button>
+          </div>
         </div>)}
     </div>
   );

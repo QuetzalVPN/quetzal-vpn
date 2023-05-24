@@ -1,42 +1,42 @@
-import {useState} from 'react';
-import PageTitle from '../components/PageTitle';
-import {PageProps} from './ConfigurationPage';
-import ShadowBox from '../components/ShadowBox';
-import LineChart from '../components/charts/LineChart';
-import {curveMonotoneX} from 'd3';
-import PieChart from '../components/charts/PieChart';
-import {ArrowDownIcon, ArrowUpIcon} from '@heroicons/react/24/outline';
-import Button from '../components/Button';
+import { useState } from "react";
+import PageTitle from "../components/PageTitle";
+import { PageProps } from "./ConfigurationPage";
+import ShadowBox from "../components/ShadowBox";
+import LineChart from "../components/charts/LineChart";
+import { curveMonotoneX } from "d3";
+import PieChart from "../components/charts/PieChart";
+import { ArrowDownIcon, ArrowUpIcon } from "@heroicons/react/24/outline";
+import Button from "../components/Button";
 import usePageLoad from "../hooks/usePageLoad";
 
 const colors = [
-  {max: 10, color: '#00FF70'},
-  {max: 20, color: '#F9C81B'},
-  {max: 30, color: '#F91B1B'},
+  { max: 10, color: "#00FF70" },
+  { max: 20, color: "#F9C81B" },
+  { max: 30, color: "#F91B1B" }
 ];
 
-export default ({navbarIdx}: PageProps) => {
+export default ({ navbarIdx }: PageProps) => {
   usePageLoad("Dashboard", navbarIdx);
 
   const [activeUsers, setActiveUsers] = useState([
-    {time: Date.now() - 1000, value: 6},
+    { time: Date.now() - 1000, value: 6 }
   ]);
 
   const [trafficData, setTrafficData] = useState([
-    {label: 'Upload', value: 14},
-    {label: 'Download', value: 22},
+    { label: "Upload", value: 14 },
+    { label: "Download", value: 22 }
   ]);
 
   const randomizeTraffic = () => {
     setTrafficData([
-      {label: 'Upload', value: Math.floor(Math.random() * 35) + 1},
-      {label: 'Download', value: Math.floor(Math.random() * 35 + 1)},
+      { label: "Upload", value: Math.floor(Math.random() * 35) + 1 },
+      { label: "Download", value: Math.floor(Math.random() * 35 + 1) }
     ]);
   };
 
   return (
     <div className="mt-8 w-full flex flex-col gap-4">
-      <PageTitle title="Dashboard"/>
+      <PageTitle title="Dashboard" />
       <div className="flex flex-wrap gap-4 flex-">
         <ShadowBox className="flex flex-col grow h-fit">
           <div className="flex items-center gap-2 w-full">
@@ -77,7 +77,7 @@ export default ({navbarIdx}: PageProps) => {
               onClick={() => {
                 setActiveUsers([
                   ...activeUsers,
-                  {time: Date.now(), value: Math.floor(Math.random() * 10)},
+                  { time: Date.now(), value: Math.floor(Math.random() * 10) }
                 ]);
               }}
             >
@@ -86,7 +86,7 @@ export default ({navbarIdx}: PageProps) => {
           </div>
           <LineChart
             data={activeUsers.slice(-10)}
-            options={{alwaysZero: true, points: true, curve: curveMonotoneX, fill: true}}
+            options={{ alwaysZero: true, points: true, curve: curveMonotoneX, fill: true }}
           />
         </ShadowBox>
         {/* Down vs. Up Panel */}
@@ -95,7 +95,7 @@ export default ({navbarIdx}: PageProps) => {
             <h2 className="text-xl">Download / Upload</h2>
             <Button onClick={randomizeTraffic}>Update</Button>
           </div>
-          <PieChart data={trafficData} options={{donutDivider: 2}}/>
+          <PieChart data={trafficData} options={{ donutDivider: 2 }} />
         </ShadowBox>
       </div>
     </div>

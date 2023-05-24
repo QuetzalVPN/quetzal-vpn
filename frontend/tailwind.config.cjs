@@ -8,6 +8,10 @@ const redHue = 1;
 const redSat = 100;
 const redBright = 60;
 
+const yellowHue = 51;
+const yellowSat = 96;
+const yellowBright = 41;
+
 module.exports = {
     content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'], darkMode: 'class', theme: {
         extend: {
@@ -16,6 +20,8 @@ module.exports = {
                 'brand-green-light': `hsl(${brandHue}, ${brandSat}%, ${brandBright + 20}%)`,
                 'brand-red': `hsl(${redHue}, ${redSat}%, ${redBright}%)`,
                 'brand-red-light': `hsl(${redHue}, ${redSat}%, ${redBright + 20}%)`,
+                'brand-yellow': `hsl(${yellowHue}, ${yellowSat}%, ${yellowBright}%)`,
+                'brand-yellow-light': `hsl(${yellowHue}, ${yellowSat}%, ${yellowBright + 20}%)`,
                 'light-background': `hsl(${brandHue}, ${brandSat / 4}%, ${95}%)`,
                 'light-foreground': `#FFF`,
                 'light-midground': '#EBEBEB',
