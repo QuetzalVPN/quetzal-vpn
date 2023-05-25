@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -ex
 
 EASY_RSA_LOC="/etc/openvpn/easyrsa"

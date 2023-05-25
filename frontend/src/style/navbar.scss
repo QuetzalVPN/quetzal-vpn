@@ -6,19 +6,19 @@ $brand-bright: 50;
 
 $brand-color: hsl($brand-hue, $brand-sat * 1%, $brand-bright * 1%);
 
-nav {
-  display: flex;
-  flex-direction: column;
-
-  transition: all .5s ease;
-
-  .navbar-items {
-    .navbar-item {
-      display: block;
-      position: relative;
-      stroke: red;
-    }
-
+//nav {
+//  display: flex;
+//  flex-direction: column;
+//
+//  transition: all .5s ease;
+//
+//  .navbar-items {
+//    .navbar-item {
+//      display: block;
+//      position: relative;
+//      stroke: red;
+//    }
+//
     //#navbar-marker {
     //  position: absolute;
     //  top: 0;
@@ -28,14 +28,14 @@ nav {
     //  height: 40px;
     //  transition: 0.3s ease;
     //}
-  }
-
-  .collapse-btn {
-    transition: transform .5s ease;
-  }
-
-  .footer {
-    justify-self: end;
-  }
-}
+  //}
+  //
+  //.collapse-btn {
+  //  transition: transform .5s ease;
+  //}
+  //
+  //.footer {
+  //  justify-self: end;
+  //}
+//}
 

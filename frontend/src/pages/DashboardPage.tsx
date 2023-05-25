@@ -35,9 +35,9 @@ export default ({ navbarIdx }: PageProps) => {
   };
 
   return (
-    <div className="mt-8 w-full flex flex-col gap-4">
+    <div className="mt-2 sm:mt-6 w-full flex flex-col gap-4">
       <PageTitle title="Dashboard" />
-      <div className="flex flex-wrap gap-4 flex-">
+      <div className="flex flex-wrap gap-4">
         <ShadowBox className="flex flex-col grow h-fit">
           <div className="flex items-center gap-2 w-full">
             <h2 className="text-xl w-fit">Current Traffic</h2>
@@ -71,7 +71,7 @@ export default ({ navbarIdx }: PageProps) => {
         </ShadowBox>
         {/* Active User Panel */}
         <ShadowBox className="h-96 grow-[2] ">
-          <div className="flex gap-4 items-center min-w-[400px]">
+          <div className="flex gap-4 items-center sm:min-w-[400px]">
             <h2 className="text-xl">Active Users </h2>
             <Button
               onClick={() => {

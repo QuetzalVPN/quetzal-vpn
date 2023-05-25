@@ -48,11 +48,9 @@ export default () => {
       <Route
         path="/"
         element={<>
-          <div className="flex gap-4">
-            <div className="min-w-fit left-0 top-0">
-              <Navbar items={pages}/>
-            </div>
-            <div className={`flex-grow ${sidebarOpen ? '' : 'pr-4'}`}>
+          <div className="flex gap-4 sm:text-amber-400 md:text-sky-500">
+            <Navbar items={pages}/>
+            <div className={`flex-grow px-2 ${sidebarOpen ? '' : 'sm:pr-4'}`}>
               <Outlet/>
               <ToastContainer
                 position="bottom-right"

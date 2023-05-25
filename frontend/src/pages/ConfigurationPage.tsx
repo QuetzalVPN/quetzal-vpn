@@ -14,11 +14,11 @@ export interface PageProps {
 
 const DHCPSettings = () => {
   return (
-    <section className="flex flex-col gap-4">
+    <section className="flex flex-col flex-wrap gap-4">
       <h2 className="text-xl">DHCP Settings</h2>
-      <div className="flex gap-4 items-center">
+      <div className="flex gap-4 flex-wrap items-center">
         <label htmlFor="dhcp-pool-start">DHCP Pool</label>
-        <div className="flex gap-2 items-center">
+        <div className="flex gap-2 flex-wrap items-center">
           <IPInput id="dhcp-pool-start" initialValue="10.0.0.1"/>
           <span>-</span>
           <IPInput id="dhcp-poool-end" initialValue="10.0.0.100"/>
@@ -66,7 +66,7 @@ export default ({navbarIdx}: PageProps) => {
   });
 
   return (
-    <div className="flex flex-col gap-4 mt-8 w-full">
+    <div className="flex flex-col gap-4 mt-2 sm:mt-6 w-full">
       <PageTitle title="VPN Configuration"/>
       <ShadowBox>
         <div className="flex flex-col gap-4">
