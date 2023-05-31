@@ -94,7 +94,11 @@ fun Application.configureVPNUserRouting() {
 
                     val reqBody = call.receive<VPNUserRoute.CreateRequest>()
 
-                    //TODO: validate username: [a-zA-Z0-9_-]
+                    if (!reqBody.username.matches(Regex("[a-zA-Z0-9_-]{3,32}"))) {
+                        call.respond(HttpStatusCode.BadRequest, "Bad username")
+                        return@post
+                    }
+
 
                     val newVPNUser = controller.addVPNUser(reqBody.username, loginUser).also {
                         if (reqBody.enable == false) {
