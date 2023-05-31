@@ -32,7 +32,7 @@ suspend fun ApplicationCall.getParamsVPNUser(): VPNUser? {
 
 class VPNUserRoute {
     @Serializable
-    data class CreateRequest(val username: String)
+    data class CreateRequest(val username: String, val enable: Boolean? = null)
 
     @Serializable
     data class CreateResponse(val id: Int, val username: String, val isEnabled: Boolean)
@@ -94,8 +94,17 @@ fun Application.configureVPNUserRouting() {
 
                     val reqBody = call.receive<VPNUserRoute.CreateRequest>()
 
-                    val newVPNUser = controller.addVPNUser(reqBody.username, loginUser)
+                    if (!reqBody.username.matches(Regex("[a-zA-Z0-9_-]{3,32}"))) {
+                        call.respond(HttpStatusCode.BadRequest, "Bad username")
+                        return@post
+                    }
 
+
+                    val newVPNUser = controller.addVPNUser(reqBody.username, loginUser).also {
+                        if (reqBody.enable == false) {
+                            controller.disableVPNUser(it)
+                        }
+                    }
                     val response =
                         VPNUserRoute.CreateResponse(newVPNUser.id.value, newVPNUser.name, newVPNUser.isEnabled)
                     call.respond(HttpStatusCode.Created, response)
@@ -113,8 +122,15 @@ fun Application.configureVPNUserRouting() {
 
                         val reqBody = call.receive<VPNUserRoute.PatchRequest>()
 
-                        reqBody.takeIf { it.enable != null && it.enable != vpnUser.isEnabled }?.let {
-                            controller.disableVPNUser(vpnUser)
+                        if (reqBody.enable != null) {
+                            if (reqBody.enable != vpnUser.isEnabled) {
+                                if (reqBody.enable) {
+                                    call.application.environment.log.info("Enabling VPN user ${vpnUser.name}")
+                                    controller.enableVPNUser(vpnUser)
+                                } else {
+                                    controller.disableVPNUser(vpnUser)
+                                }
+                            }
                         }
 
                         val response = VPNUserRoute.GetResponse(vpnUser.id.value, vpnUser.name, vpnUser.isEnabled)

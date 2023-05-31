@@ -21,7 +21,3 @@ echo "<tls-auth>"
 sed -ne '/BEGIN OpenVPN Static key/,$ p' "$EASYRSA_PKI"/ta.key # TODO: generate tc.key
 echo "</tls-auth>"
 } > "$OPENVPN_CONFIG_PATH"/ccd/"$client"/"$client".ovpn
-
-
-
-

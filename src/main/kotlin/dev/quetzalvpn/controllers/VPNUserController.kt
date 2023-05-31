@@ -16,14 +16,9 @@ class VPNUserController (private val config: ApplicationConfig){
             configDir = Path.of(config.property("openvpn.config.path").getString())
         )
 
-    private fun activateUser(vpnUser: VPNUser) {
-        TODO("Write user to OpenVPN")
-        // move revoked files to active directories and reload crl
-    }
+    private fun activateUser(vpnUser: VPNUser) = easyRSA.unrevokeClient(vpnUser.name)
 
-    private fun deactivateUser(vpnUser: VPNUser) {
-        easyRSA.revokeClient(vpnUser.name)
-    }
+    private fun deactivateUser(vpnUser: VPNUser) = easyRSA.revokeClient(vpnUser.name)
 
     private fun generateUserCertificate(vpnUser: VPNUser) {
         easyRSA.buildClientFull(vpnUser.name)
@@ -44,16 +39,19 @@ class VPNUserController (private val config: ApplicationConfig){
     }
 
     fun enableVPNUser(vpnUser: VPNUser) {
-        activateUser(vpnUser)
-        transaction {
-            vpnUser.isEnabled = true
+        if (activateUser(vpnUser)) {
+            transaction {
+                vpnUser.isEnabled = true
+            }
         }
+
     }
 
     fun disableVPNUser(vpnUser: VPNUser) {
-        deactivateUser(vpnUser)
-        transaction {
-            vpnUser.isEnabled = false
+        if (deactivateUser(vpnUser)) {
+            transaction {
+                vpnUser.isEnabled = false
+            }
         }
     }
 
