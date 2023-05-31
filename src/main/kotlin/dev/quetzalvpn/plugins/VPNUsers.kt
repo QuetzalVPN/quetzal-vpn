@@ -94,6 +94,8 @@ fun Application.configureVPNUserRouting() {
 
                     val reqBody = call.receive<VPNUserRoute.CreateRequest>()
 
+                    //TODO: validate username: [a-zA-Z0-9_-]
+
                     val newVPNUser = controller.addVPNUser(reqBody.username, loginUser).also {
                         if (reqBody.enable == false) {
                             controller.disableVPNUser(it)
@@ -116,8 +118,15 @@ fun Application.configureVPNUserRouting() {
 
                         val reqBody = call.receive<VPNUserRoute.PatchRequest>()
 
-                        reqBody.takeIf { it.enable != null && it.enable != vpnUser.isEnabled }?.let {
-                            controller.disableVPNUser(vpnUser)
+                        if (reqBody.enable != null) {
+                            if (reqBody.enable != vpnUser.isEnabled) {
+                                if (reqBody.enable) {
+                                    call.application.environment.log.info("Enabling VPN user ${vpnUser.name}")
+                                    controller.enableVPNUser(vpnUser)
+                                } else {
+                                    controller.disableVPNUser(vpnUser)
+                                }
+                            }
                         }
 
                         val response = VPNUserRoute.GetResponse(vpnUser.id.value, vpnUser.name, vpnUser.isEnabled)
