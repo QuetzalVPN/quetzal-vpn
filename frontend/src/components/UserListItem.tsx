@@ -57,7 +57,7 @@ export default ({user}: UserListItemProps) => {
           className="h-7 group-hover:text-brand-red group-focus:text-brand-red"/></NavButton>
       </div>
       <Dialog open={dialogOpen} onClose={closeDialog} title={`Confirm deletion of ${user.username}`}
-              description={`Do you really want to delete the user ${user.username} ?`}>
+              description={`Do you really want to delete the user ${user.username} ?`} className="w-10/12 sm:w-auto">
         <form className="flex gap-2 justify-end" onSubmit={(e) => {
           e.preventDefault();
           handleDelete();

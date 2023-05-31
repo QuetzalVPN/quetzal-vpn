@@ -1,18 +1,19 @@
 import {
   ArrowLeftOnRectangleIcon,
   Bars3Icon,
-  ChevronDoubleLeftIcon,
+  ChevronDoubleLeftIcon
 } from "@heroicons/react/24/outline";
-import {ReactElement, useEffect, useState} from "react";
-import {useNavigate} from "react-router-dom";
-import {useCurrentPage} from "../hooks/zustand";
+import { ReactElement, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useCurrentPage } from "../hooks/zustand";
 import "../style/navbar.scss";
 import AboutLink from "./AboutLink";
 import NavButton from "./NavButton";
 import NavbarItem from "./NavbarItem";
 import QuetzalTitle from "./QuetzalTitle";
 import ThemeSwitcher from "./ThemeSwitcher";
-import {Menu, Transition} from "@headlessui/react";
+import { Menu, Transition } from "@headlessui/react";
+import { useSmallerThan } from "../hooks/useBreakpoints";
 
 // import useLogout from "../hooks/useLogout";
 
@@ -26,43 +27,31 @@ interface NavbarProps {
   items: NavItem[];
 }
 
-export default ({items}: NavbarProps) => {
+export default ({ items }: NavbarProps) => {
   const navigate = useNavigate();
+
+  const smallScreen = useSmallerThan("sm");
 
   const [collapsed, setCollapsed] = useState<boolean>(
     (localStorage.getItem("navbarCollapsed") ?? "false") === "true"
   );
 
-  const handleCollapse = () => {
-    setCollapsed(prev => !prev);
-  }
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
 
-  const [extras] = useState([
-    {
-      title: "Logout",
-      component: <ArrowLeftOnRectangleIcon className="h-6 stroke-inherit"/>,
-      onClick: () => {
-        localStorage.removeItem("token");
-        navigate("/login");
-      }
-    },
-    {
-      title: "Theme",
-      component: <ThemeSwitcher/>,
-    },
-    {
-      title: "About",
-      component: <AboutLink collapsed={true}/>,
-    },
-  ]);
-
-  const [markerOffset, setMarkerOffset] = useState<{ top?: number, left?: number }>({top: 0, left: 0});
+  const [markerOffset, setMarkerOffset] = useState<{ top?: number, left?: number }>({ top: 0, left: 0 });
 
   const currentPage = useCurrentPage((state) => state.currentPage);
 
   return (
     <div
-      className={`fixed sm:static bottom-0 flex sm:flex-col sm:h-screen py-3.5 sm:py-6 bg-light-foreground dark:bg-dark-foreground shadow-md w-full sm:w-fit sm:min-w-fit`}
+      className={`
+        fixed sm:static flex bottom-0 sm:flex-col sm:h-screen w-full sm:w-fit sm:min-w-fit
+        border-t border-gray-neutral/30 sm:border-0 py-3.5 sm:py-6
+        -sm:bg-gradient-to-t from-20% from-light-foreground dark:from-dark-background dark:bg-dark-background/40 backdrop-blur-sm
+        sm:bg-light-foreground sm:dark:bg-dark-foreground sm:backdrop-blur-none shadow-md`}
     >
       <QuetzalTitle
         className="hidden sm:flex w-full justify-center sm:px-8"
@@ -70,7 +59,7 @@ export default ({items}: NavbarProps) => {
       />
 
       <nav
-        className={`relative sm:mt-8 flex flex-row justify-evenly w-full sm:flex-col gap-8 ${collapsed ? "sm:items-center" : "sm:pl-8 sm:items-start"}`}>
+        className={`relative px-4 sm:mt-8 flex flex-row justify-evenly w-full sm:flex-col gap-8 ${collapsed ? "items-center" : "sm:pl-8 items-center sm:items-start"}`}>
         <div
           id="navbar-marker"
           style={markerOffset}
@@ -87,57 +76,67 @@ export default ({items}: NavbarProps) => {
             key={item.title + idx}
           />
         ))}
-        <Menu as={'div'} className='sm:hidden relative inline-block'>
-          <Menu.Button as={NavButton}>
-            <Bars3Icon className='h-6 stroke-inherit'/>
-          </Menu.Button>
-          <Transition
-            enter="transition duration-100 ease-out"
-            enterFrom="transform scale-95 opacity-0"
-            enterTo="transform scale-100 opacity-100"
-            leave="transition duration-75 ease-out"
-            leaveFrom="transform scale-100 opacity-100"
-            leaveTo="transform scale-95 opacity-0"
-          >
-            <Menu.Items
-              className="absolute bottom-10 -left-2 bg-light-foreground dark:bg-dark-midground flex flex-col items-center rounded-lg pt-2">
-              {extras.map((extra, idx) => (
+        {
+          smallScreen &&
+          <Menu as={"div"} className="relative">
+            <Menu.Button as={NavButton}>
+              <Bars3Icon className="h-8 stroke-inherit" />
+            </Menu.Button>
+            <Transition
+              enter="transition duration-100 ease-out"
+              enterFrom="transform scale-95 opacity-0"
+              enterTo="transform scale-100 opacity-100"
+              leave="transition duration-75 ease-out"
+              leaveFrom="transform scale-100 opacity-100"
+              leaveTo="transform scale-95 opacity-0"
+            >
+              <Menu.Items
+                className="absolute bottom-14 left-1 border border-gray-neutral/30 bg-light-foreground dark:bg-dark-foreground flex flex-col items-center rounded-lg">
                 <Menu.Item>
-                  {({active}) => (
-                    <NavButton onClick={extra.onClick} className={`block ${active ? 'bg-gray-neutral/20' : ''}`}>
-                      {extra.component}
+                  {({ active }) => (
+                    <NavButton onClick={handleLogout} className={`${active ? "bg-gray-neutral/20" : ""}`}>
+                      <ArrowLeftOnRectangleIcon className="h-6 stroke-inherit" />
                     </NavButton>
                   )}
                 </Menu.Item>
-              ))}
-            </Menu.Items>
-          </Transition>
-        </Menu>
+                <Menu.Item>
+                  {/*TODO: make theme switcher only show dialog, control dialog from here*/}
+                  {({ active }) => (
+                    <ThemeSwitcher />
+                  )}
+                </Menu.Item>
+                <Menu.Item>
+                  {({ active }) => (
+                    <NavButton className={`${active ? "bg-gray-neutral/20" : ""}`}>
+                      <AboutLink collapsed={true}/>
+                    </NavButton>
+                  )}
+                </Menu.Item>
+              </Menu.Items>
+            </Transition>
+          </Menu>
+        }
       </nav>
-      <div className="hidden mt-auto sm:flex flex-col gap-2 justify-end items-center">
-        {extras.map((extra, idx) => (
-          <NavButton onClick={extra.onClick}>
-            {extra.component}
+      {smallScreen ||
+        <div className="mt-auto flex flex-col gap-2 justify-end items-center">
+          <NavButton>
+           <ArrowLeftOnRectangleIcon className={`h-6 stroke-inherit`} onClick={handleLogout} />
           </NavButton>
-        ))}
-        {/*<NavButton onClick={() => {*/}
-        {/*  // logout();*/}
-        {/*  navigate("/login");*/}
-        {/*}}>*/}
-        {/*  <ArrowLeftOnRectangleIcon className="h-6 stroke-inherit"/>*/}
-        {/*</NavButton>*/}
-        {/*<ThemeSwitcher/>*/}
-        <NavButton
-          onClick={() => setCollapsed((prevCollapsed) => !prevCollapsed)}
-        >
-          <ChevronDoubleLeftIcon
-            className={`collapse-btn h-6 stroke-inherit transition-transform ${
-              collapsed ? "flipped" : ""
-            }`}
-          />
-        </NavButton>
-        {/*<AboutLink collapsed={collapsed}/>*/}
-      </div>
+          <ThemeSwitcher />
+          <NavButton>
+            <AboutLink collapsed={true} />
+          </NavButton>
+          <NavButton
+            onClick={() => setCollapsed((prevCollapsed) => !prevCollapsed)}
+          >
+            <ChevronDoubleLeftIcon
+              className={`collapse-btn h-6 stroke-inherit transition-transform ${
+                collapsed ? "flipped" : ""
+              }`}
+            />
+          </NavButton>
+        </div>
+      }
     </div>
   );
 };

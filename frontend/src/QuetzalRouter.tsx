@@ -50,7 +50,7 @@ export default () => {
         element={<>
           <div className="flex gap-4 sm:text-amber-400 md:text-sky-500">
             <Navbar items={pages}/>
-            <div className={`flex-grow px-2 ${sidebarOpen ? '' : 'sm:pr-4'}`}>
+            <div className={`flex-grow mb-24 sm:m-0 overflow-y-auto sm:overflow-y-hidden sm:h-screen px-3 sm:px-0 sm:pb-4 ${sidebarOpen ? 'px-0' : 'sm:pr-4'}`}>
               <Outlet/>
               <ToastContainer
                 position="bottom-right"

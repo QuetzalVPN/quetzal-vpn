@@ -106,10 +106,10 @@ export default ({userId}: UserDetailProps) => {
           />
           <UserAuthentication user={vpnUser.data.data}/>
           <h2 className="text-xl">Actions</h2>
-          <div className="flex gap-2 w-full">
+          <div className="flex justify-center gap-2 w-full">
             {/*<Button color="yellow" variant="outline" className="grow">Deactivate</Button>*/}
             {/*TODO: show a confirmation dialog before deleting*/}
-            <Button color="red" variant="outline" className="grow" onClick={() => deleteVPNUser.mutate(vpnUser.data.data)}>
+            <Button color="red" variant="outline" className="sm:grow" onClick={() => deleteVPNUser.mutate(vpnUser.data.data)}>
               <TrashIcon className="h-6"/>
               Delete
             </Button>

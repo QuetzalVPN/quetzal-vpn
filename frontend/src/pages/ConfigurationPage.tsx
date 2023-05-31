@@ -66,7 +66,7 @@ export default ({navbarIdx}: PageProps) => {
   });
 
   return (
-    <div className="flex flex-col gap-4 mt-2 sm:mt-6 w-full">
+    <div className="flex flex-col gap-4 mt-4 w-full">
       <PageTitle title="VPN Configuration"/>
       <ShadowBox>
         <div className="flex flex-col gap-4">

@@ -9,7 +9,7 @@ export default ({navbarIdx}: PageProps) => {
   usePageLoad("Administration", navbarIdx);
 
   return (
-    <div className=" mt-2 sm:mt-6 w-full">
+    <div className="w-full mt-4">
       <div className="flex flex-col gap-4">
         <PageTitle title="Administration"/>
         <ShadowBox className="w-full"/>

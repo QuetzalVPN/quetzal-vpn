@@ -10,7 +10,7 @@ export default React.forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputE
                                                                                           }, forwardedRef) => {
   return <input {...props}
                 ref={forwardedRef}
-                className={`${className} ${borderClasses} ${inputClasses}`}
+                className={`${className ?? ''} ${borderClasses} ${inputClasses}`}
   />
 });
 
@@ -22,8 +22,8 @@ const PasswordInput = React.forwardRef<HTMLInputElement, InputHTMLAttributes<HTM
 
   const toggleHidden = () => setHidden((prev) => !prev);
 
-  return <div className={`${borderClasses} flex items-center password-toggle`}>
-    <input {...props} type={hidden ? 'password' : 'text'} className={`${className} ${inputClasses}`}
+  return <div className={`${borderClasses} flex items-center justify-between`}>
+    <input {...props} type={hidden ? 'password' : 'text'} className={`${className ?? ''} ${inputClasses}`}
            ref={forwardedRef}/>
     <button type="button" className="ml-auto rounded-lg p-2" onClick={toggleHidden}>
       {

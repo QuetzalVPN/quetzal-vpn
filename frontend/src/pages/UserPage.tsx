@@ -15,6 +15,7 @@ import NavButton from "../components/NavButton";
 import Dialog from "../components/Dialog";
 import VPNUserCreation from "../components/VPNUserCreation";
 import Button from "../components/Button";
+import { useSmallerThan } from "../hooks/useBreakpoints";
 
 // export enum UserStatus {
 //   Online,
@@ -32,6 +33,8 @@ export default ({navbarIdx}: PageProps) => {
   usePageLoad("User Management", navbarIdx);
 
   const {setSidebar} = useSidebarState();
+
+  const smallScreen = useSmallerThan('sm');
 
   const {id: selectedUser} = useParams();
 
@@ -52,7 +55,7 @@ export default ({navbarIdx}: PageProps) => {
 
   return (
     <div className="flex gap-4 w-full">
-      <div className="flex flex-col gap-4 mt-2 sm:mt-6 w-7/12 grow">
+      <div className="flex flex-col mt-4 gap-4 w-7/12 grow">
         <PageTitle title="User Management"/>
         <ShadowBox>
           <div className="flex items-center">
@@ -79,7 +82,7 @@ export default ({navbarIdx}: PageProps) => {
                         </div>
                     </Button>
                     <Dialog title="Create User" description="Enter details for the new user below" open={dialogOpen}
-                            onClose={closeDialog}>
+                            onClose={closeDialog} fullScreen={smallScreen}>
                         <VPNUserCreation onClose={closeDialog}/>
                     </Dialog>
                 </>}

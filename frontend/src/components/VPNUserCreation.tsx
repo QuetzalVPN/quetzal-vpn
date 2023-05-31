@@ -27,7 +27,7 @@ export default ({onClose}: VPNUserCreationProps) => {
   const [enabled, setEnabled] = useState(true);
 
   return <form
-    className="flex flex-col gap-2"
+    className="flex flex-col flex-grow gap-4 sm:gap-2"
     autoComplete="off"
     onSubmit={(e) => {
       e.preventDefault();
@@ -57,7 +57,7 @@ export default ({onClose}: VPNUserCreationProps) => {
       <Switch enabled={enabled} setEnabled={setEnabled} label="Enable user?"/>
     </div>
 
-    <div className="flex justify-end gap-2 mt-4">
+    <div className="flex justify-end gap-2 mt-auto sm:mt-4">
       <Button variant="outline" className="mr-auto" color="red" type="reset" onClick={reset}>Clear</Button>
       <Button type="button" color="neutral" variant="outline" onClick={onClose}>Close</Button>
       <Button type="submit">Create</Button>

@@ -46,13 +46,13 @@ export default ({
   }, [active, smallScreen]);
 
   return (
-    <NavButton active={active} onClick={() => navigate(path)}>
+    <NavButton active={active} onClick={() => navigate(path)} >
       <div
-        className={`flex ${collapsed ? "" : "gap-2"} text-lg items-center cursor-pointer w-fit ${active ? "text-current" : ""}`}
+        className={`flex ${collapsed ? "" : "sm:gap-2"} text-lg items-center cursor-pointer w-fit ${active ? "text-current" : ""}`}
         ref={ref}>
         {icon}
-        <div className={`sm:nav-extra hidden ${collapsed ? "sm:collapsed" : ""}`}>
-          <h2 className={`sm:overflow-hidden`}>{title}</h2>
+        <div className={`hidden sm:grid transition-[grid-template-columns] my-test ${collapsed ? "grid-cols-[0fr]" : "grid-cols-[1fr]"}`}>
+          <h2 className={`overflow-hidden transition-all ${collapsed ? 'opacity-0' : ''}`}>{title}</h2>
         </div>
       </div>
     </NavButton>

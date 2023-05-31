@@ -10,9 +10,6 @@ interface UserData {
 }
 
 const useLogin = () => {
-  // TODO: dont navigate here, but in the component
-  const navigate = useNavigate();
-
   const {setLoggedIn} = useLoginState();
 
   return useMutation({
@@ -21,7 +18,6 @@ const useLogin = () => {
         return loginUser(username, password)
       },
       onSuccess: ({data}) => {
-        navigate('/dashboard', {replace: true});
         localStorage.setItem("token", data.accessToken);
         setLoggedIn(true);
       },

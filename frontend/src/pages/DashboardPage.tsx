@@ -8,6 +8,8 @@ import PieChart from "../components/charts/PieChart";
 import { ArrowDownIcon, ArrowUpIcon } from "@heroicons/react/24/outline";
 import Button from "../components/Button";
 import usePageLoad from "../hooks/usePageLoad";
+import { useSmallerThan } from "../hooks/useBreakpoints";
+import ThemeSwitcher from "../components/ThemeSwitcher";
 
 const colors = [
   { max: 10, color: "#00FF70" },
@@ -35,10 +37,10 @@ export default ({ navbarIdx }: PageProps) => {
   };
 
   return (
-    <div className="mt-2 sm:mt-6 w-full flex flex-col gap-4">
+    <div className="w-full flex flex-col mt-4 gap-4">
       <PageTitle title="Dashboard" />
       <div className="flex flex-wrap gap-4">
-        <ShadowBox className="flex flex-col grow h-fit">
+        <ShadowBox className="flex flex-col grow-[10]">
           <div className="flex items-center gap-2 w-full">
             <h2 className="text-xl w-fit">Current Traffic</h2>
             <Button className="ml-auto" onClick={randomizeTraffic}>
@@ -70,7 +72,7 @@ export default ({ navbarIdx }: PageProps) => {
           </div>
         </ShadowBox>
         {/* Active User Panel */}
-        <ShadowBox className="h-96 grow-[2] ">
+        <ShadowBox className="h-96 grow-[20] ">
           <div className="flex gap-4 items-center sm:min-w-[400px]">
             <h2 className="text-xl">Active Users </h2>
             <Button
@@ -90,12 +92,18 @@ export default ({ navbarIdx }: PageProps) => {
           />
         </ShadowBox>
         {/* Down vs. Up Panel */}
-        <ShadowBox className="min-w-[150px] grow h-fit">
+        <ShadowBox className="min-w-[150px] grow-[10]">
           <div className="flex items-center gap-4">
             <h2 className="text-xl">Download / Upload</h2>
             <Button onClick={randomizeTraffic}>Update</Button>
           </div>
           <PieChart data={trafficData} options={{ donutDivider: 2 }} />
+        </ShadowBox>
+        <ShadowBox className="grow">
+          <h2>Some other information</h2>
+          <p className="text-gray-neutral">
+            Placeholder for other statistics
+          </p>
         </ShadowBox>
       </div>
     </div>

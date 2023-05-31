@@ -9,7 +9,6 @@ interface LinkProps {
 }
 
 export default ({ collapsed }: LinkProps) => (
-  <NavButton>
     <a
       className="flex gap-1 items-center justify-center text-gray-neutral hover:underline"
       href="https://quetzal-vpn.dev"
@@ -24,5 +23,4 @@ export default ({ collapsed }: LinkProps) => (
         </>
       )}
     </a>
-</NavButton>
 );
