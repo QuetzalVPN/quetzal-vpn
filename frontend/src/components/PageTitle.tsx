@@ -1,5 +1,4 @@
 import ShadowBox from './ShadowBox';
-import GlobalSearch from './GlobalSearch';
 import {useBiggerThan, useSmallerThan} from "../hooks/useBreakpoints";
 
 interface PageTitleProps {

@@ -21,7 +21,6 @@ const createUser = async (username: string) => {
   });
 }
 
-// enable is not optional, because it is the only thing that can be changed, so otherwise updateUser would never be called
 const updateUser = async (id: number, enable: boolean) => {
   return await axiosClient.patch<VPNUser>(`${BASE_URL}/${id}`, {
     enable

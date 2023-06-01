@@ -1,8 +1,5 @@
-import {useMutation} from "react-query";
-import {loginUser} from "../services/authService";
-import {useNavigate} from "react-router-dom";
-
-import {useLoginState} from "./zustand";
+import { useMutation } from "react-query";
+import { loginUser } from "../services/authService";
 
 interface UserData {
   username: string;
@@ -10,23 +7,18 @@ interface UserData {
 }
 
 const useLogin = () => {
-  const {setLoggedIn} = useLoginState();
-
   return useMutation({
-      mutationFn: ({username, password}: UserData) => {
-        console.log('data', {username, password});
-        return loginUser(username, password)
+      mutationFn: ({ username, password }: UserData) => {
+        return loginUser(username, password);
       },
-      onSuccess: ({data}) => {
+      onSuccess: ({ data }) => {
         localStorage.setItem("token", data.accessToken);
-        setLoggedIn(true);
       },
       onError: (error) => {
-        console.error(error);
-        setLoggedIn(false);
+        localStorage.removeItem("token");
       }
     }
-  )
-}
+  );
+};
 
-export {useLogin};
+export { useLogin };
