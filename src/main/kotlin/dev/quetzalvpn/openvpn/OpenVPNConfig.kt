@@ -1,6 +1,5 @@
 package dev.quetzalvpn.openvpn
 
-import java.io.File
 import java.nio.file.Path
 
 class OpenVPNConfig(private val configPath: Path){

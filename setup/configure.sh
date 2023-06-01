@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# Executed on openvpn container start to configure the server
+
 set -ex
 
 EASY_RSA_LOC="/etc/openvpn/easyrsa"
@@ -37,9 +39,14 @@ if [ ! -c /dev/net/tun ]; then
     mknod /dev/net/tun c 10 200
 fi
 
-cp -f /etc/openvpn-setup/server.conf /etc/openvpn/server.conf
+# Load the default server configuration file if it doesn't exist
+[ ! -f "/etc/openvpn/server.conf" ] && cp "/etc/openvpn-setup/server.conf" "/etc/openvpn/server.conf"
+
+# Copy the scripts to the openvpn directory, so they can be executed through the docker volume
 cp -f /etc/openvpn-setup/*.sh /etc/openvpn/
 
+# Create the client-common.txt file
+# TODO: Make this configurable
 echo "client
 tls-client
 key-direction 1
@@ -64,6 +71,7 @@ verb 3" > /etc/openvpn/client-common.txt
 #  echo "verify-client-cert require" | tee -a /etc/openvpn/openvpn.conf
 #  openvpn-user db-init --db.path=$EASY_RSA_LOC/pki/users.db
 #fi
+
 
 [ -d $EASY_RSA_LOC/pki ] && chmod 755 $EASY_RSA_LOC/pki
 [ -f $EASY_RSA_LOC/pki/crl.pem ] && chmod 644 $EASY_RSA_LOC/pki/crl.pem
