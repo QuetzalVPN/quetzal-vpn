@@ -2,8 +2,9 @@ FROM node:18-alpine AS frontend
 ENV NODE_ENV=production
 WORKDIR /app
 COPY ./frontend /app
-RUN npm install --include=dev && npm cache clean --force
-RUN npm run build
+RUN npm install --include=dev  \
+    && npm cache clean --force  \
+    && npm run build
 
 #FROM gradle:7-jdk11 AS build
 #COPY --chown=gradle:gradle . /home/gradle/src/
