@@ -29,16 +29,19 @@ export default ({ user }: UserListItemProps) => {
 
   return (
     <div
-      className={`flex p-4 my-4 items-center gap-4 rounded-xl shadow-big transition-shadow ${user.isEnabled ? user.address ? 'shadow-brand-green/60 hover:shadow-brand-green focus-within:shadow-brand-green' : 'shadow-brand-yellow-light/60 hover:shadow-brand-yellow-light focus-within:shadow-brand-yellow-light' : 'shadow-brand-red/50 hover:shadow-brand-red/90 focus-within:shadow-brand-red/90'}`}
+      className={`flex px-4 py-3 my-4 cursor-pointer items-center gap-4 rounded-xl shadow-big transition-shadow ${user.isEnabled ? user.address ? "shadow-brand-green/60 hover:shadow-brand-green focus-within:shadow-brand-green" : "shadow-brand-yellow-light/60 hover:shadow-brand-yellow-light focus-within:shadow-brand-yellow-light" : "shadow-brand-red/50 hover:shadow-brand-red/90 focus-within:shadow-brand-red/90"}`}
+      onClick={openDetails}
     >
       <UserCircleIcon
-        className={`h-14 cursor-pointer ${user.isEnabled ? user.address ? "text-brand-green stroke-brand-green" : "text-brand-yellow-light stroke-brand-yellow-light" : "text-brand-red stroke-brand-red"}}`}
-        onClick={openDetails}
+        className={`h-14 ${user.isEnabled ? user.address ? "text-brand-green stroke-brand-green" : "text-brand-yellow-light stroke-brand-yellow-light" : "text-brand-red stroke-brand-red"}}`}
+        // onClick={openDetails}
       />
-      <div className="cursor-pointer" onClick={openDetails}>
+      <div
+        // onClick={openDetails}
+      >
         <p className="text-lg font-lexend">{user.username}</p>
         {user.address && (
-          <p className="text-lg text-gray-neutral">{user.address.split(':')[0]}</p>
+          <p className="text-lg text-gray-neutral">{user.address.split(":")[0]}</p>
         )}
         {user.timestamp && (
           <p className="text-lg text-gray-neutral">
@@ -48,8 +51,11 @@ export default ({ user }: UserListItemProps) => {
         )}
       </div>
       <div className="ml-auto flex gap-2">
-        <NavButton onClick={openDetails}><WrenchIcon className="h-7" /></NavButton>
-        <NavButton className="group" onClick={() => setDialogOpen(true)}><TrashIcon
+        <NavButton><WrenchIcon className="h-7" /></NavButton>
+        <NavButton className="group" onClick={(e) => {
+          e.stopPropagation();
+          setDialogOpen(true);
+        }}><TrashIcon
           className="h-7 group-hover:text-brand-red group-focus:text-brand-red" /></NavButton>
       </div>
       <Dialog open={dialogOpen} onClose={closeDialog} title={`Confirm deletion of ${user.username}`}

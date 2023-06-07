@@ -1,7 +1,7 @@
 import {
   ArrowLeftOnRectangleIcon,
   Bars3Icon,
-  ChevronDoubleLeftIcon
+  ChevronDoubleLeftIcon, MoonIcon, SunIcon
 } from "@heroicons/react/24/outline";
 import { ReactElement, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -14,6 +14,7 @@ import QuetzalTitle from "./QuetzalTitle";
 import ThemeSwitcher from "./ThemeSwitcher";
 import { Menu, Transition } from "@headlessui/react";
 import { useSmallerThan } from "../hooks/useBreakpoints";
+import { useTheme } from "../hooks/useTheme";
 
 // import useLogout from "../hooks/useLogout";
 
@@ -32,6 +33,8 @@ export default ({ items }: NavbarProps) => {
 
   const smallScreen = useSmallerThan("sm");
 
+  const { theme } = useTheme();
+
   const [collapsed, setCollapsed] = useState<boolean>(
     (localStorage.getItem("navbarCollapsed") ?? "false") === "true"
   );
@@ -42,16 +45,19 @@ export default ({ items }: NavbarProps) => {
   };
 
   const [markerOffset, setMarkerOffset] = useState<{ top?: number, left?: number }>({ top: 0, left: 0 });
+  const [themeMenuOpen, setThemeMenuOpen] = useState(false);
 
   const currentPage = useCurrentPage((state) => state.currentPage);
 
   return (
     <div
       className={`
+      z-[50]
         fixed sm:static flex bottom-0 sm:flex-col sm:h-screen w-full sm:w-fit sm:min-w-fit
-        border-t border-gray-neutral/30 sm:border-0 py-3.5 sm:py-6
+        border-t sm:border-r border-gray-neutral/30 md:border-0 py-3.5 sm:py-6
         -sm:bg-gradient-to-t from-20% from-light-foreground dark:from-dark-background dark:bg-dark-background/40 backdrop-blur-sm
-        sm:bg-light-foreground sm:dark:bg-dark-foreground sm:backdrop-blur-none shadow-md`}
+        sm:bg-light-foreground sm:dark:bg-dark-foreground sm:backdrop-blur-none shadow-md
+        `}
     >
       <QuetzalTitle
         className="hidden sm:flex w-full justify-center sm:px-8"
@@ -100,15 +106,23 @@ export default ({ items }: NavbarProps) => {
                   )}
                 </Menu.Item>
                 <Menu.Item>
-                  {/*TODO: make theme switcher only show dialog, control dialog from here*/}
                   {({ active }) => (
-                    <ThemeSwitcher />
+                    <NavButton onClick={() => setThemeMenuOpen((prev) => !prev)}
+                               className={`${active ? "bg-gray-neutral/20" : ""}`}>
+                      {
+                        theme === "light" ?
+                          <SunIcon className={`h-6 stroke-inherit`} />
+                          :
+                          <MoonIcon className={`h-6 stroke-inherit`} />
+                      }
+                      <ThemeSwitcher open={themeMenuOpen} />
+                    </NavButton>
                   )}
                 </Menu.Item>
                 <Menu.Item>
                   {({ active }) => (
                     <NavButton className={`${active ? "bg-gray-neutral/20" : ""}`}>
-                      <AboutLink collapsed={true}/>
+                      <AboutLink collapsed={true} />
                     </NavButton>
                   )}
                 </Menu.Item>
@@ -119,10 +133,18 @@ export default ({ items }: NavbarProps) => {
       </nav>
       {smallScreen ||
         <div className="mt-auto flex flex-col gap-2 justify-end items-center">
-          <NavButton>
-           <ArrowLeftOnRectangleIcon className={`h-6 stroke-inherit`} onClick={handleLogout} />
+          <NavButton onClick={handleLogout}>
+            <ArrowLeftOnRectangleIcon className={`h-6 stroke-inherit`} />
           </NavButton>
-          <ThemeSwitcher />
+          <NavButton onClick={() => setThemeMenuOpen((prev) => !prev)}>
+            {
+              theme === "light" ?
+                <SunIcon className={`h-6 stroke-inherit`} />
+                :
+                <MoonIcon className={`h-6 stroke-inherit`} />
+            }
+            <ThemeSwitcher open={themeMenuOpen} />
+          </NavButton>
           <NavButton>
             <AboutLink collapsed={true} />
           </NavButton>

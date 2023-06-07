@@ -24,7 +24,7 @@ const useVPNUserProfile = (id: number) => {
 
 const useCreateVPNUser = () => {
   const queryClient = useQueryClient();
-  const toastId = useRef<ToastId | null>(null);
+  const toastId = useRef<ToastId>();
 
   const updateLoadingToast = (options: ToastUpdateOptions) => {
     if (toastId.current) {
@@ -76,14 +76,14 @@ const useDeleteVPNUser = () => {
   });
 };
 
-interface UdateVPNUserParams {
+interface UpdateVPNUserParams {
   user: VPNUser;
   enable: boolean;
 }
 
 const useUpdateVPNUser = () => {
   const queryClient = useQueryClient();
-  const toastId = useRef<ToastId | null>(null);
+  const toastId = useRef<ToastId>();
 
   const updateLoadingToast = (options: ToastUpdateOptions) => {
     if (toastId.current) {
@@ -93,7 +93,7 @@ const useUpdateVPNUser = () => {
 
   return useMutation({
     mutationKey: "updateVPNUser",
-    mutationFn: ({ user, enable }: UdateVPNUserParams) => updateUser(user.id, enable),
+    mutationFn: ({ user, enable }: UpdateVPNUserParams) => updateUser(user.id, enable),
     onMutate: ({ user }) => {
       toastId.current = toast.loading(`Updating user ${user.username}...`);
     },

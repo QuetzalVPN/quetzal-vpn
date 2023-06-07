@@ -41,6 +41,7 @@ export default ({onClose}: VPNUserCreationProps) => {
       </div>
       <BasicInput
         required
+        autoFocus={true}
         placeholder="Username"
         id="vpnuser-username"
         value={username}

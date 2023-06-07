@@ -4,7 +4,7 @@ import NavButton from "./NavButton";
 import { Menu, Transition } from "@headlessui/react";
 import ShadowBox from "./ShadowBox";
 
-export default () => {
+export default ({ open }: { open: boolean }) => {
   const { theme, isSystemTheme, setTheme } = useTheme();
 
   const options = [
@@ -29,13 +29,9 @@ export default () => {
   ];
 
   return (
-    <Menu as="div" className="relative">
-      <Menu.Button as={NavButton}>
-        <div className="h-6">
-          {options.find((option) => option.active)?.icon}
-        </div>
-      </Menu.Button>
-      <Menu.Items as={ShadowBox} className="absolute border border-gray-neutral/30 py-0 px-0 -top-11 right-12 sm:-top-10 sm:-right-24 rounded-lg overflow-hidden">
+    open ? <Menu as="div" className="relative">
+      <Menu.Items static open={open} as={ShadowBox}
+                  className="absolute border border-gray-neutral/30 py-0 px-0 -top-11 right-12 sm:-top-10 sm:-right-24 rounded-lg overflow-hidden">
         {options.map((option) => (
           <Menu.Item key={option.label}>
             {({ active }) => (
@@ -56,6 +52,6 @@ export default () => {
           </Menu.Item>
         ))}
       </Menu.Items>
-    </Menu>
+    </Menu> : <></>
   );
 };

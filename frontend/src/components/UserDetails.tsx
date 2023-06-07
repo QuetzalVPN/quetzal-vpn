@@ -18,6 +18,7 @@ import { useState } from "react";
 import useDownload from "../hooks/useDownload";
 import { getUserProfile } from "../services/vpnUserService";
 import { toast } from "react-toastify";
+import InfoTooltip from "./InfoTooltip";
 
 interface UserDetailProps {
   userId: number;
@@ -74,7 +75,13 @@ const UserAuthentication = ({ user }: { user: VPNUser }) => {
   };
 
   return <section className="flex flex-col gap-2">
-    <h2 className="text-xl text-center">Authentication</h2>
+    <div className="flex justify-center items-center gap-2">
+      <h2 className="text-xl text-center">Authentication</h2>
+      <InfoTooltip
+        className="w-72 -left-60 text-center"
+        info="Users can log onto your server with this file."
+      />
+    </div>
     <Button onClick={handleDownload}>
       <ArrowDownTrayIcon className="h-6" />
       Download OVPN-File
@@ -93,7 +100,7 @@ export default ({ userId }: UserDetailProps) => {
 
   const handleUpdate = () => {
     if (vpnUser.data) {
-      updateVPNUser.mutate({user: vpnUser.data.data, enable: !vpnUser.data.data.isEnabled});
+      updateVPNUser.mutate({ user: vpnUser.data.data, enable: !vpnUser.data.data.isEnabled });
     }
   };
 
@@ -119,14 +126,20 @@ export default ({ userId }: UserDetailProps) => {
             color={"#00ff70"}
           />
           <UserAuthentication user={vpnUser.data.data} />
-          <h2 className="text-xl">Actions</h2>
-          <div className="flex justify-center gap-2 w-full">
-            <Button color={vpnUser.data.data.isEnabled ? 'yellow' : 'green'} variant="outline" className="sm:grow" onClick={handleUpdate}>
+          <div className="flex gap-2 justify-center items-center">
+            <h2 className="text-xl">Actions</h2>
+            <InfoTooltip
+              className="-left-48 text-center w-72"
+              info="Deactivating a user will revoke their certificate." />
+          </div>
+          <div className="w-full flex flex-col gap-4">
+            <Button color={vpnUser.data.data.isEnabled ? "yellow" : "green"} variant="outline" className="sm:w-full"
+                    onClick={handleUpdate}>
               {vpnUser.data.data.isEnabled ? <NoSymbolIcon className="h-6" /> : <CheckCircleIcon className="h-6" />}
-              {vpnUser.data.data.isEnabled ? 'Disable' : 'Enable'}
+              {vpnUser.data.data.isEnabled ? "Disable" : "Enable"}
             </Button>
             {/*TODO: show a confirmation dialog before deleting*/}
-            <Button color="red" variant="outline" className="sm:grow"
+            <Button color="red" variant="outline" className="sm:w-full"
                     onClick={() => deleteVPNUser.mutate(vpnUser.data.data)}>
               <TrashIcon className="h-6" />
               Delete

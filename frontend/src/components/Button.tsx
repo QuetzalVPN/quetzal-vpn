@@ -1,4 +1,5 @@
 import React from "react";
+import { twMerge } from "tailwind-merge";
 
 const VARIANT_CLASSES = {
   default: {
@@ -29,6 +30,6 @@ export default React.forwardRef<HTMLButtonElement, ButtonProps>(({
   <button
     {...props}
     ref={forwardedRef}
-    className={`${className} ${VARIANT_CLASSES[variant ?? 'default'][color ?? 'green']} font-lexend px-4 py-2 rounded-lg flex gap-2 justify-center items-center transition active:scale-90`}
+    className={twMerge(VARIANT_CLASSES[variant ?? 'default'][color ?? 'green'], 'font-lexend px-4 py-2 rounded-lg flex gap-2 justify-center items-center transition active:scale-90' , className)}
   />
 ));

@@ -37,7 +37,7 @@ module.exports = {
         hard: "0px 1px 2px #1116",
         glow: "0px 0px 4px 1px",
         switch: "0px 0px 0px 6px #7F7F7F7F",
-        "big": "0px 0px 5px 1px",
+        "big": "0px 0px 5px 1px"
       }, fontFamily: {
         lexend: ["Lexend", "sans-serif"]
       }, translate: {
@@ -50,5 +50,5 @@ module.exports = {
         "-sm": { "max": "639px" }
       }
     }
-  }, plugins: []
+  }, plugins: [require("@headlessui/tailwindcss")]
 };

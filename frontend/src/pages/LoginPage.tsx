@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useTitleState } from "../hooks/zustand";
 import LoadingSpinner from "../components/LoadingSpinner";
 import QuetzalTitle from "../components/QuetzalTitle";
-import { useLogin } from "../hooks/useLogin";
+import { useLoginUser } from "../hooks/useLoginUser";
 import BasicInput, { PasswordInput } from "../components/BasicInput";
 import Button from "../components/Button";
 import { Navigate } from "react-router-dom";
@@ -11,7 +11,7 @@ import { Navigate } from "react-router-dom";
 export default () => {
   const setBrowserTitle = useTitleState((state) => state.change);
 
-  const login = useLogin();
+  const login = useLoginUser();
 
   const [username, setUsername] = useState("");
   const [usernameMsg, setUsernameMsg] = useState<string>();
@@ -51,7 +51,7 @@ export default () => {
                   <label htmlFor="username" className="font-lexend text-lg">Username</label>
                   <p className="text-brand-red text-sm">{usernameMsg}</p>
                 </div>
-                <BasicInput placeholder="Username" id="username" value={username} required
+                <BasicInput autoFocus={true} placeholder="Username" id="username" value={username} required
                             onChange={e => setUsername(e.target.value)}
                             onBlur={e => setUsernameMsg(e.target.validity.valid ? undefined : "Please enter your username")}
                 />
