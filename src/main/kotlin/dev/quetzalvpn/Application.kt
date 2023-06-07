@@ -1,8 +1,8 @@
 package dev.quetzalvpn
 
 import dev.quetzalvpn.dao.DatabaseFactory
-import io.ktor.server.application.*
 import dev.quetzalvpn.plugins.*
+import io.ktor.server.application.*
 
 fun main(args: Array<String>): Unit =
     io.ktor.server.netty.EngineMain.main(args)
@@ -12,6 +12,7 @@ fun Application.module() {
     DatabaseFactory.init(environment.config)
     configureSerialization()
     configureSecurity()
+    configureLoginUsers()
     configureRouting()
     configureReactSPA()
 }

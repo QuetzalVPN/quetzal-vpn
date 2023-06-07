@@ -1,13 +1,12 @@
 package dev.quetzalvpn.plugins
 
-import io.ktor.server.routing.*
-import io.ktor.server.response.*
-import io.ktor.server.plugins.statuspages.*
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
-import io.ktor.server.http.content.*
+import io.ktor.server.plugins.statuspages.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
 
 fun Application.configureRouting() {
     configureVPNUserRouting()
@@ -25,6 +24,7 @@ fun Application.configureRouting() {
             route("/auth") {
                 authenticate {
                     get("/me") {
+                        //TODO: implement this route correctly
                         call.respondText("Hello, ${call.principal<JWTPrincipal>()?.payload?.getClaim("username")}")
                     }
                 }
