@@ -1,5 +1,5 @@
 import { axiosClient } from "../api/axios";
-import { LoginUser } from "../types/AuthUsers";
+import { LoginUser, UserLog } from "../types/LoginUsers";
 
 const BASE_URL = "/auth";
 
@@ -12,27 +12,31 @@ const loginUser = async (username: string, password: string) => {
 };
 
 const signupUser = async (username: string, password: string) => {
-  return await axiosClient.post(`${BASE_URL}/signup`, {
+  return await axiosClient.post(`${BASE_URL}/users`, {
       username,
       password
     }
   );
 };
 
-const updateUser = async (password: string) => {
-  return await axiosClient.patch(`${BASE_URL}/signup`, { password });
+const updateUser = async (id: number, password: string) => {
+  return await axiosClient.patch(`${BASE_URL}/users/${id}`, { password });
 };
 
-const deleteUser = async () => {
-  return await axiosClient.delete(`${BASE_URL}/signup`);
+const deleteLoginUser = async (id: number) => {
+  return await axiosClient.delete(`${BASE_URL}/users/${id}`);
 };
 
 const getLoginUsers = async () => {
-  return await axiosClient.get<LoginUser[]>(`${BASE_URL}/signup`);
+  return await axiosClient.get<LoginUser[]>(`${BASE_URL}/users`);
+}
+
+const getUserLogs = async (id: number) => {
+  return await axiosClient.get<UserLog[]>(`${BASE_URL}/users/${id}/logs`);
 }
 
 const getSelf = async () => {
   return await axiosClient.get<string>(`${BASE_URL}/me`);
 };
 
-export { loginUser, signupUser, getLoginUsers, getSelf };
+export { loginUser, signupUser, deleteLoginUser, getLoginUsers, getSelf };

@@ -16,8 +16,6 @@ import { Menu, Transition } from "@headlessui/react";
 import { useSmallerThan } from "../hooks/useBreakpoints";
 import { useTheme } from "../hooks/useTheme";
 
-// import useLogout from "../hooks/useLogout";
-
 interface NavItem {
   title: string;
   icon: ReactElement;
@@ -82,54 +80,6 @@ export default ({ items }: NavbarProps) => {
             key={item.title + idx}
           />
         ))}
-        {
-          smallScreen &&
-          <Menu as={"div"} className="relative">
-            <Menu.Button as={NavButton}>
-              <Bars3Icon className="h-8 stroke-inherit" />
-            </Menu.Button>
-            <Transition
-              enter="transition duration-100 ease-out"
-              enterFrom="transform scale-95 opacity-0"
-              enterTo="transform scale-100 opacity-100"
-              leave="transition duration-75 ease-out"
-              leaveFrom="transform scale-100 opacity-100"
-              leaveTo="transform scale-95 opacity-0"
-            >
-              <Menu.Items
-                className="absolute bottom-14 left-1 border border-gray-neutral/30 bg-light-foreground dark:bg-dark-foreground flex flex-col items-center rounded-lg">
-                <Menu.Item>
-                  {({ active }) => (
-                    <NavButton onClick={handleLogout} className={`${active ? "bg-gray-neutral/20" : ""}`}>
-                      <ArrowLeftOnRectangleIcon className="h-6 stroke-inherit" />
-                    </NavButton>
-                  )}
-                </Menu.Item>
-                <Menu.Item>
-                  {({ active }) => (
-                    <NavButton onClick={() => setThemeMenuOpen((prev) => !prev)}
-                               className={`${active ? "bg-gray-neutral/20" : ""}`}>
-                      {
-                        theme === "light" ?
-                          <SunIcon className={`h-6 stroke-inherit`} />
-                          :
-                          <MoonIcon className={`h-6 stroke-inherit`} />
-                      }
-                      <ThemeSwitcher open={themeMenuOpen} />
-                    </NavButton>
-                  )}
-                </Menu.Item>
-                <Menu.Item>
-                  {({ active }) => (
-                    <NavButton className={`${active ? "bg-gray-neutral/20" : ""}`}>
-                      <AboutLink collapsed={true} />
-                    </NavButton>
-                  )}
-                </Menu.Item>
-              </Menu.Items>
-            </Transition>
-          </Menu>
-        }
       </nav>
       {smallScreen ||
         <div className="mt-auto flex flex-col gap-2 justify-end items-center">

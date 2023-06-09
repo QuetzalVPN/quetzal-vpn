@@ -6,12 +6,15 @@ import React from "react";
 import Dialog from "./Dialog";
 import Button from "./Button";
 import { useDeleteVPNUser } from "../hooks/useVPNUser";
+import { VPNClient, VPNRoute } from "../types/VPNManagement";
 
 interface UserListItemProps {
   user: VPNUser;
+  client?: VPNClient;
+  route?: VPNRoute;
 }
 
-export default ({ user }: UserListItemProps) => {
+export default ({ user, client, route }: UserListItemProps) => {
   const navigate = useNavigate();
 
   const [dialogOpen, setDialogOpen] = React.useState(false);
@@ -29,20 +32,17 @@ export default ({ user }: UserListItemProps) => {
 
   return (
     <div
-      className={`flex px-4 py-3 my-4 cursor-pointer items-center gap-4 rounded-xl shadow-big transition-shadow ${user.isEnabled ? user.address ? "shadow-brand-green/60 hover:shadow-brand-green focus-within:shadow-brand-green" : "shadow-brand-yellow-light/60 hover:shadow-brand-yellow-light focus-within:shadow-brand-yellow-light" : "shadow-brand-red/50 hover:shadow-brand-red/90 focus-within:shadow-brand-red/90"}`}
+      className={`flex px-4 py-3 my-4 cursor-pointer items-center gap-4 rounded-xl shadow-big transition-shadow ${user.isEnabled ? client ? "shadow-brand-green/60 hover:shadow-brand-green focus-within:shadow-brand-green" : "shadow-brand-yellow-light/60 hover:shadow-brand-yellow-light focus-within:shadow-brand-yellow-light" : "shadow-brand-red/50 hover:shadow-brand-red/90 focus-within:shadow-brand-red/90"}`}
       onClick={openDetails}
     >
       <UserCircleIcon
-        className={`h-14 ${user.isEnabled ? user.address ? "text-brand-green stroke-brand-green" : "text-brand-yellow-light stroke-brand-yellow-light" : "text-brand-red stroke-brand-red"}}`}
-        // onClick={openDetails}
+        className={`h-14 ${user.isEnabled ? client ? "text-brand-green stroke-brand-green" : "text-brand-yellow-light stroke-brand-yellow-light" : "text-brand-red stroke-brand-red"}}`}
       />
-      <div
-        // onClick={openDetails}
-      >
+      <div>
         <p className="text-lg font-lexend">{user.username}</p>
-        {user.address && (
-          <p className="text-lg text-gray-neutral">{user.address.split(":")[0]}</p>
-        )}
+        {client &&
+          <p className="text-lg text-gray-neutral">{client.realAddress.split(":")[0]}</p>
+        }
         {user.timestamp && (
           <p className="text-lg text-gray-neutral">
             Last connected:&nbsp;

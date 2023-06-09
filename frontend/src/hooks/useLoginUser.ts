@@ -1,7 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { getLoginUsers, loginUser, signupUser } from "../services/loginUserService";
+import { deleteLoginUser, getLoginUsers, loginUser, signupUser } from "../services/loginUserService";
 import { useRef } from "react";
 import { Id as ToastId, toast, UpdateOptions as ToastUpdateOptions } from "react-toastify";
+import { LoginUser } from "../types/LoginUsers";
+import { VPNUser } from "../types/VPNUsers";
 
 const useLoginUser = () => {
   return useMutation({
@@ -64,4 +66,41 @@ const useLoginUsers = () => {
   });
 };
 
-export { useLoginUser, useLoginUsers, useSignupUser };
+const useDeleteUser = () => {
+  const queryClient = useQueryClient();
+  const toastId = useRef<ToastId>();
+
+  const updateLoadingToast = (options: ToastUpdateOptions) => {
+    if (toastId.current) {
+      toast.update(toastId.current, options);
+    }
+  };
+
+  return useMutation({
+    mutationFn: (user: LoginUser) => deleteLoginUser(user.id),
+    onMutate: (user: LoginUser) => {
+      toastId.current = toast.loading(`Deleting user ${user.username}...`);
+    },
+    onSuccess: (data, user) => {
+      updateLoadingToast({
+        render: `Successfully deleted user ${user.username}!`,
+        type: "success",
+        isLoading: false,
+        autoClose: undefined
+      });
+    },
+    onError: (error, user) => {
+      updateLoadingToast({
+        render: `Failed to delete user ${user.username}!`,
+        type: "error",
+        isLoading: false,
+        autoClose: undefined
+      });
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries("loginUsers");
+    }
+  });
+};
+
+export { useLoginUser, useLoginUsers, useDeleteUser, useSignupUser };

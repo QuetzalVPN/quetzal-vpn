@@ -10,7 +10,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useVPNUsers } from "../hooks/useVPNUser";
 import LoadingSpinner from "../components/LoadingSpinner";
-import UserListItem from "../components/UserListItem";
+import UserListItem from "../components/VPNUserListItem";
 import NavButton from "../components/NavButton";
 import Dialog from "../components/Dialog";
 import VPNUserCreation from "../components/VPNUserCreation";
@@ -65,7 +65,7 @@ export default ({ navbarIdx }: PageProps) => {
         <PageTitle title="User Management" />
         <ShadowBox>
           <div className="flex items-center justify-between">
-            <h2 className="text-xl">Users</h2>
+            <h2 className="text-xl">VPN Users</h2>
             <Searchbar value={searchTerm} onChange={(value) => setSearchTerm(value)} />
           </div>
           <div className="px-2 overflow-y-auto">
@@ -78,10 +78,19 @@ export default ({ navbarIdx }: PageProps) => {
                     .go(
                       searchTerm.trim(), vpnUsers.data.data.vpnUsers,
                       { keys: ["username", "id"], all: true }
-                    ).map(result => result.obj)
+                    ).map(result => {
+                    return result.obj;
+                  })
                     .sort((a, b) => +b.isEnabled - +a.isEnabled)
                     .map((user) => {
-                      return <UserListItem key={user.id} user={user} />;
+                      const client = vpnStatus.data.clients.find((client) => client.commonName === user.username);
+                      const route = vpnStatus.data.routes.find((route) => route.commonName === user.username);
+                      return <UserListItem
+                        key={user.id}
+                        user={user}
+                        client={client}
+                        route={route}
+                      />;
                     })
                 }
                 <Button variant="outline" className="w-full text-center mb-1" onClick={openDialog}>
@@ -100,7 +109,7 @@ export default ({ navbarIdx }: PageProps) => {
       </div>
       {selectedUser && (
         <Sidebar>
-          <UserDetails userId={Number.parseInt(selectedUser)} />
+          <UserDetails userId={Number.parseInt(selectedUser)}/>
         </Sidebar>
       )}
     </div>

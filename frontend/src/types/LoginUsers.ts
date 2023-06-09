@@ -3,4 +3,8 @@ interface LoginUser {
   username: string;
 }
 
-export type { LoginUser };
+interface UserLog {
+
+}
+
+export type { LoginUser, UserLog };
