@@ -14,8 +14,8 @@ import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.transactions.transaction
 
 
-suspend fun ApplicationCall.getParamsVPNUser(): VPNUser? {
-    val id = parameters["id"]?.toIntOrNull()
+suspend fun ApplicationCall.getParamsVPNUser(parameterName: String = "id"): VPNUser? {
+    val id = parameters[parameterName]?.toIntOrNull()
     if (id == null) {
         respond(HttpStatusCode.BadRequest)
         return null

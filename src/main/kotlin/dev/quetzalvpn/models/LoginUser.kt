@@ -10,6 +10,8 @@ class LoginUser(id: EntityID<Int>) : Entity<Int>(id) {
 
     var loginName by LoginUsers.loginName
     var passwordHash by LoginUsers.passwordHash
+
+    val logs by LoginLog referrersOn LoginLogs.loginUserId
 }
 
 object LoginUsers : IntIdTable() {

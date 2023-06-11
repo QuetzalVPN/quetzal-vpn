@@ -1,18 +1,11 @@
 package dev.quetzalvpn.plugins
 
-import dev.quetzalvpn.openvpn.OpenVPNConfig
 import dev.quetzalvpn.openvpn.OpenVPNManagementClient
+import io.ktor.http.*
 import io.ktor.server.application.*
-import io.ktor.server.http.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import kotlinx.serialization.Serializable
-import java.nio.file.Paths
 
-class VPNManagementRoute {
-    @Serializable
-    data class StatusResponse(val lastUpdated: String, val rawStatus: String)
-}
 
 fun Application.configureVPNManagementRouting() {
     val vpnServerHost = environment.config.property("openvpn.server.host").getString();
@@ -25,10 +18,20 @@ fun Application.configureVPNManagementRouting() {
         route("/api/v1/vpn/management") {
             get("/status") {
                 val status = vpnManagementClient.status()
-                //call.respondText(status.rawStatus)
-                //call.respond(VPNManagementRoute.StatusResponse(status.updated.toHttpDateString(), rawStatus = status.rawStatus))
+
                 call.respond(status)
             }
+            post("/restart") {
+                vpnManagementClient.restartServer()
+                call.respond(HttpStatusCode.Accepted)
+            }
+            post("/kill/{clientId}") {
+                val vpnUser = call.getParamsVPNUser("clientId") ?: return@post
+
+                vpnManagementClient.killClient(vpnUser.name)
+                call.respond(HttpStatusCode.Accepted)
+            }
+
         }
     }
 

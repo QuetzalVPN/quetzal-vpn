@@ -1,7 +1,5 @@
 package dev.quetzalvpn.plugins
 
-import dev.quetzalvpn.models.LoginLog
-import dev.quetzalvpn.models.LoginLogs
 import dev.quetzalvpn.models.LoginUser
 import dev.quetzalvpn.models.LoginUsers
 import dev.quetzalvpn.security.Hashing
@@ -118,7 +116,7 @@ fun Application.configureLoginUsers() {
                         get {
                             val loginUser = call.getParamsAuthUser() ?: return@get
                             val logs = transaction {
-                                LoginLog.find { LoginLogs.loginUserId eq loginUser.id }.toList()
+                                loginUser.logs.toList()
                             }
                             call.respond(GetLogsResponse(logs.map {
                                 LoginLogResponse(
@@ -126,7 +124,7 @@ fun Application.configureLoginUsers() {
                                     it.loginDateTime,
                                     it.loginIp,
                                     it.loginResult,
-                                    it.loginUser.id.value
+                                    loginUser.id.value
                                 )
                             }))
                         }
