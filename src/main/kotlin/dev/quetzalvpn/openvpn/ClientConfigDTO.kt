@@ -10,7 +10,7 @@ data class RemoteDefinition(
 
 @Serializable
 data class ClientConfigDTO(
-    val remote: RemoteDefinition, //TODO: multiple remotes?
+    val remote: RemoteDefinition,
     val proto: Protocol,
     val cipher: String?
 )

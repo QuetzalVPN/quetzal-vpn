@@ -16,8 +16,7 @@ import java.util.*
 data class OpenVPNStatus(
     @Serializable(with = LocalDateTimeSerializer::class) val updated: LocalDateTime,
     val clients: List<OpenVPNClient>,
-    val routes: List<OpenVPNRoutingTableRow>,
-    val rawStatus: String //TODO: remove on release
+    val routes: List<OpenVPNRoutingTableRow>
 )
 
 @Serializable
@@ -37,20 +36,22 @@ data class OpenVPNRoutingTableRow(
     @Serializable(with = LocalDateTimeSerializer::class) val lastRef: LocalDateTime
 )
 
-class OpenVPNManagementClient(host: String, port: Int) {
+class OpenVPNManagementClient(private val host: String, private val port: Int) {
     private val LOGGER = KtorSimpleLogger(this::class.qualifiedName.orEmpty());
+
     companion object {
         private val ovpnDateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
     }
 
-    private val socket: Socket = Socket(host, port) // TODO: fix reconnect
-    private val writer: Writer = OutputStreamWriter(socket.getOutputStream())
-    private val reader: Scanner = Scanner(InputStreamReader(socket.getInputStream()))
-
-
     enum class Signals {
         SIGHUP, SIGTERM, SIGUSR1, SIGUSR2
     }
+
+    private var socket: Socket = Socket(host, port) //TODO: reconnect/timeout
+    private val writer: Writer
+        get() = OutputStreamWriter(socket.getOutputStream())
+    private val reader: Scanner
+        get() = Scanner(InputStreamReader(socket.getInputStream()))
 
     private fun sendSignal(signal: Signals) {
         LOGGER.debug("Sending Signal ${signal.name}")
@@ -95,7 +96,6 @@ class OpenVPNManagementClient(host: String, port: Int) {
         val routingTableLabelIndex = lines.indexOf("ROUTING TABLE")
         val routingTableHeaderIndex = routingTableLabelIndex + 1
         val globalStatsLabelIndex = lines.indexOf("GLOBAL STATS")
-        val endLineIndex = lines.indexOf("END")
 
         val clientListHeader = lines[clientListHeaderIndex]
         val clientListLines = lines.subList(clientListHeaderIndex + 1, routingTableLabelIndex)
@@ -103,17 +103,10 @@ class OpenVPNManagementClient(host: String, port: Int) {
         val routingTableHeader = lines[routingTableHeaderIndex]
         val routingTableLines = lines.subList(routingTableHeaderIndex + 1, globalStatsLabelIndex)
 
-        // TODO: this is not the header/label + parse this and add to OpenVPNStatus
-        val globalStatsHeader = lines[globalStatsLabelIndex]
-        val globalStatsLines = lines.subList(globalStatsLabelIndex + 1, endLineIndex)
-
-        val statusOutput: String = lines.subList(clientListLabelIndex, endLineIndex).joinToString("\n")
-
         return OpenVPNStatus(
             updated = parseUpdatedLine(lines[updatedLineIndex]),
             clients = parseClientList(clientListHeader, clientListLines),
             routes = parseRoutingTable(routingTableHeader, routingTableLines),
-            rawStatus = statusOutput
         )
     }
 
@@ -162,9 +155,6 @@ class OpenVPNManagementClient(host: String, port: Int) {
         }
     }
 
-    private fun parseGlobalStats(headerLine: String, statsLines: List<String>) {
-        TODO("Not yet implemented")
-    }
 
     private fun executeCommand(command: String) {
         writer.write("$command\r\n")
@@ -172,9 +162,7 @@ class OpenVPNManagementClient(host: String, port: Int) {
     }
 
     private fun executeCommandReadEnd(command: String): String {
-        writer.write("$command\r\n")
-        writer.flush()
-
+        executeCommand(command)
         return readToEnd()
     }
 
