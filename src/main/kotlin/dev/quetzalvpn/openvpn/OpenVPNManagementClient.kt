@@ -48,10 +48,9 @@ class OpenVPNManagementClient(private val host: String, private val port: Int) {
     }
 
     private var socket: Socket = Socket(host, port) //TODO: reconnect/timeout
-    private val writer: Writer
-        get() = OutputStreamWriter(socket.getOutputStream())
-    private val reader: Scanner
-        get() = Scanner(InputStreamReader(socket.getInputStream()))
+    private var writer: Writer = OutputStreamWriter(socket.getOutputStream())
+    private var reader: Scanner = Scanner(InputStreamReader(socket.getInputStream()))
+
 
     private fun sendSignal(signal: Signals) {
         LOGGER.debug("Sending Signal ${signal.name}")
