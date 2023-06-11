@@ -1,7 +1,5 @@
 package dev.quetzalvpn.plugins
 
-import dev.quetzalvpn.models.LoginLog
-import dev.quetzalvpn.models.LoginLogs
 import dev.quetzalvpn.models.LoginUser
 import dev.quetzalvpn.models.LoginUsers
 import dev.quetzalvpn.security.Hashing
@@ -12,6 +10,7 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.serialization.Serializable
+import org.jetbrains.exposed.dao.load
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.LocalDateTime
 
@@ -117,10 +116,10 @@ fun Application.configureLoginUsers() {
                     route("logs") {
                         get {
                             val loginUser = call.getParamsAuthUser() ?: return@get
-                            val logs = transaction {
-                                LoginLog.find { LoginLogs.loginUserId eq loginUser.id }.toList()
+                            transaction {
+                                loginUser.load(LoginUser::logs)
                             }
-                            call.respond(GetLogsResponse(logs.map {
+                            call.respond(GetLogsResponse(loginUser.logs.map {
                                 LoginLogResponse(
                                     it.id.value,
                                     it.loginDateTime,

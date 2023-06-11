@@ -7,7 +7,7 @@ mkdir -p /etc/openvpn/ccd/"$client"
 
 # Make the client.ovpn file
 {
-cat "$OPENVPN_CONFIG_PATH"/client-common.txt
+cat "$OPENVPN_CONFIG_PATH"/client-common.conf
 echo "<ca>"
 cat "$EASYRSA_PKI"/ca.crt
 echo "</ca>"

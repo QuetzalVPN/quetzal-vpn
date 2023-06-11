@@ -3,7 +3,7 @@ package dev.quetzalvpn.openvpn
 import java.nio.file.Path
 
 
-class IndexTXT(indexTXTPath: Path) : LineFile<MutableList<IndexTXTEntry>>(indexTXTPath) {
+class IndexTXT(indexTXTPath: Path) : LineFile<IndexTXTEntry>(indexTXTPath) {
 
     companion object {
         const val INDEX_TXT_FLAG = 0
@@ -14,14 +14,13 @@ class IndexTXT(indexTXTPath: Path) : LineFile<MutableList<IndexTXTEntry>>(indexT
         const val INDEX_TXT_DN = 5
     }
 
-    override var currentEntries: MutableList<IndexTXTEntry> = mutableListOf()
 
     init {
         readEntries()
     }
 
     private fun parseLine(line: String): IndexTXTEntry {
-        val split = line.split("\t");
+        val split = line.split("\t")
         return IndexTXTEntry(
             flag = split[INDEX_TXT_FLAG],
             expirationDate = split[INDEX_TXT_EXPIRATION_DATE],
