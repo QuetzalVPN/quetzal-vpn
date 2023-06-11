@@ -10,7 +10,6 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.serialization.Serializable
-import org.jetbrains.exposed.dao.load
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.LocalDateTime
 
@@ -116,16 +115,16 @@ fun Application.configureLoginUsers() {
                     route("logs") {
                         get {
                             val loginUser = call.getParamsAuthUser() ?: return@get
-                            transaction {
-                                loginUser.load(LoginUser::logs)
+                            val logs = transaction {
+                                loginUser.logs.toList()
                             }
-                            call.respond(GetLogsResponse(loginUser.logs.map {
+                            call.respond(GetLogsResponse(logs.map {
                                 LoginLogResponse(
                                     it.id.value,
                                     it.loginDateTime,
                                     it.loginIp,
                                     it.loginResult,
-                                    it.loginUser.id.value
+                                    loginUser.id.value
                                 )
                             }))
                         }
