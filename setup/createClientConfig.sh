@@ -8,6 +8,7 @@ mkdir -p /etc/openvpn/ccd/"$client"
 # Make the client.ovpn file
 {
 cat "$OPENVPN_CONFIG_PATH"/client-common.conf
+echo -e "\n"
 echo "<ca>"
 cat "$EASYRSA_PKI"/ca.crt
 echo "</ca>"
@@ -18,6 +19,6 @@ echo "<key>"
 cat "$EASYRSA_PKI"/private/"$client".key
 echo "</key>"
 echo "<tls-auth>"
-sed -ne '/BEGIN OpenVPN Static key/,$ p' "$EASYRSA_PKI"/ta.key # TODO: generate tc.key
+sed -ne '/BEGIN OpenVPN Static key/,$ p' "$EASYRSA_PKI"/ta.key
 echo "</tls-auth>"
 } > "$OPENVPN_CONFIG_PATH"/ccd/"$client"/"$client".ovpn
