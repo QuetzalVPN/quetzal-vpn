@@ -56,4 +56,4 @@ chmod +x /etc/openvpn/*.sh
 mkdir -p /etc/openvpn/ccd
 
 
-openvpn --config /etc/openvpn/server.conf --client-config-dir /etc/openvpn/ccd --port 1194 --management 0.0.0.0 9999
+openvpn --config /etc/openvpn/server.conf --client-config-dir /etc/openvpn/ccd --management 0.0.0.0 9999
