@@ -1,6 +1,7 @@
 package dev.quetzalvpn.openvpn
 
 import dev.quetzalvpn.plugins.LocalDateTimeSerializer
+import io.ktor.util.logging.*
 import kotlinx.serialization.Serializable
 import java.io.InputStreamReader
 import java.io.OutputStreamWriter
@@ -37,6 +38,7 @@ data class OpenVPNRoutingTableRow(
 )
 
 class OpenVPNManagementClient(host: String, port: Int) {
+    private val LOGGER = KtorSimpleLogger(this::class.qualifiedName.orEmpty());
     companion object {
         private val ovpnDateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
     }
@@ -50,18 +52,36 @@ class OpenVPNManagementClient(host: String, port: Int) {
         SIGHUP, SIGTERM, SIGUSR1, SIGUSR2
     }
 
-    //TODO: send signal
-    fun sendSignal(signal: Signals) = executeCommand("signal ${signal.name}")
+    private fun sendSignal(signal: Signals) {
+        LOGGER.debug("Sending Signal ${signal.name}")
+        executeCommand("signal ${signal.name}")
+    }
 
-    //TODO: kill client
-    fun killClient(commonName: String) = executeCommand("kill $commonName")
+    fun killClient(commonName: String) {
+        LOGGER.debug("Killing Client $commonName")
+        executeCommand("kill $commonName")
+    }
+
+    fun triggerLog() {
+        LOGGER.debug("Triggering Log")
+        sendSignal(Signals.SIGUSR2)
+    }
+
+    fun restartServer() {
+        LOGGER.info("Restarting OpenVPN-Daemon")
+        sendSignal(Signals.SIGHUP)
+    }
+
+    fun stopServer() {
+        LOGGER.warn("Stopping OpenVPN-Daemon")
+        sendSignal(Signals.SIGTERM)
+    }
 
     fun status(): OpenVPNStatus {
-        val output = executeCommand("status")
-
+        LOGGER.debug("Querying Status of OpenVPN")
+        val output = executeCommandReadEnd("status")
 
         return parseStatus(output)
-
     }
 
     private fun parseStatus(output: String): OpenVPNStatus {
@@ -146,10 +166,12 @@ class OpenVPNManagementClient(host: String, port: Int) {
         TODO("Not yet implemented")
     }
 
-    private fun executeCommand(command: String): String {
+    private fun executeCommand(command: String) {
+        writer.write("$command\r\n")
+        writer.flush()
+    }
 
-        println("executeCommand: $command")
-
+    private fun executeCommandReadEnd(command: String): String {
         writer.write("$command\r\n")
         writer.flush()
 

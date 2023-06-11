@@ -24,6 +24,10 @@ fun Application.configureVPNConfigRouting() {
                     serverConfig.readEntries()
                     call.respond(serverConfig.getParsed())
                 }
+                post {
+                    TODO("Implement changing of the ServerConfig")
+                }
+
                 get("/raw") {
                     call.respondText(serverConfig.getRaw())
                 }
@@ -32,6 +36,9 @@ fun Application.configureVPNConfigRouting() {
                 get {
                     clientConfig.readEntries()
                     TODO("Client Config Parsing not implemented yet")
+                }
+                post {
+                    TODO("Implement changing of the ClientConfig")
                 }
                 get("/raw") {
                     call.respondText(clientConfig.getRaw())
