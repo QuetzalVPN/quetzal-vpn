@@ -35,6 +35,7 @@ fi
 
 # Copy the scripts to the openvpn directory, so they can be executed through the docker volume
 cp -f /etc/openvpn-setup/*.sh /etc/openvpn/
+chmod +x /etc/openvpn/*.sh
 
 # Create the client-common.conf file
 [ ! -f "/etc/openvpn/client-common.conf" ] && cp "/etc/openvpn-setup/client-common.conf" "/etc/openvpn/client-common.conf"
