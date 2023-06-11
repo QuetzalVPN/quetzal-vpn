@@ -3,6 +3,7 @@ package dev.quetzalvpn.plugins
 import dev.quetzalvpn.openvpn.ClientConfig
 import dev.quetzalvpn.openvpn.ServerConfig
 import dev.quetzalvpn.openvpn.ServerConfigDTO
+import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
@@ -29,7 +30,8 @@ fun Application.configureVPNConfigRouting() {
                 post {
                     val newConfig = call.receive<ServerConfigDTO>()
 
-                    TODO("Implement changing of the ServerConfig")
+                    serverConfig.writeParsed(newConfig)
+                    call.respond(HttpStatusCode.Accepted)
                 }
 
                 get("/raw") {
