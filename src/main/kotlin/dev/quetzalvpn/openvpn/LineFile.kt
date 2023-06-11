@@ -23,6 +23,11 @@ abstract class LineFile<EntryType>(filePath: Path) {
 
     fun getRaw(): String = file.readText()
 
+    fun setRaw(text: String) {
+        file.writeText(text)
+        readEntries()
+    }
+
     protected fun getLines(): List<String> {
         LOGGER.info("Reading ${this::class.simpleName} file: ${file.absolutePath}")
         return file.readLines().filter { it.isNotEmpty() && !commentChars.contains(it.first()) }
