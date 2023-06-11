@@ -3,18 +3,18 @@ import {
   Bars3Icon,
   ChevronDoubleLeftIcon, MoonIcon, SunIcon
 } from "@heroicons/react/24/outline";
-import { ReactElement, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useCurrentPage } from "../hooks/zustand";
+import {ReactElement, useEffect, useState} from "react";
+import {useNavigate} from "react-router-dom";
+import {useCurrentPage} from "../hooks/zustand";
 import "../style/navbar.scss";
 import AboutLink from "./AboutLink";
 import NavButton from "./NavButton";
 import NavbarItem from "./NavbarItem";
 import QuetzalTitle from "./QuetzalTitle";
 import ThemeSwitcher from "./ThemeSwitcher";
-import { Menu, Transition } from "@headlessui/react";
-import { useSmallerThan } from "../hooks/useBreakpoints";
-import { useTheme } from "../hooks/useTheme";
+import {Menu, Transition} from "@headlessui/react";
+import {useSmallerThan} from "../hooks/useBreakpoints";
+import {useTheme} from "../hooks/useTheme";
 
 interface NavItem {
   title: string;
@@ -26,12 +26,12 @@ interface NavbarProps {
   items: NavItem[];
 }
 
-export default ({ items }: NavbarProps) => {
+export default ({items}: NavbarProps) => {
   const navigate = useNavigate();
 
   const smallScreen = useSmallerThan("sm");
 
-  const { theme } = useTheme();
+  const {theme} = useTheme();
 
   const [collapsed, setCollapsed] = useState<boolean>(
     (localStorage.getItem("navbarCollapsed") ?? "false") === "true"
@@ -42,7 +42,12 @@ export default ({ items }: NavbarProps) => {
     navigate("/login");
   };
 
-  const [markerOffset, setMarkerOffset] = useState<{ top?: number, left?: number }>({ top: 0, left: 0 });
+  const handleCollapse = () => {
+    setCollapsed((prevCollapsed) => !prevCollapsed);
+    localStorage.setItem("navbarCollapsed", (!collapsed).toString());
+  }
+
+  const [markerOffset, setMarkerOffset] = useState<{ top?: number, left?: number }>({top: 0, left: 0});
   const [themeMenuOpen, setThemeMenuOpen] = useState(false);
 
   const currentPage = useCurrentPage((state) => state.currentPage);
@@ -52,7 +57,7 @@ export default ({ items }: NavbarProps) => {
       className={`
       z-[50]
         fixed sm:static flex bottom-0 sm:flex-col sm:h-screen w-full sm:w-fit sm:min-w-fit
-        border-t sm:border-r border-gray-neutral/30 md:border-0 py-3.5 sm:py-6
+        border-t sm:border-t-0 sm:border-r border-gray-neutral/30 md:border-0 py-3.5 sm:py-6
         -sm:bg-gradient-to-t from-20% from-light-foreground dark:from-dark-background dark:bg-dark-background/40 backdrop-blur-sm
         sm:bg-light-foreground sm:dark:bg-dark-foreground sm:backdrop-blur-none shadow-md
         `}
@@ -82,32 +87,32 @@ export default ({ items }: NavbarProps) => {
         ))}
       </nav>
       {smallScreen ||
-        <div className="mt-auto flex flex-col gap-2 justify-end items-center">
-          <NavButton onClick={handleLogout}>
-            <ArrowLeftOnRectangleIcon className={`h-6 stroke-inherit`} />
-          </NavButton>
-          <NavButton onClick={() => setThemeMenuOpen((prev) => !prev)}>
-            {
-              theme === "light" ?
-                <SunIcon className={`h-6 stroke-inherit`} />
-                :
-                <MoonIcon className={`h-6 stroke-inherit`} />
-            }
-            <ThemeSwitcher open={themeMenuOpen} />
-          </NavButton>
-          <NavButton>
-            <AboutLink collapsed={true} />
-          </NavButton>
-          <NavButton
-            onClick={() => setCollapsed((prevCollapsed) => !prevCollapsed)}
-          >
-            <ChevronDoubleLeftIcon
-              className={`collapse-btn h-6 stroke-inherit transition-transform ${
-                collapsed ? "flipped" : ""
-              }`}
-            />
-          </NavButton>
-        </div>
+          <div className="mt-auto flex flex-col gap-2 justify-end items-center">
+              <NavButton onClick={handleLogout}>
+                  <ArrowLeftOnRectangleIcon className={`h-6 stroke-inherit`}/>
+              </NavButton>
+              <NavButton onClick={() => setThemeMenuOpen((prev) => !prev)}>
+                {
+                  theme === "light" ?
+                    <SunIcon className={`h-6 stroke-inherit`}/>
+                    :
+                    <MoonIcon className={`h-6 stroke-inherit`}/>
+                }
+                  <ThemeSwitcher open={themeMenuOpen}/>
+              </NavButton>
+              <NavButton>
+                  <AboutLink collapsed={true}/>
+              </NavButton>
+              <NavButton
+                  onClick={handleCollapse}
+              >
+                  <ChevronDoubleLeftIcon
+                      className={`collapse-btn h-6 stroke-inherit transition-transform ${
+                        collapsed ? "flipped" : ""
+                      }`}
+                  />
+              </NavButton>
+          </div>
       }
     </div>
   );

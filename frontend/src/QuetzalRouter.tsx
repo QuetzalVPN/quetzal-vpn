@@ -52,8 +52,8 @@ export default () => {
           <div className={twMerge("flex", sidebarOpen ? "md:gap-4" : "sm:gap-4")}>
             <Navbar items={pages} />
             <div
-              className={`flex-grow pb-12 mb-12 sm:m-0 overflow-y-auto sm:overflow-y-hidden sm:h-screen px-3 sm:px-0 sm:pb-4 ${sidebarOpen ? "px-0" : "sm:pr-4"}`}>
-              <Outlet />
+              className={`flex-grow h-screen pb-24 sm:pb-4 overflow-y-auto sm:h-screen px-3 sm:px-0 ${sidebarOpen ? "px-0" : "sm:pr-4"}`}>
+              <Outlet/>
               <ToastContainer
                 position="bottom-right"
                 autoClose={5000}

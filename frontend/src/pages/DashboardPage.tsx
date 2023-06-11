@@ -37,8 +37,8 @@ export default ({ navbarIdx }: PageProps) => {
   };
 
   return (
-    <div className="w-full flex flex-col mt-4 gap-4">
-      <PageTitle title="Dashboard" />
+    <div className="w-full flex flex-col gap-4">
+      <PageTitle title="Dashboard" className="mt-4"/>
       <div className="flex flex-wrap gap-4">
         <ShadowBox className="flex flex-col grow-[10]">
           <div className="flex items-center gap-2 w-full">

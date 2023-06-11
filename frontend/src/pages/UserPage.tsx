@@ -61,7 +61,7 @@ export default ({ navbarIdx }: PageProps) => {
 
   return (
     <div className={`flex gap-4 w-full`}>
-      <div className={`flex-col mt-4 gap-4 w-7/12 grow ${sidebarOpen ? "hidden md:flex" : "flex"}`}>
+      <div className={`flex-col mt-4 gap-4 grow ${sidebarOpen ? "hidden md:flex" : "flex"}`}>
         <PageTitle title="User Management" />
         <ShadowBox>
           <div className="flex items-center justify-between">
