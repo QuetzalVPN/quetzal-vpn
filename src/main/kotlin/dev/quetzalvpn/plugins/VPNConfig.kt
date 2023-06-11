@@ -1,6 +1,7 @@
 package dev.quetzalvpn.plugins
 
 import dev.quetzalvpn.openvpn.ClientConfig
+import dev.quetzalvpn.openvpn.ClientConfigDTO
 import dev.quetzalvpn.openvpn.ServerConfig
 import dev.quetzalvpn.openvpn.ServerConfigDTO
 import io.ktor.http.*
@@ -23,6 +24,8 @@ fun Application.configureVPNConfigRouting() {
         route("/api/v1/vpn/config") {
 
             route("/server") {
+
+                /* Controlled editing */
                 get {
                     serverConfig.readEntries()
                     call.respond(serverConfig.getParsed())
@@ -34,20 +37,39 @@ fun Application.configureVPNConfigRouting() {
                     call.respond(HttpStatusCode.Accepted)
                 }
 
+                /* Raw editing */
                 get("/raw") {
                     call.respondText(serverConfig.getRaw())
                 }
+                post("/raw") {
+                    val newConfigText = call.receiveText()
+                    serverConfig.setRaw(newConfigText)
+                    call.respond(HttpStatusCode.Accepted)
+                }
             }
             route("/client") {
+
+                /* Controlled editing */
                 get {
                     clientConfig.readEntries()
-                    TODO("Client Config Parsing not implemented yet")
+
+                    call.respond(clientConfig.getParsed())
                 }
                 post {
-                    TODO("Implement changing of the ClientConfig")
+                    val newConfig = call.receive<ClientConfigDTO>()
+
+                    clientConfig.writeParsed(newConfig)
+                    call.respond(HttpStatusCode.Accepted)
                 }
+
+                /* Raw editing */
                 get("/raw") {
                     call.respondText(clientConfig.getRaw())
+                }
+                post("/raw") {
+                    val newConfigText = call.receiveText()
+                    clientConfig.setRaw(newConfigText)
+                    call.respond(HttpStatusCode.Accepted)
                 }
             }
         }

@@ -21,7 +21,7 @@ services:
     container_name: openvpn
     command: /etc/openvpn-setup/configure.sh
     ports:
-      - "1194:1194/tcp"
+      - "11940:11940/tcp"
       - "9999:9999"
 
     volumes:
@@ -46,7 +46,7 @@ services:
       - JWT_EXP_SECS=86400
       - ADMIN_PASSWORD=password
       - OPENVPN_HOST=openvpn
-      - OPENVPN_PORT=1194
+      - OPENVPN_PORT=11940
       - OPENVPN_CONFIG_PATH=/etc/openvpn
       - OPENVPN_EASYRSA_PATH=/usr/share/easy-rsa
       - EASYRSA_PKI=/etc/openvpn/easyrsa/pki
