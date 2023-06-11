@@ -27,22 +27,20 @@ body {
   overflow-y: hidden;
 }
 
-@keyframes showDialogContent {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -48%) scale(0.96);
-  }
-  to {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-  }
+.flipped {
+  transform: rotateY(180deg);
 }
 
-@keyframes showDialogOverlay {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+.info-bg-image {
+  background-image: url("assets/info.svg");
+  background-origin: content-box;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.warning-bg-image {
+    background-image: url("assets/warning.svg");
+    background-origin: content-box;
+    background-position: center;
+    background-repeat: no-repeat;
 }

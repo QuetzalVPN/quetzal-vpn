@@ -1,5 +1,4 @@
-#!/bin/bash
-
+#!/usr/bin/env bash
 client=$1
 
 # Create the client config directory

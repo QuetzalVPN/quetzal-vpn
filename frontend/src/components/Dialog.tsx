@@ -1,5 +1,5 @@
-import React, {ReactNode} from "react";
-import {Dialog} from "@headlessui/react";
+import React, { ReactNode } from "react";
+import { Dialog } from "@headlessui/react";
 import ShadowBox from "./ShadowBox";
 
 interface DialogProps {
@@ -8,16 +8,19 @@ interface DialogProps {
   description?: string;
   children?: ReactNode;
   backdrop?: boolean;
+  fullScreen?: boolean;
+  className?: string;
   onClose: () => void;
 }
 
-export default ({open, onClose, title, backdrop, description, children}: DialogProps) =>
+export default ({ open, onClose, title, backdrop, className, fullScreen, description, children }: DialogProps) =>
   <Dialog open={open} onClose={onClose}>
     {(backdrop ?? true) &&
-        <div className="fixed inset-0 bg-black/20 dark:bg-black/50" aria-hidden={true}/>
+      <div className="fixed inset-0 bg-black/20 dark:bg-black/50" aria-hidden={true} />
     }
     <Dialog.Panel as={ShadowBox}
-                  className="fixed top-[50%] left-[50%] -translate-x-center-50 -translate-y-center-50">
+                  className={`${className} fixed z-[100] ${ fullScreen ? 'top-0 left-0 rounded-none w-screen h-screen flex flex-col' :
+                    'top-[50%] left-[50%] -translate-x-center-50 -translate-y-center-50'}`}>
       <Dialog.Title as="h2" className="text-xl">
         {title}
       </Dialog.Title>

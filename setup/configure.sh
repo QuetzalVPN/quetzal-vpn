@@ -1,10 +1,16 @@
 #!/usr/bin/env bash
-# Executed on openvpn container start to configure the server
+#Executed on openvpn container start to configure the server
 
 set -ex
 
 EASY_RSA_LOC="/etc/openvpn/easyrsa"
 SERVER_CERT="${EASY_RSA_LOC}/pki/issued/server.crt"
+
+OVPN_SERVER_NET="172.16.100.0"
+OVPN_SERVER_MASK="255.255.255.0"
+
+OVPN_SRV_NET=${OVPN_SERVER_NET:-172.16.100.0}
+OVPN_SRV_MASK=${OVPN_SERVER_MASK:-255.255.255.0}
 
 
 mkdir -p $EASY_RSA_LOC
@@ -25,6 +31,9 @@ else
 fi
 easyrsa gen-crl
 
+iptables -t nat -D POSTROUTING -s ${OVPN_SRV_NET}/${OVPN_SRV_MASK} ! -d ${OVPN_SRV_NET}/${OVPN_SRV_MASK} -j MASQUERADE || true
+iptables -t nat -A POSTROUTING -s ${OVPN_SRV_NET}/${OVPN_SRV_MASK} ! -d ${OVPN_SRV_NET}/${OVPN_SRV_MASK} -j MASQUERADE
+
 mkdir -p /dev/net
 if [ ! -c /dev/net/tun ]; then
     mknod /dev/net/tun c 10 200
@@ -38,6 +47,7 @@ cp -f /etc/openvpn-setup/*.sh /etc/openvpn/
 chmod +x /etc/openvpn/*.sh
 
 # Create the client-common.conf file
+# TODO: Make this configurable
 [ ! -f "/etc/openvpn/client-common.conf" ] && cp "/etc/openvpn-setup/client-common.conf" "/etc/openvpn/client-common.conf"
 
 [ -d $EASY_RSA_LOC/pki ] && chmod 755 $EASY_RSA_LOC/pki
@@ -46,4 +56,4 @@ chmod +x /etc/openvpn/*.sh
 mkdir -p /etc/openvpn/ccd
 
 
-openvpn --config /etc/openvpn/server.conf --client-config-dir /etc/openvpn/ccd --management 0.0.0.0 9999
+openvpn --config /etc/openvpn/server.conf --client-config-dir /etc/openvpn/ccd --port 1194 --management 0.0.0.0 9999

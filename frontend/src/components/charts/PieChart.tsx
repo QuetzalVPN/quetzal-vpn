@@ -51,7 +51,7 @@ export default ({data, options}: PieChartProps) => {
   const [displayData, setDisplayData] = useState(data);
   const [textTransform, setTextTransform] = useState('translate(0, 0)');
 
-  const updateRadius = () => {
+  const handleResize = () => {
     const diameter = Math.min(
       svgRef.current?.clientWidth ?? 0,
       svgRef.current?.clientHeight ?? 0
@@ -60,9 +60,9 @@ export default ({data, options}: PieChartProps) => {
   };
 
   useEffect(() => {
-    updateRadius();
-    window.addEventListener('resize', updateRadius);
-    return () => window.removeEventListener('resize', updateRadius);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   const pie = d3.pie().sort(() => 0);

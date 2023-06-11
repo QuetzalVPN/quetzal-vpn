@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-
 OVPN_SRV_NET=$4
 OVPN_SRV_MASK=$5
 
