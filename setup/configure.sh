@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Executed on openvpn container start to configure the server
+#Executed on openvpn container start to configure the server
 
 set -ex
 

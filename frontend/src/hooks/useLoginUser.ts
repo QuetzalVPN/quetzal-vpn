@@ -1,16 +1,16 @@
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import { deleteLoginUser, getLoginUsers, loginUser, signupUser } from "../services/loginUserService";
-import { useRef } from "react";
-import { Id as ToastId, toast, UpdateOptions as ToastUpdateOptions } from "react-toastify";
-import { LoginUser } from "../types/LoginUsers";
-import { VPNUser } from "../types/VPNUsers";
+import {useMutation, useQuery, useQueryClient} from "react-query";
+import {deleteLoginUser, getLoginUserLogs, getLoginUsers, loginUser, signupUser} from "../services/loginUserService";
+import {useRef} from "react";
+import {Id as ToastId, toast, UpdateOptions as ToastUpdateOptions} from "react-toastify";
+import {LoginUser} from "../types/LoginUsers";
+import {VPNUser} from "../types/VPNUsers";
 
 const useLoginUser = () => {
   return useMutation({
-      mutationFn: ({ username, password }: { username: string; password: string }) => {
+      mutationFn: ({username, password}: { username: string; password: string }) => {
         return loginUser(username, password);
       },
-      onSuccess: ({ data }) => {
+      onSuccess: ({data}) => {
         localStorage.setItem("token", data.accessToken);
       },
       onError: (error) => {
@@ -31,13 +31,13 @@ const useSignupUser = () => {
   };
 
   return useMutation({
-      mutationFn: ({ username, password }: { username: string; password: string }) => {
+      mutationFn: ({username, password}: { username: string; password: string }) => {
         return signupUser(username, password);
       },
-      onMutate({ username }) {
+      onMutate({username}) {
         toastId.current = toast.loading(`Creating user ${username}...`);
       },
-      onSuccess: ({ data }, user) => {
+      onSuccess: ({data}, user) => {
         updateLoadingToast({
           render: `${user.username} successfully created!`,
           type: "success",
@@ -103,4 +103,11 @@ const useDeleteUser = () => {
   });
 };
 
-export { useLoginUser, useLoginUsers, useDeleteUser, useSignupUser };
+const useLoginUserLogs = (id: number) => {
+  return useQuery({
+    queryKey: ["loginUserLogs", id],
+    queryFn: () => getLoginUserLogs(id)
+  });
+};
+
+export {useLoginUser, useLoginUsers, useDeleteUser, useSignupUser, useLoginUserLogs};
