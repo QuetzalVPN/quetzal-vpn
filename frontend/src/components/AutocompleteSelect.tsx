@@ -1,4 +1,3 @@
-import InfoTooltip from "./InfoTooltip";
 import {Combobox, Transition} from "@headlessui/react";
 import {CheckIcon, ChevronUpDownIcon} from "@heroicons/react/24/outline";
 import {Fragment, useEffect, useState} from "react";
@@ -69,7 +68,7 @@ export default ({
       >
         <Combobox.Options
           as={ShadowBox}
-          className="absolute w-full p-0 bg-light-foreground dark:bg-dark-midground border border-gray-neutral/30 mt-2 max-h-60 overflow-auto rounded-md"
+          className="absolute z-[90] w-full p-0 bg-light-foreground dark:bg-dark-midground border border-gray-neutral/30 mt-2 max-h-60 overflow-auto rounded-md"
         >
           {filtered.map((option, index) => (
             <Combobox.Option

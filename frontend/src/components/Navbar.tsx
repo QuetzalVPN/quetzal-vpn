@@ -37,6 +37,12 @@ export default ({items}: NavbarProps) => {
     (localStorage.getItem("navbarCollapsed") ?? "false") === "true"
   );
 
+  useEffect(() => {
+    if (localStorage.getItem("token") === null) {
+      navigate("/login");
+    }
+  }, []);
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/login");
