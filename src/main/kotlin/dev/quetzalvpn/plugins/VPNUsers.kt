@@ -139,6 +139,8 @@ fun Application.configureVPNUserRouting() {
                     delete {
                         val vpnUser = call.getParamsVPNUser() ?: return@delete
 
+                        controller.disableVPNUser(vpnUser)
+
                         transaction {
                             vpnUser.delete()
                         }
