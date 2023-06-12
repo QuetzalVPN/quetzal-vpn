@@ -39,11 +39,8 @@ export default ({data, options}: LineChartProps) => {
 
   useEffect(() => {
     handleResize()
-    window.addEventListener('resize', () => {
-      handleResize()
-    });
-    return () => window.removeEventListener('resize', () => {
-    });
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   useEffect(handleResize, [svgRef]);

@@ -14,8 +14,8 @@ import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.transactions.transaction
 
 
-suspend fun ApplicationCall.getParamsVPNUser(): VPNUser? {
-    val id = parameters["id"]?.toIntOrNull()
+suspend fun ApplicationCall.getParamsVPNUser(parameterName: String = "id"): VPNUser? {
+    val id = parameters[parameterName]?.toIntOrNull()
     if (id == null) {
         respond(HttpStatusCode.BadRequest)
         return null
@@ -32,7 +32,7 @@ suspend fun ApplicationCall.getParamsVPNUser(): VPNUser? {
 
 class VPNUserRoute {
     @Serializable
-    data class CreateRequest(val username: String)
+    data class CreateRequest(val username: String, val enable: Boolean? = null)
 
     @Serializable
     data class CreateResponse(val id: Int, val username: String, val isEnabled: Boolean)
@@ -94,8 +94,17 @@ fun Application.configureVPNUserRouting() {
 
                     val reqBody = call.receive<VPNUserRoute.CreateRequest>()
 
-                    val newVPNUser = controller.addVPNUser(reqBody.username, loginUser)
+                    if (!reqBody.username.matches(Regex("[a-zA-Z0-9_-]{3,32}"))) {
+                        call.respond(HttpStatusCode.BadRequest, "Bad username")
+                        return@post
+                    }
 
+
+                    val newVPNUser = controller.addVPNUser(reqBody.username, loginUser).also {
+                        if (reqBody.enable == false) {
+                            controller.disableVPNUser(it)
+                        }
+                    }
                     val response =
                         VPNUserRoute.CreateResponse(newVPNUser.id.value, newVPNUser.name, newVPNUser.isEnabled)
                     call.respond(HttpStatusCode.Created, response)
@@ -112,9 +121,15 @@ fun Application.configureVPNUserRouting() {
                         val vpnUser = call.getParamsVPNUser() ?: return@patch
 
                         val reqBody = call.receive<VPNUserRoute.PatchRequest>()
-                        transaction {
-                            vpnUser.apply {
-                                if (reqBody.enable != null) isEnabled = reqBody.enable
+
+                        if (reqBody.enable != null) {
+                            if (reqBody.enable != vpnUser.isEnabled) {
+                                if (reqBody.enable) {
+                                    call.application.environment.log.info("Enabling VPN user ${vpnUser.name}")
+                                    controller.enableVPNUser(vpnUser)
+                                } else {
+                                    controller.disableVPNUser(vpnUser)
+                                }
                             }
                         }
 
@@ -123,6 +138,8 @@ fun Application.configureVPNUserRouting() {
                     }
                     delete {
                         val vpnUser = call.getParamsVPNUser() ?: return@delete
+
+                        controller.disableVPNUser(vpnUser)
 
                         transaction {
                             vpnUser.delete()

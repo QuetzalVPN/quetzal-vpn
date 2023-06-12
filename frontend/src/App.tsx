@@ -4,9 +4,6 @@ import {ReactQueryDevtools} from "react-query/devtools";
 // import {useLoginState} from "./hooks/zustand";
 import QuetzalRouter from "./QuetzalRouter";
 
-//TODO: Implement Router loader
-//TODO: Fix types (they are really bad)
-
 export type Theme = 'system' | 'light' | 'dark';
 
 const queryClient = new QueryClient();
