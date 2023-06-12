@@ -3,6 +3,7 @@ import {getVPNServerConfig, updateVPNServerConfig} from "../services/vpnConfigur
 import {VPNServerConfig} from "../types/VPNServerConfig";
 import {useRef} from "react";
 import {Id as ToastId, toast, UpdateOptions as ToastUpdateOptions} from "react-toastify";
+import {useVPNServerRestart} from "./useVPNManagement";
 
 const useVPNServerConfiguration = () => {
   return useQuery({
@@ -14,6 +15,7 @@ const useVPNServerConfiguration = () => {
 const useUpdateVPNServerConfiguration = () => {
   const toastId = useRef<ToastId>();
   const queryClient = useQueryClient();
+  const restartVPNServer = useVPNServerRestart();
 
   const updateLoadingToast = (options: ToastUpdateOptions) => {
     if (toastId.current) {
@@ -28,6 +30,7 @@ const useUpdateVPNServerConfiguration = () => {
       toastId.current = toast.loading(`Updating VPN server configuration...`);
     },
     onSuccess: () => {
+      restartVPNServer.mutate();
       updateLoadingToast({
         render: `Successfully updated VPN server configuration!`,
         type: "success",

@@ -32,4 +32,8 @@ const getVPNStatus = async () => {
   return vpnStatus;
 };
 
-export { getVPNStatus };
+const restartVPNServer = async () => {
+  return await axiosClient.post(`${BASE_URL}/restart`);
+}
+
+export { getVPNStatus, restartVPNServer };

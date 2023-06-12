@@ -27,7 +27,7 @@ export default ({options, disabled, value, className, onChange}: SelectProps) =>
         leaveTo="opacity-0"
       >
         <Listbox.Options
-          className="absolute w-full mt-2 rounded-md bg-light-foreground border border-gray-neutral/30 dark:bg-dark-midground overflow-hidden">
+          className="absolute z-[90] w-full mt-2 rounded-md bg-light-foreground border border-gray-neutral/30 dark:bg-dark-midground overflow-hidden">
           {options.map((option) => (
             <Listbox.Option key={option.id} value={option}
                             className={({active}) => `relative select-none py-1.5 pl-8 pr-4 ${active ? 'bg-brand-green/10' : ''}`}>

@@ -16,6 +16,7 @@ import {useQueryClient} from "react-query";
 import AutocompleteSelect, {SelectOption} from "../components/AutocompleteSelect";
 import {useVPNServerConfiguration, useUpdateVPNServerConfiguration} from "../hooks/useVPNConfiguration";
 import {VPNServerConfig} from "../types/VPNServerConfig";
+import {useVPNServerRestart} from "../hooks/useVPNManagement";
 
 export interface PageProps {
   navbarIdx: number;
@@ -487,7 +488,8 @@ export default ({navbarIdx}: PageProps) => {
                     {/*<h5 className="font-lexend text-lg">Routes</h5>*/}
                     {/*<h5 className="font-lexend text-lg">Options</h5>*/}
 
-                    <div className="flex mt-2 justify-end gap-4">
+                    <div className="flex mt-2 justify-end items-center gap-4">
+                      <InfoTooltip info="Changing the configuration will restart the server." className="text-center w-64 -left-28" />
                       <Button type="reset" variant="outline" color="red">Discard</Button>
                       <Button type="submit">Apply</Button>
                     </div>
