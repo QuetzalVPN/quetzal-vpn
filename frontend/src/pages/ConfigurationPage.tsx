@@ -14,9 +14,8 @@ import ConfigItem from "../components/ConfigItem";
 import Select from "../components/Select";
 import {useQueryClient} from "react-query";
 import AutocompleteSelect, {SelectOption} from "../components/AutocompleteSelect";
-import {useVPNServerConfiguration, useUpdateVPNServerConfiguration} from "../hooks/useVPNConfiguration";
+import {useUpdateVPNServerConfiguration, useVPNServerConfiguration} from "../hooks/useVPNConfiguration";
 import {VPNServerConfig} from "../types/VPNServerConfig";
-import {useVPNServerRestart} from "../hooks/useVPNManagement";
 
 export interface PageProps {
   navbarIdx: number;

@@ -26,7 +26,7 @@ export default ({ onClose }: { onClose?: () => void }) => {
         <label htmlFor="loginuser-username" className="font-lexend">Login name</label>
         {usernameMsg && <p className="text-brand-red text-sm">{usernameMsg}</p>}
       </div>
-      <BasicInput required autoFocus id="loginuser-username" value={username}
+      <BasicInput required autoFocus id="loginuser-username" value={username} pattern="[a-zA-Z0-9_-]{3,32}"
                   onChange={(e) => setUsername(e.target.value)}
                   onBlur={(e) => setUsernameMsg(e.target.validity.valid ? undefined : "Please fill out this field")} />
     </div>

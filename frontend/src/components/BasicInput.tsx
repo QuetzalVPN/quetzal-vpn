@@ -3,7 +3,7 @@ import {EyeIcon, EyeSlashIcon} from "@heroicons/react/24/outline";
 import {twMerge} from "tailwind-merge";
 
 const borderClasses = 'border-2 rounded-lg border-gray-neutral focus-within:border-neutral-800 dark:focus-within:border-neutral-300';
-const inputClasses = "form-input px-2 py-1.5 rounded-lg bg-transparent outline-none grow";
+const inputClasses = "px-2 py-1.5 rounded-lg bg-transparent outline-none grow";
 
 const BasicInput = React.forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputElement>>(({
                                                                                                 className,
